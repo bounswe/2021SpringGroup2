@@ -15,4 +15,4 @@ This repository belongs to computer engineering students from Boğaziçi Univers
 - [Mehmet Saraçoğlu](https://github.com/bounswe/2021SpringGroup2/wiki/Mehmet-Sara%C3%A7o%C4%9Flu)
 - [Kerem Zaman](https://github.com/bounswe/2021SpringGroup2/wiki/Kerem-Zaman)
 
-For more information, you can check our Wiki pages.
+For more information, you can check our [Wiki](https://github.com/bounswe/2021SpringGroup2/wiki) pages.
