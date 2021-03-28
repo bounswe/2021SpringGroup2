@@ -1,6 +1,6 @@
-# Wolcome to Group 2!
+# Welcome to Group 2!
 
-This repository belongs to computer engineering students from Boğaziçi University. It will be maintained throughout CMPE352 and CMPE451 courses. 
+This repository belongs to computer engineering students from Boğaziçi University. It will be maintained throughout the CMPE352 and CMPE451 courses. 
 
 # Team Members
 
