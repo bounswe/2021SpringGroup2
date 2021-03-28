@@ -4,15 +4,15 @@ This repository belongs to computer engineering students from Boğaziçi Univers
 
 # Team Members
 
-Doğukan Akar  
-Şefika Akman  
-Ömer Arslan  
-İbrahim Kağan Bayat   
-Berkay Döner  
-Ahmet Necip Görgülü   
-Ege Can Kaya  
-Bengisu Özaydın  
-Mehmet Saraçoğlu  
-Kerem Zaman  
+- Doğukan Akar  
+- Şefika Akman  
+- Ömer Arslan  
+- İbrahim Kağan Bayat   
+- Berkay Döner  
+- Ahmet Necip Görgülü   
+- Ege Can Kaya  
+- Bengisu Özaydın  
+- Mehmet Saraçoğlu  
+- Kerem Zaman  
 
 For more information, you can check our [Wiki](https://github.com/bounswe/2021SpringGroup2/wiki) page.
