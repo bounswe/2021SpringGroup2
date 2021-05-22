@@ -1,0 +1,12 @@
+version: "3"
+services:
+  backend:
+    build: .
+    ports:
+      - "9000:9000"
+
+volumes:
+  data:
+  cache:
+  analytics:
+
