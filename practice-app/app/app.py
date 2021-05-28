@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, abort
+import requests
 
 app = Flask(__name__)
 
@@ -25,10 +26,19 @@ events = [
 def index():
     return jsonify({'message': 'hello world'}), 200  # mock message as an example
 
+@app.route('/api/v1.0/sportTypes', methods=['GET'])
+def get_sport_types():
+    try:
+        response = requests.get("https://sports.api.decathlon.com/sports")
+        mapped = [{"name": j["attributes"]["name"], "description": j["attributes"]["description"], "icon": j["attributes"]["icon"]} for j in response.json()["data"] if j["attributes"]["decathlon_id"]!=None and j["attributes"]["parent_id"]==None]
+        return jsonify(mapped), 200
+    except:
+        abort(500) 
+
 
 
 @app.route('/api/v1.0/spectators/<int:event_id>', methods=['GET'])
-def getSpectators(event_id):
+def get_spectators(event_id):
     event = [event for event in events if event['eventId'] == event_id]
     if len(event) == 0:
         abort(404)
