@@ -38,6 +38,16 @@ users = [
     }
 ]
 
+equipments = [
+	{
+		"EquipmentId": 1,
+		"EquipmentType": "Ball",
+		"EquipmentCondition": "Well",
+		"Explanation": "A well conditioned soccer ball"
+	}
+]
+
+
 @app.route('/api/v1.0/', methods=['GET'])
 def index():
     return jsonify({'message': 'hello world'}), 200  # mock message as an example
@@ -69,6 +79,28 @@ def applyAsPlayer(event_id, user_id):
     event[0]["players"].append(user[0]['nickname'])
     response = Response("%s applied to event %s" % (user[0]["nickname"], event[0]["title"]), 201, mimetype='application/json')
     return response
+
+
+@app.route('/api/v1.0/equipments', method=['POST'])
+def create_equipment():
+	#Creates the equipment post
+	if len(equipments) != 0:
+		new_equipment = {
+			"EquipmentId": equipments[-1]['EquipmentId'] + 1,
+			"EquipmentType": request.json['EquipmentType'],
+			"EquipmentCondition": request.json["EquipmentCondition"],
+			"Explanation": request.json["Explanation"]
+		}
+	else:
+		new_equipment = {
+			"EquipmentId": 1,
+			"EquipmentType": request.json['EquipmentType'],
+			"EquipmentCondition": request.json["EquipmentCondition"],
+			"Explanation": request.json["Explanation"]
+		}
+	equipments.append(new_equipment)
+	return jsonify({"equipment": new_equipment}), 201
+
 
 
 if __name__ == '__main__':
