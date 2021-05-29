@@ -102,6 +102,6 @@ def create_equipment():
 	return jsonify({"equipment": new_equipment}), 201
 
 
-s
+
 if __name__ == '__main__':
     app.run(debug=True)
