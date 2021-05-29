@@ -127,7 +127,7 @@ def postSpectator(event_id):
     return  jsonify({'spectators': event[0]["spectators"]}),201
 
 
-@app.route('/api/v1.0/equipments', method=['POST'])
+@app.route('/api/v1.0/equipments', methods=['POST'])
 def create_equipment_post():
 	# Creates the equipment post
 	if len(equipments) != 0:
