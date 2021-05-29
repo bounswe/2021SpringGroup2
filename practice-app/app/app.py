@@ -1,5 +1,6 @@
 import requests
-from flask import Flask, jsonify, abort, Response
+from flask import Flask, jsonify, abort, request
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -25,9 +26,9 @@ events = [
 users = [
     {
         "userId": 1,
-        "nickname": "emre_gundogdu",
+        "nickname": "emre_gundogu",
         "firstName": "Emre",
-        "lastName": "Gundogdu",
+        "lastName": "Gundogu",
         "biography": "Hello, I am a 28 year-old football fan",
         "age": "28",
         "avatar": "url_to_image",
@@ -37,6 +38,16 @@ users = [
         "privacy": "public",
     }
 ]
+
+equipments = [
+	{
+		"EquipmentId": 1,
+		"EquipmentType": "Ball",
+		"EquipmentCondition": "Well",
+		"Explanation": "A well conditioned soccer ball"
+	}
+]
+
 
 @app.route('/api/v1.0/', methods=['GET'])
 def index():
@@ -72,6 +83,7 @@ def get_spectators(event_id):
     return jsonify({'spectators': event[0]["spectators"]})
 
 
+
 @app.route('/api/v1.0/events/<int:event_id>', methods=['GET'])
 def get_players(event_id):
     event = [event for event in events if event['eventId']==event_id]
@@ -80,15 +92,52 @@ def get_players(event_id):
     return jsonify({'evetns': event[0]["events"]})
 
 
-@app.route('/api/v1.0/events/<int:event_id>/players/<int:user_id>', methods=['POST'])
-def applyAsPlayer(event_id, user_id):
+
+@app.route('/api/v1.0/events/<int:event_id>', methods=['POST'])
+def apply_as_player(event_id):
+    body = request.json
+    print(body)
+    user_id = body["userId"]
+    event = [event for event in events if event["eventId"] == event_id]
+    user = [user for user in users if user["userId"] == user_id]
+    if len(event) == 0 or len(user) == 0:
+        abort(404)
+    event[0]["players"].append(user[0]["nickname"])
+    return jsonify({"eventId": event_id,
+                    "eventTitle": event[0]["title"],
+                    "applicantId": user_id,
+                    "applicantNickname": user[0]["nickname"],
+                    "applicationServerTime": datetime.now().strftime("%d/%m/%Y %H:%M:%S")}), 201
+
+@app.route('/api/v1.0/events/<int:event_id>/spectators', methods=['POST'])
+def postSpectator(event_id):
     event = [event for event in events if event['eventId'] == event_id]
-    user = [user for user in users if user['userId'] == user_id]
     if len(event) == 0:
         abort(404)
-    event[0]["players"].append(user[0]['nickname'])
-    response = Response("%s applied to event %s" % (user[0]["nickname"], event[0]["title"]), 201, mimetype='application/json')
-    return response
+    r=requests.get("https://pipl.ir/v1/getPerson").json()
+    randomname=r['person']['personal']['name']+'_'+r['person']['personal']['last_name']
+    event[0]["spectators"].append({"username":randomname})
+    return  jsonify({'spectators': event[0]["spectators"]}),201
+
+@app.route('/api/v1.0/equipments', method=['POST'])
+def create_equipment():
+	#Creates the equipment post
+	if len(equipments) != 0:
+		new_equipment = {
+			"EquipmentId": equipments[-1]['EquipmentId'] + 1,
+			"EquipmentType": request.json['EquipmentType'],
+			"EquipmentCondition": request.json["EquipmentCondition"],
+			"Explanation": request.json["Explanation"]
+		}
+	else:
+		new_equipment = {
+			"EquipmentId": 1,
+			"EquipmentType": request.json['EquipmentType'],
+			"EquipmentCondition": request.json["EquipmentCondition"],
+			"Explanation": request.json["Explanation"]
+		}
+	equipments.append(new_equipment)
+	return jsonify({"equipment": new_equipment}), 201
 
 
 if __name__ == '__main__':
