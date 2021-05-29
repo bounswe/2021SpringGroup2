@@ -72,17 +72,20 @@ def get_spectators(event_id):
     return jsonify({'spectators': event[0]["spectators"]})
 
 @app.route('/api/v1.0/events/<int:event_id>', methods=['POST'])
-def apply_as_player(event_id, user_id):
-    event = [event for event in events if event['eventId'] == event_id]
-    user = [user for user in users if user['userId'] == user_id]
+def apply_as_player(event_id):
+    body = request.json
+    print(body)
+    user_id = body["userId"]
+    event = [event for event in events if event["eventId"] == event_id]
+    user = [user for user in users if user["userId"] == user_id]
     if len(event) == 0 or len(user) == 0:
         abort(404)
-    event[0]["players"].append(user[0]['nickname'])
-    return jsonify({'eventId': event_id,
-                    'eventTitle': event['title'],
-                    'applicantId': user_id,
-                    'applicantNickname': user['nickname'],
-                    'applicationTime': datetime.now().strftime("%d/%m/%Y %H:%M:%S")}), 201
+    event[0]["players"].append(user[0]["nickname"])
+    return jsonify({"eventId": event_id,
+                    "eventTitle": event[0]["title"],
+                    "applicantId": user_id,
+                    "applicantNickname": user[0]["nickname"],
+                    "applicationServerTime": datetime.now().strftime("%d/%m/%Y %H:%M:%S")}), 201
 
 @app.route('/api/v1.0/equipments', method=['POST'])
 def create_equipment():
