@@ -26,9 +26,9 @@ events = [
 users = [
     {
         "userId": 1,
-        "nickname": "emre_gundogdu",
+        "nickname": "emre_gundogu",
         "firstName": "Emre",
-        "lastName": "Gundogdu",
+        "lastName": "Gundogu",
         "biography": "Hello, I am a 28 year-old football fan",
         "age": "28",
         "avatar": "url_to_image",
