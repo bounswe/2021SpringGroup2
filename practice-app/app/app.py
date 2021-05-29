@@ -54,6 +54,53 @@ equipmentPost = [
 		"link": "www.ismycomputeron.com"
 	}
 ]
+equipments2 = [
+    {
+        "equipmentId": 1,
+        "ownerId": 1,
+        "title" : "Tennis shoes for sale!",
+        "content" : "I have a pair of shoes in good condition that i want to sell.",
+        "website name" : "letgo",
+        "link" : "letgo.com/245323",
+        "equipment type" : "Shoes"
+
+    },
+    {
+        "equipmentId": 2,
+        "ownerId": 1,
+        "title" : "Tennis rackets for sale!",
+        "content" : "I have a pair of shoes in good condition that i want to sell.",
+        "website name" : "letgo",
+        "link" : "letgo.com/245323",
+        "equipment type" : "Shoes"
+    }
+]
+headers = {
+    "x-rapidapi-key": "c4ab16012amsh73b5a257264eb3dp11ade4jsnb69ec0b79098",
+    "x-rapidapi-host" :"google-search3.p.rapidapi.com"
+}
+
+@app.route('/api/v1.0/equipments/<int:equipmentId>/results', methods=['GET'])
+def results(equipmentId):
+    equipment = [equipment for equipment in equipments2 if equipment['equipmentId'] == equipmentId]
+    if len(equipment) == 0:
+        abort(404)
+    title=equipment[0]['title']
+    query = {
+    "q": equipment[0]['title'],
+    
+}
+    response=requests.get("https://rapidapi.p.rapidapi.com/api/v1/search/" + urllib.parse.urlencode(query), headers=headers)
+    mapped=[{"description": j["description"],"link": j["link"], "title":j["title"]} for j in response.json()["results"]]
+    return jsonify(mapped), 200
+@app.route('/api/v1.0/equipments/<int:equipmentId>', methods=['GET'])
+def getEquipment(equipmentId):
+   equipment = [equipment for equipment in equipments2 if equipment['equipmentId'] == equipmentId]
+   if len(equipment) == 0:
+        abort(404)
+   return jsonify({'equipments': equipment[0]})
+
+
 
 
 @app.route('/api/v1.0/', methods=['GET'])
