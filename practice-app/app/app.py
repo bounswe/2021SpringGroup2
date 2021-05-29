@@ -1,5 +1,6 @@
 import requests
-from flask import Flask, jsonify, abort, Response
+from flask import Flask, jsonify, abort, request
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -70,16 +71,18 @@ def get_spectators(event_id):
         abort(404)
     return jsonify({'spectators': event[0]["spectators"]})
 
-@app.route('/api/v1.0/events/<int:event_id>/players/<int:user_id>', methods=['POST'])
-def applyAsPlayer(event_id, user_id):
+@app.route('/api/v1.0/events/<int:event_id>', methods=['POST'])
+def apply_as_player(event_id, user_id):
     event = [event for event in events if event['eventId'] == event_id]
     user = [user for user in users if user['userId'] == user_id]
-    if len(event) == 0:
+    if len(event) == 0 or len(user) == 0:
         abort(404)
     event[0]["players"].append(user[0]['nickname'])
-    response = Response("%s applied to event %s" % (user[0]["nickname"], event[0]["title"]), 201, mimetype='application/json')
-    return response
-
+    return jsonify({'eventId': event_id,
+                    'eventTitle': event['title'],
+                    'applicantId': user_id,
+                    'applicantNickname': user['nickname'],
+                    'applicationTime': datetime.now().strftime("%d/%m/%Y %H:%M:%S")}), 201
 
 @app.route('/api/v1.0/equipments', method=['POST'])
 def create_equipment():
@@ -100,7 +103,6 @@ def create_equipment():
 		}
 	equipments.append(new_equipment)
 	return jsonify({"equipment": new_equipment}), 201
-
 
 
 if __name__ == '__main__':
