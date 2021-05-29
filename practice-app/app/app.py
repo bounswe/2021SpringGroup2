@@ -86,6 +86,15 @@ def apply_as_player(event_id):
                     "applicantId": user_id,
                     "applicantNickname": user[0]["nickname"],
                     "applicationServerTime": datetime.now().strftime("%d/%m/%Y %H:%M:%S")}), 201
+@app.route('/api/v1.0/events/<int:event_id>/spectators', methods=['POST'])
+def postSpectator(event_id):
+    event = [event for event in events if event['eventId'] == event_id]
+    if len(event) == 0:
+        abort(404)
+    r=requests.get("https://pipl.ir/v1/getPerson").json()
+    randomname=r['person']['personal']['name']+'_'+r['person']['personal']['last_name']
+    event[0]["spectators"].append({"username":randomname})
+    return  jsonify({'spectators': event[0]["spectators"]}),201
 
 @app.route('/api/v1.0/equipments', method=['POST'])
 def create_equipment():
