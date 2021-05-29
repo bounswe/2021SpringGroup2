@@ -103,12 +103,30 @@ def get_players(event_id):
 @app.route('/api/v1.0/events/<int:event_id>', methods=['POST'])
 def apply_as_player(event_id):
     body = request.json
-    print(body)
     user_id = body["userId"]
     event = [event for event in events if event["eventId"] == event_id]
     user = [user for user in users if user["userId"] == user_id]
-    if len(event) == 0 or len(user) == 0:
+    if len(event) == 0:
         abort(404)
+    if len(user) == 0:
+        response = requests.get("https://randomapi.com/api/9fekfc0v?key=2UX0-XIT1-7DYM-WDBC")
+        json_data = response.json()["results"]
+        new_user = {"userId": user_id,
+                     "nickname": json_data[0]["nickname"],
+                     "firstName": json_data[0]["firstName"],
+                     "lastName": json_data[0]["lastName"],
+                     "biography": json_data[0]["biography"],
+                     "age": json_data[0]["age"],
+                     "avatar": json_data[0]["avatar"],
+                     "location": json_data[0]["location"],
+                     "favSports": json_data[0]["favSports"],
+                     "badges": json_data[0]["badges"],
+                     "privacy": json_data[0]["privacy"]}
+        print(new_user)
+        users.append(new_user)
+        user.append(new_user)
+        print(users)
+
     event[0]["players"].append(user[0]["nickname"])
     return jsonify({"eventId": event_id,
                     "eventTitle": event[0]["title"],
