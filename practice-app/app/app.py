@@ -39,12 +39,19 @@ users = [
     }
 ]
 
-equipments = [
+equipmentPost = [
 	{
-		"EquipmentId": 1,
-		"EquipmentType": "Ball",
-		"EquipmentCondition": "Well",
-		"Explanation": "A well conditioned soccer ball"
+		"postId": 1,
+		"ownerId": 1,
+		"content": "A nice ball",
+		"title": "Well-conditioned ball",
+		"creationDate": "29.05.2021",
+		"lastUpdateDate": "29.05.2021",
+		"numberOfClicks": 1,
+		"location": "İstanbul",
+		"equipmentType": "Ball",
+		"websiteName": "ismycomputeron",
+		"link": "www.ismycomputeron.com"
 	}
 ]
 
@@ -119,24 +126,39 @@ def postSpectator(event_id):
     event[0]["spectators"].append({"username":randomname})
     return  jsonify({'spectators': event[0]["spectators"]}),201
 
-@app.route('/api/v1.0/equipments', methods=['POST'])
-def create_equipment():
-	#Creates the equipment post
+
+@app.route('/api/v1.0/equipments', method=['POST'])
+def create_equipment_post():
+	# Creates the equipment post
 	if len(equipments) != 0:
 		new_equipment = {
-			"EquipmentId": equipments[-1]['EquipmentId'] + 1,
-			"EquipmentType": request.json['EquipmentType'],
-			"EquipmentCondition": request.json["EquipmentCondition"],
-			"Explanation": request.json["Explanation"]
+			"postId": equipments[-1]['postId'] + 1,
+			"ownerId": request.json['ownerId'],
+			"content": request.json['content'],
+			"title": request.json['title'],
+			"creationDate": request.json["creationDate"],
+			"lastUpdateDate": request.json["lastUpdateDate"],
+			"numberOfClicks": request.json['numberOfClicks'],
+			"location": request.json["location"],
+			"equipmentType": request.json["equipmentType"],
+			"websiteName": request.json["websiteName"],
+			"link": request.json["link"]
 		}
 	else:
 		new_equipment = {
-			"EquipmentId": 1,
-			"EquipmentType": request.json['EquipmentType'],
-			"EquipmentCondition": request.json["EquipmentCondition"],
-			"Explanation": request.json["Explanation"]
+			"postId": 1,
+			"ownerId": request.json['ownerId'],
+			"content": request.json['content'],
+			"title": request.json['title'],
+			"creationDate": request.json["creationDate"],
+			"lastUpdateDate": request.json["lastUpdateDate"],
+			"numberOfClicks": request.json['numberOfClicks'],
+			"location": request.json["location"],
+			"equipmentType": request.json["equipmentType"],
+			"websiteName": request.json["websiteName"],
+			"link": request.json["link"]
 		}
-	equipments.append(new_equipment)
+	equipmentPost.append(new_equipment)
 	return jsonify({"equipment": new_equipment}), 201
 
 
