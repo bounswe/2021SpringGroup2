@@ -49,8 +49,19 @@ def get_sport_types():
         mapped = [{"name": j["attributes"]["name"], "description": j["attributes"]["description"], "icon": j["attributes"]["icon"]} for j in response.json()["data"] if j["attributes"]["decathlon_id"]!=None and j["attributes"]["parent_id"]==None]
         return jsonify(mapped), 200
     except:
-        abort(500) 
+        abort(500)
 
+@app.route('/api/v1.0/weather/<string:city>/<int:year>/<int:month>/<int:day>', methods=['GET'])
+def get_weather(city, year, month, day):
+    try:
+        response = requests.get("https://www.metaweather.com/api/location/search/?query=" + city)
+        id = response.json()[0]["woeid"]
+        result = requests.get("https://www.metaweather.com/api/location/" + str(id) + "/" + str(year) + "/" + str(month) + "/" + str(day))
+        mapped = {key: result.json()[0][key] for key in ["humidity", "max_temp", "min_temp", "the_temp", "weather_state_name", "wind_speed"]}
+        return jsonify(mapped)
+
+    except:
+        abort(500)
 
 
 @app.route('/api/v1.0/spectators/<int:event_id>', methods=['GET'])
@@ -59,6 +70,15 @@ def get_spectators(event_id):
     if len(event) == 0:
         abort(404)
     return jsonify({'spectators': event[0]["spectators"]})
+
+
+@app.route('/api/v1.0/events/<int:event_id>', methods=['GET'])
+def get_players(event_id):
+    event = [event for event in events if event['eventId']==event_id]
+    if len(event) == 0:
+        abort(404)
+    return jsonify({'evetns': event[0]["events"]})
+
 
 @app.route('/api/v1.0/events/<int:event_id>/players/<int:user_id>', methods=['POST'])
 def applyAsPlayer(event_id, user_id):
