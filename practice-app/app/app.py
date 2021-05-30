@@ -1,7 +1,7 @@
 import requests
 from flask import Flask, jsonify, abort, request
-from datetime import datetime
 import urllib
+from datetime import datetime, timedelta
 app = Flask(__name__)
 
 events = [
@@ -101,6 +101,38 @@ def getEquipment(equipmentId):
    return jsonify({'equipments': equipment[0]})
 
 
+@app.route('/api/v1.0/events/<int:event_id>', methods=['GET'])
+def get_event(event_id):
+    try:
+        event = list(filter(lambda x: x['eventId'] == event_id, events))[0]
+    except IndexError:
+        abort(404)
+    covid_risk = False
+
+    # assume event owners create event only in the country of their registration location
+    user_location = list(filter(lambda x: x['nickname'] == event['owner'], users))[0]['location']
+    resp = requests.get('http://api.geonames.org/searchJSON', {'q': user_location, 'username': 'practice_app'})
+    data = resp.json()
+
+    if len(data['geonames']) > 0:
+        # get country name from location via geonames API
+        country = '-'.join(data['geonames'][0]['countryName'].split()).lower()
+        # set dates to fetch coronavirus cases
+        today = datetime.today()
+        to_date = str(today)
+        from_date = today - timedelta(days=3)
+
+        resp = requests.get(f'https://api.covid19api.com/country/{country}/status/confirmed/live',
+                     {'from': from_date, 'to_date': to_date})
+
+        covid_data = resp.json()
+        # if cases are increasing for 3 days in a row, set risk status true
+        if covid_data[-1]['Cases'] > covid_data[-2]['Cases'] > covid_data[-3]['Cases']:
+            covid_risk = True
+
+    return jsonify({'events': event,
+                    'covid_risk_status': covid_risk,
+                    'current_cases': covid_data[-1]['Cases']})
 
 
 @app.route('/api/v1.0/', methods=['GET'])
