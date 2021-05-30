@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
 
 app = Flask(__name__)
-API_KEY = "AIzaSyD5TlVjboI-PWBYRI-dEznS3pmaflGr8Os"
+API_KEY = "Google API Key"
 
 events = [
     {
@@ -163,7 +163,7 @@ def get_weather(city, year, month, day):
 
     except:
         abort(500)
-        
+
 def haversineDistance(lat1, lon1, lat2, lon2):
     ## Calculates the Haversine Distance between two locations. 
     ## Available here:https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
