@@ -170,7 +170,7 @@ def get_spectators(event_id):
 
 
 
-@app.route('/api/v1.0/events/<int:event_id>', methods=['GET'])
+@app.route('/api/v1.0/events/<int:event_id>/players', methods=['GET'])
 def get_players(event_id):
     event = [event for event in events if event['eventId']==event_id]
     if len(event) == 0:
@@ -179,7 +179,7 @@ def get_players(event_id):
 
 
 
-@app.route('/api/v1.0/events/<int:event_id>', methods=['POST'])
+@app.route('/api/v1.0/events/<int:event_id>/players', methods=['POST'])
 def apply_as_player(event_id):
     body = request.json
     user_id = body["userId"]
