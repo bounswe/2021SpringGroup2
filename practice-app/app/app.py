@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy import Column, String, Integer, BigInteger, ARRAY, Boolean
+from sqlalchemy import Column, String, Integer, BigInteger, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import requests
@@ -142,7 +142,7 @@ def get_event(event_id):
                     'covid_risk_status': covid_risk,
                     'current_cases': covid_data[-1]['Cases']})
 
-db = create_engine('postgresql://practice_user:#My6o0dPa33W0rd#-@localhost:5432/practiceapp_db')
+db = create_engine('postgresql://practice_user:-#My6o0dPa33W0rd#-@localhost:5432/practiceapp_db')
 base = declarative_base()
 
 class User(base):
@@ -168,15 +168,6 @@ Session = sessionmaker(db)
 session = Session()
 
 base.metadata.create_all(db)
-
-emre_gundogu = User(user_id=2, nickname="emre_gundogu", first_name="Emre",
-                    last_name="Gundogu", biography="Hello, I am a 28 year-old football fan",
-                    birth_year=1993, avatar="url_to_image", location="Istanbul",
-                    fav_sport_1="football", fav_sport_2="basketball", badge_1="good_player",
-                    badge_2="serious", privacy=True)
-
-session.add(emre_gundogu)
-session.commit()
 
 @app.route('/api/v1.0/', methods=['GET'])
 def index():
@@ -286,10 +277,8 @@ def apply_as_player(event_id):
                      "fav_sports": json_data[0]["favSports"],
                      "badges": json_data[0]["badges"],
                      "privacy": json_data[0]["privacy"]}
-        print(new_user)
         users.append(new_user)
         user.append(new_user)
-        print(users)
 
     event[0]["players"].append(user[0]["nickname"])
     return jsonify({"eventId": event_id,
