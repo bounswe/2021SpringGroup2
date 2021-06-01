@@ -143,7 +143,7 @@ def get_event(event_id):
                     'covid_risk_status': covid_risk,
                     'current_cases': covid_data[-1]['Cases']})
 
-db = create_engine('postgresql://practice_user:-#My6o0dPa33W0rd#-@localhost:5432/practiceapp_db')
+db = create_engine('postgresql://practice_user:-#My6o0dPa33W0rd#-@database/practiceapp_db')
 base = declarative_base()
 
 class User(base):
