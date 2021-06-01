@@ -59,7 +59,7 @@ function App() {
         }
     }, []);
     return (
-    <React.Fragment className="App">
+    <React.Fragment>
         <IconButton
             color="inherit"
             aria-label="open drawer"

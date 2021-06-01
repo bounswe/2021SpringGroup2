@@ -6,27 +6,44 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import LocationPicker from "react-leaflet-location-picker";
+
 
 const fields = [
-    "Age",
     "Location",
     "Location Range",
+    "Age",
     "Gender",
     "Skill Level"
 ]
 
 export default function FilterEventModal(props){
     const [filter, setFilter] = useState({})
+
+    const pointMode = {
+        banner: false,
+        control: {
+            values: filter["Location"]?(filter["Location"].split(",").length>1?[filter["Location"].split(",")]:[]):[],
+            onClick: point =>setLocation(point),
+            onRemove: point =>setLocation(undefined)
+        }
+    };
     const sendFilter = _=>{
         props.setFilter(filter)
         props.handleClose()
     }
+    console.log(pointMode)
     const handleChange = e=>{
         const id = e.target.id
         const value = e.target.value
         const filters = {...filter}
         if(value === "")filters[""+id] = undefined
         else filters[""+id] = value
+        setFilter(filters)
+    }
+    const setLocation = l=>{
+        const filters = {...filter}
+        filters["Location"] = l[0] + "," + l[1]
         setFilter(filters)
     }
     return (
@@ -37,7 +54,12 @@ export default function FilterEventModal(props){
                     <DialogContentText>
                         You can choose filters to search events.
                     </DialogContentText>
-
+                    <LocationPicker
+                        pointMode={pointMode}
+                        showInputs={false}
+                        overlayAll={false}
+                        useDynamic={false}
+                    />
                     {
                         fields.map(field=>(
                             <TextField
@@ -46,6 +68,7 @@ export default function FilterEventModal(props){
                                 margin="dense"
                                 id={field}
                                 label={field}
+                                InputLabelProps={{ shrink: true }}
                                 type="string"
                                 fullWidth
                                 onChange={handleChange}
