@@ -1,9 +1,9 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import Container from "@material-ui/core/Container";
 import {InputAdornment, makeStyles, TextField} from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
+import FilterListIcon from '@material-ui/icons/FilterList';
 import EventRow from '../components/EventRow'
-
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -11,7 +11,10 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 import {useHistory} from "react-router-dom";
+import FilterEventModal from "../components/FilterEventModal";
 
 const events = [
     {
@@ -37,29 +40,67 @@ const useStyles = makeStyles({
     },
 });
 
+/*
+* Filter
+* {
+*   field: {
+*       range:[int,int],
+*   }
+* }
+* */
+
 
 export default function EventScreen() {
+    const [open, setOpen] = useState(false);
+    const [filter, setFilter] = useState({});
+    const handleClose = () => {
+        setOpen(false);
+    };
     const [text, setText] = useState("")
     const classes = useStyles();
     const history = useHistory()
+    const [width, setWidth] = useState(window.innerWidth);
+    const handleWindowSizeChange = () => {
+        setWidth(window.innerWidth);
+    }
+    useEffect(() => {
+        window.addEventListener('resize', handleWindowSizeChange);
+        return () => {
+            window.removeEventListener('resize', handleWindowSizeChange);
+        }
+    }, []);
+
     return (
-        <React.Fragment className="App">
+        <React.Fragment>
             <Container maxWidth={"md"}>
-                <div style={{marginTop:20, marginBottom:20}}>
-                    <TextField
-                        placeholder={"Search Event"}
-                        fullWidth
-                        value={text}
-                        onChange={e=>setText(e.target.value)}
-                        InputProps={{
-                            startAdornment:(
-                                <InputAdornment position="start">
-                                    <SearchIcon/>
-                                </InputAdornment>
-                            )
-                        }}
-                    />
-                </div>
+                <Grid container justify={"space-between"} style={{marginBottom:20}}>
+                    <Grid item xs={width>600?10:9}>
+                        <TextField
+                            placeholder={"Search Event"}
+                            fullWidth
+                            value={text}
+                            onChange={e=>setText(e.target.value)}
+                            InputProps={{
+                                startAdornment:(
+                                    <InputAdornment position="start">
+                                        <SearchIcon/>
+                                    </InputAdornment>
+                                )
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Button style={{float:"right"}} variant="contained" color="primary">Search</Button>
+                    </Grid>
+                </Grid>
+                <Button
+                    variant={"contained"}
+                    color={"primary"}
+                    startIcon={<FilterListIcon/>}
+                    onClick={_=>setOpen(true)}
+                >
+                    Filter
+                </Button>
                 <TableContainer component={Paper}>
                     <Table className={classes.table} aria-label="simple table">
                         <TableHead>
@@ -84,6 +125,11 @@ export default function EventScreen() {
                     </Table>
                 </TableContainer>
             </Container>
+            <FilterEventModal
+                open={open}
+                handleClose={handleClose}
+                setFilter={setFilter}
+            />
         </React.Fragment>
     );
 }
