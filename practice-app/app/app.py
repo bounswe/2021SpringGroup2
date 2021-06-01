@@ -1,3 +1,7 @@
+from sqlalchemy import create_engine
+from sqlalchemy import Column, String, Integer, BigInteger, ARRAY, Boolean
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 import requests
 from flask import Flask, jsonify, abort, request
 from datetime import datetime
@@ -27,13 +31,13 @@ users = [
     {
         "userId": 1,
         "nickname": "emre_gundogu",
-        "firstName": "Emre",
-        "lastName": "Gundogu",
+        "first_name": "Emre",
+        "last_name": "Gundogu",
         "biography": "Hello, I am a 28 year-old football fan",
-        "age": "28",
+        "birth_year": "28",
         "avatar": "url_to_image",
         "location": "Istanbul",
-        "favSports": ["football", "basketball"],
+        "fav_sports": ["football", "basketball"],
         "badges": ["good_player", "serious"],
         "privacy": "public",
     }
@@ -55,6 +59,41 @@ equipmentPost = [
 	}
 ]
 
+db = create_engine('postgresql://practice_user:#My6o0dPa33W0rd#-@localhost:5432/practiceapp_db')
+base = declarative_base()
+
+class User(base):
+    __tablename__ = 'users'
+
+    user_id = Column(BigInteger, primary_key=True)
+    nickname = Column(String)
+    first_name = Column(String)
+    last_name = Column(String)
+    biography = Column(String)
+    birth_year = Column(Integer)
+    avatar = Column(String)
+    location = Column(String)
+    fav_sport_1 = Column(String)
+    fav_sport_2 = Column(String)
+    fav_sport_3 = Column(String)
+    badge_1 = Column(String)
+    badge_2 = Column(String)
+    badge_3 = Column(String)
+    privacy = Column(Boolean)
+
+Session = sessionmaker(db)
+session = Session()
+
+base.metadata.create_all(db)
+
+emre_gundogu = User(user_id=2, nickname="emre_gundogu", first_name="Emre",
+                    last_name="Gundogu", biography="Hello, I am a 28 year-old football fan",
+                    birth_year=1993, avatar="url_to_image", location="Istanbul",
+                    fav_sport_1="football", fav_sport_2="basketball", badge_1="good_player",
+                    badge_2="serious", privacy=True)
+
+session.add(emre_gundogu)
+session.commit()
 
 @app.route('/api/v1.0/', methods=['GET'])
 def index():
@@ -113,13 +152,13 @@ def apply_as_player(event_id):
         json_data = response.json()["results"]
         new_user = {"userId": user_id,
                      "nickname": json_data[0]["nickname"],
-                     "firstName": json_data[0]["firstName"],
-                     "lastName": json_data[0]["lastName"],
+                     "first_name": json_data[0]["firstName"],
+                     "last_name": json_data[0]["lastName"],
                      "biography": json_data[0]["biography"],
-                     "age": json_data[0]["age"],
+                     "birth_year": json_data[0]["birth_year"],
                      "avatar": json_data[0]["avatar"],
                      "location": json_data[0]["location"],
-                     "favSports": json_data[0]["favSports"],
+                     "fav_sports": json_data[0]["favSports"],
                      "badges": json_data[0]["badges"],
                      "privacy": json_data[0]["privacy"]}
         print(new_user)
