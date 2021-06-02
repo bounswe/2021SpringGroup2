@@ -66,7 +66,9 @@ equipments2 = [
         "content" : "I have a pair of shoes in good condition that i want to sell.",
         "website name" : "letgo",
         "link" : "letgo.com/245323",
-        "equipment type" : "Shoes"
+        "equipmentType": "shoes",
+        "location": "Istanbul",
+        "sportType": "Tennis"
 
     },
     {
@@ -76,7 +78,9 @@ equipments2 = [
         "content" : "I have a pair of shoes in good condition that i want to sell.",
         "website name" : "letgo",
         "link" : "letgo.com/245323",
-        "equipment type" : "Shoes"
+        "equipmentType": "racket",
+        "location": "Ankara",
+        "sportType": "Tennis"
     }
 ]
 headers = {
@@ -92,7 +96,7 @@ def results(equipmentId):
     title=equipment[0]['title']
     query = {
     "q": equipment[0]['title'],
-    
+
 }
     response=requests.get("https://rapidapi.p.rapidapi.com/api/v1/search/" + urllib.parse.urlencode(query), headers=headers)
     mapped=[{"description": j["description"],"link": j["link"], "title":j["title"]} for j in response.json()["results"]]
@@ -164,7 +168,7 @@ def get_weather(city, year, month, day):
         abort(500)
 
 def haversineDistance(lat1, lon1, lat2, lon2):
-    ## Calculates the Haversine Distance between two locations. 
+    ## Calculates the Haversine Distance between two locations.
     ## Available here:https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
     p = pi/180
     a = 0.5 - cos((lat2-lat1)*p)/2 + cos(lat1*p) * cos(lat2*p) * (1-cos((lon2-lon1)*p))/2
@@ -201,7 +205,7 @@ def getNearbyEvents():
         lat = ipdata["location"]["lat"]
         lng = ipdata["location"]["lng"]
         print(lat, lng)
-    nearbyEvents = [event for event in filteredEvents if 
+    nearbyEvents = [event for event in filteredEvents if
         haversineDistance(lat,lng,event["coordinates"][0], event["coordinates"][1])<=float(radius)]
     return jsonify(nearbyEvents)
 
@@ -301,6 +305,46 @@ def create_equipment_post():
 	equipmentPost.append(new_equipment)
 	return jsonify({"equipment": new_equipment}), 201
 
+@app.route('api/v1.0/events', methods=['POST'])
+def create_event_post():
+    event_id = len(events) == 0 ? 1 : events[-1]['eventId'] + 1
+    location = request.json['location']
+    new_event = {
+            "eventId": event_id,
+            "owner": request.json['ownerId'],
+            "title":  request.json['title'],
+            "content": request.json['content'],
+            "location": location,
+            "date": request.json['date'],
+            "hours": request.json['hours'],
+            "sport": request.json['sport'],
+            "ageGroup": request.json['ageGroup'],
+            "skillLevel": request.json['skillLevel'],
+            "playerCapacity": request.json['playerCapacity'],
+            "spectatorCapacity": request.json['spectatorCapacity'],
+            "spectators": request.json['spectators'],
+            "players": request.json['players']
+    }
+    events.append(new_event)
+    key = I4AusKojAMUPh2QSaXg9RTGqsM903dJ1
+    response = requests.get("http://www.mapquestapi.com/geocoding/v1/address?key={}&location={}".format(key, location))
+    latLng = response["results"][0]["locations"]["latLng"]
+    return jsonify({"event": new_event, "latLng": latLng}), 201
+
+@app.route('/api/v1.0/search-equipment-type/<string:equipmentType>', methods=['GET'])
+def search_equipments_by_type(equipmentType):
+    equipment = [equipment for equipment in equipments2 if equipment['equipmentType'] == equipmentType]
+    if len(equipment) == 0:
+        abort(404)
+    return jsonify(equipment), 200
+
+
+@app.route('/api/v1.0/search-equipment-location/<string:location>', methods=['GET'])
+def search_equipments_by_location(location):
+    equipment = [equipment for equipment in equipments2 if equipment['location'] == location]
+    if len(equipment) == 0:
+        abort(404)
+    return jsonify(equipment), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
