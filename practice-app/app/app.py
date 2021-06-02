@@ -188,6 +188,12 @@ class eventpost(post):
     eventSkillLevel = Column(ENUM('Beginner', 'Preintermediate', 'Intermediate','Advanced','Expert', name='skill'))
     eventCoordinates = Column(NUMRANGE, nullable=False)
 
+class equipmentpost(post):
+    __tablename__ = "equiomentpost"
+    equipmentType = Column(String(30), nullable=False)
+    websiteName = Column(String(50), nullable=False)
+    link = Column(String(200), nullable=False)
+
 Session = sessionmaker(db)
 session = Session()
 
