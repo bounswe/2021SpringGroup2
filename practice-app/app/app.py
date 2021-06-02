@@ -71,7 +71,9 @@ equipments2 = [
         "content" : "I have a pair of shoes in good condition that i want to sell.",
         "website name" : "letgo",
         "link" : "letgo.com/245323",
-        "equipment type" : "Shoes"
+        "equipmentType": "shoes",
+        "location": "Istanbul",
+        "sportType": "Tennis"
 
     },
     {
@@ -81,7 +83,9 @@ equipments2 = [
         "content" : "I have a pair of shoes in good condition that i want to sell.",
         "website name" : "letgo",
         "link" : "letgo.com/245323",
-        "equipment type" : "Shoes"
+        "equipmentType": "racket",
+        "location": "Ankara",
+        "sportType": "Tennis"
     }
 ]
 headers = {
@@ -387,6 +391,21 @@ def create_event_post():
     response = requests.get("http://www.mapquestapi.com/geocoding/v1/address?key={}&location={}".format(key, location))
     latLng = response["results"][0]["locations"]["latLng"]
     return jsonify({"event": new_event, "latLng": latLng}), 201
+
+@app.route('/api/v1.0/search-equipment-type/<string:equipmentType>', methods=['GET'])
+def search_equipments_by_type(equipmentType):
+    equipment = [equipment for equipment in equipments2 if equipment['equipmentType'] == equipmentType]
+    if len(equipment) == 0:
+        abort(404)
+    return jsonify(equipment), 200
+
+
+@app.route('/api/v1.0/search-equipment-location/<string:location>', methods=['GET'])
+def search_equipments_by_location(location):
+    equipment = [equipment for equipment in equipments2 if equipment['location'] == location]
+    if len(equipment) == 0:
+        abort(404)
+    return jsonify(equipment), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
