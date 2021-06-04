@@ -83,6 +83,18 @@ equipments2 = [
         "sportType": "Tennis"
     }
 ]
+notification=[
+	{
+		"ID": 1,
+		"date": "29.12.2021",
+		"isRead": False,
+		"recipientID": 1,
+		"description": "Your application to the event with the eventID 1 has been approved."
+	
+	
+	}
+
+]
 headers = {
     "x-rapidapi-key": "c4ab16012amsh73b5a257264eb3dp11ade4jsnb69ec0b79098",
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
@@ -304,6 +316,29 @@ def create_equipment_post():
 		}
 	equipmentPost.append(new_equipment)
 	return jsonify({"equipment": new_equipment}), 201
+@app.route('/api/v1.0/notification', methods=['POST'])
+def create_notification():
+	# Creates the equipment post
+	if len(notification) != 0:
+		new_notification = {
+			"ID": notification[-1]['ID'] + 1,
+			"date": request.json['date'],
+			"description":request.json['description'],
+			"isRead":False,
+			"recipientId": request.json['recipientId']
+			
+		}
+	else:
+		new_notification = {
+			"ID":  1,
+			"date": request.json['date'],
+			"description":request.json['description'],
+			"isRead":False,
+			"recipientId": request.json['recipientId']
+		}
+	notification.append(new_notification)
+	return jsonify({"notification": new_notification}), 201
+
 
 @app.route('api/v1.0/events', methods=['POST'])
 def create_event_post():
