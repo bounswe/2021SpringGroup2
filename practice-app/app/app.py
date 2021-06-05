@@ -4,7 +4,7 @@ import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
 import dbinit
-from dbinit import User
+from dbinit import User, eventpost
 from sqlalchemy.orm import sessionmaker
 
 app = Flask(__name__)
@@ -251,10 +251,12 @@ def get_players(event_id):
 def apply_as_player(event_id):
     body = request.json
     user_id = body["userId"]
-    event = [event for event in events if event["eventId"] == event_id]
+    event = session.query(eventpost).filter(eventpost.postID == event_id)
     user = session.query(User).filter(User.user_id == user_id)
-    if len(event) == 0:
+    if event.first() is None:
         abort(404)
+    else:
+        event = event.first()
     if user.first() is None:
         response = requests.get("https://randomapi.com/api/9fekfc0v?key=2UX0-XIT1-7DYM-WDBC")
         json_data = response.json()["results"]
@@ -273,9 +275,9 @@ def apply_as_player(event_id):
     else:
         user = user.first()
 
-    event[0]["players"].append(user.nickname)
+    event.eventPlayers.append(user.nickname)
     return jsonify({"eventId": event_id,
-                    "eventTitle": event[0]["title"],
+                    "eventTitle": event.title,
                     "applicantId": user_id,
                     "applicantNickname": user.nickname,
                     "applicationServerTime": datetime.now().strftime("%d/%m/%Y %H:%M:%S")}), 201
@@ -368,6 +370,7 @@ def search_equipments_by_location(location):
     if len(equipment) == 0:
         abort(404)
     return jsonify(equipment), 200
+
 
 
 if __name__ == '__main__':
