@@ -3,7 +3,6 @@ from sqlalchemy import Column, String, Integer, BigInteger, Boolean, MetaData, D
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 from sqlalchemy.dialects.postgresql import ENUM, NUMRANGE, INT4RANGE, ARRAY
 from sqlalchemy.sql.schema import ForeignKey
-from sqlalchemy.orm import sessionmaker
 
 db = create_engine('postgresql://practice_user:-#My6o0dPa33W0rd#-@localhost:5432/practiceapp_db')
 base = declarative_base()
@@ -19,12 +18,6 @@ class User(base):
     birth_year = Column(Integer)
     avatar = Column(String)
     location = Column(String)
-    fav_sport_1 = Column(String)
-    fav_sport_2 = Column(String)
-    fav_sport_3 = Column(String)
-    badge_1 = Column(String)
-    badge_2 = Column(String)
-    badge_3 = Column(String)
     privacy = Column(Boolean)
 
 class post(base):
@@ -50,10 +43,8 @@ class eventpost(post):
     eventPlayers = Column(ARRAY(Integer))
     eventSpectators = Column(ARRAY(Integer))
     eventSkillLevel = Column(ENUM('Beginner', 'Preintermediate', 'Intermediate','Advanced','Expert', name='skill'))
-    eventLatitude =  Column(Float)
+    eventLatitude = Column(Float)
     eventLongitude = Column(Float)
 
-Session = sessionmaker(db)
-session = Session()
 
 base.metadata.create_all(db)
