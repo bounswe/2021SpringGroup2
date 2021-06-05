@@ -307,7 +307,7 @@ def create_equipment_post():
 
 @app.route('api/v1.0/events', methods=['POST'])
 def create_event_post():
-    event_id = len(events) == 0 ? 1 : events[-1]['eventId'] + 1
+    event_id = 1 if len(events) == 0 else events[-1]['eventId'] + 1
     location = request.json['location']
     new_event = {
             "eventId": event_id,
@@ -326,7 +326,7 @@ def create_event_post():
             "players": request.json['players']
     }
     events.append(new_event)
-    key = I4AusKojAMUPh2QSaXg9RTGqsM903dJ1
+    key = "I4AusKojAMUPh2QSaXg9RTGqsM903dJ1"
     response = requests.get("http://www.mapquestapi.com/geocoding/v1/address?key={}&location={}".format(key, location))
     latLng = response["results"][0]["locations"]["latLng"]
     return jsonify({"event": new_event, "latLng": latLng}), 201
