@@ -52,7 +52,15 @@ class eventpost(post):
     eventSkillLevel = Column(ENUM('Beginner', 'Preintermediate', 'Intermediate','Advanced','Expert', name='skill'))
     eventLatitude =  Column(Float)
     eventLongitude = Column(Float)
-
+    
+class notification(base):
+    __tablename__ = "notification"
+    ID = Column(Integer, primary_key=True)
+    date = Column(Date,nullable=False)
+    description = Column(String,nullable=False)
+    isRead = Column(Boolean,nullable=False)
+    recipientId = Column(Integer,nullable=False)
+    
 Session = sessionmaker(db)
 session = Session()
 
