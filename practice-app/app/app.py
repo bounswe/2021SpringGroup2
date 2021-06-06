@@ -261,6 +261,34 @@ def apply_as_player(event_id):
                     "applicantNickname": user[0]["nickname"],
                     "applicationServerTime": datetime.now().strftime("%d/%m/%Y %H:%M:%S")}), 201
 
+
+
+@app.route('/api/v1.0/users', methods=['POST'])
+def post_user(user_id):
+    body = request.json
+    user_id = body["userId"]
+    user = [user for user in users if user["userId"] == user_id]
+    if len(user) == 0:
+        response = requests.get("https://randomapi.com/api/9fekfc0v?key=2UX0-XIT1-7DYM-WDBC")
+        json_data = response.json()["results"]
+        new_user = {"userId": user_id,
+                     "nickname": json_data[0]["nickname"],
+                     "first_name": json_data[0]["firstName"],
+                     "last_name": json_data[0]["lastName"],
+                     "biography": json_data[0]["biography"],
+                     "birth_year": json_data[0]["birth_year"],
+                     "avatar": json_data[0]["avatar"],
+                     "location": json_data[0]["location"],
+                     "fav_sports": json_data[0]["favSports"],
+                     "badges": json_data[0]["badges"],
+                     "privacy": json_data[0]["privacy"]}
+        users.append(new_user)
+        user.append(new_user)
+        return jsonify({"applicantId": user_id,
+                    "applicantNickname": user[0]["nickname"],
+                    "applicationServerTime": datetime.now().strftime("%d/%m/%Y %H:%M:%S")}), 201
+
+
 @app.route('/api/v1.0/events/<int:event_id>/spectators', methods=['POST'])
 def postSpectator(event_id):
     event = [event for event in events if event['eventId'] == event_id]
