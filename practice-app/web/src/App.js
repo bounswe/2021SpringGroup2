@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import Events from "./screens/Events";
 import EventPage from "./screens/EventPage";
+import Equipments from "./screens/Equipments";
+import EquipmentPage from "./screens/EquipmentPage";
 import {
     Route,
     Switch,
@@ -16,6 +18,7 @@ import SportsIcon from '@material-ui/icons/Sports';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import MenuIcon from '@material-ui/icons/Menu';
 import CreateEvent from "./screens/CreateEvent";
+import CreateEquipment from "./screens/CreateEquipment";
 
 const drawerWidth = 240;
 
@@ -116,6 +119,10 @@ function App() {
                 <Route path={'/events'} component={Events}/>
                 <Route path={'/event/:id'} component={EventPage}/>
                 <Route path={'/create-event'} component={CreateEvent}/>
+                <Redirect exact from="/" to="/equipments"/>}
+                <Route path={'/equipments'} component={Equipments}/>
+                <Route path={'/equipment/:id'} component={EquipmentPage}/>
+                <Route path={'/create-equipment'} component={CreateEquipment}/>
             </Switch>
         </Router>
     </React.Fragment>
