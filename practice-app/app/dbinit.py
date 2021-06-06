@@ -27,7 +27,7 @@ class User(base):
     badge_3 = Column(String)
     privacy = Column(Boolean)
 
-class post(base):
+class Post(base):
     __abstract__ = True
     __tablename__ = "post"
     postID = Column(BigInteger,primary_key=True)
@@ -39,7 +39,7 @@ class post(base):
     creationDate = Column(DateTime,nullable=False)
     location = Column(String(200))
 
-class eventpost(post):
+class Eventpost(post):
     __tablename__ = "eventpost"
     eventDate = Column(Date,nullable=False)
     eventHours = Column(Time,nullable=False)
@@ -53,7 +53,7 @@ class eventpost(post):
     eventLatitude =  Column(Float)
     eventLongitude = Column(Float)
     
-class notification(base):
+class Notification(base):
     __tablename__ = "notification"
     ID = Column(BigInteger, primary_key=True)
     date = Column(Date,nullable=False)
