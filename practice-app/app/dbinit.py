@@ -63,6 +63,13 @@ class notification(base):
     def recipientID(cls):
         return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
 
+ class Following(base):
+    __tablename__ = "following"
+    def followingID(cls):
+        return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
+    def followerID(cls):
+        return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
+    
 class blocking(base):
     __tablename__ = "blocking"
     blockingID = Column(Integer, primary_key=True)
