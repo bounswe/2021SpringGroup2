@@ -70,10 +70,12 @@ class notification(base):
     def followerID(cls):
         return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
     
-class blocking(base):
+class Blocking(base):
     __tablename__ = "blocking"
-    blockingID = Column(Integer, primary_key=True)
-    blockedID = Column(Integer, nullable=False)
+    def blockingID(cls):
+        return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
+    def blockedID(cls):
+        return Column(BigInteger, ForeignKey("users.user_id"), nullable=False)
 
 class Comment(base):
     __tablename__ = "comments"
