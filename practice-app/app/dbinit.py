@@ -39,7 +39,7 @@ class Post(base):
     creationDate = Column(DateTime,nullable=False)
     location = Column(String(200))
 
-class Eventpost(post):
+class Eventpost(Post):
     __tablename__ = "eventpost"
     eventDate = Column(Date,nullable=False)
     eventHours = Column(Time,nullable=False)
