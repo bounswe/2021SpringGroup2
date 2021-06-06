@@ -9,6 +9,9 @@ from sqlalchemy.orm import sessionmaker
 
 app = Flask(__name__)
 API_KEY = "Google API Key"
+db = dbinit.db
+Session = sessionmaker(db)
+session = Session()
 
 events = [
     {
