@@ -58,6 +58,7 @@ equipmentPost = [
 		"link": "www.ismycomputeron.com"
 	}
 ]
+
 equipments2 = [
     {
         "equipmentId": 1,
@@ -69,7 +70,6 @@ equipments2 = [
         "equipmentType": "shoes",
         "location": "Istanbul",
         "sportType": "Tennis"
-
     },
     {
         "equipmentId": 2,
@@ -83,6 +83,7 @@ equipments2 = [
         "sportType": "Tennis"
     }
 ]
+
 headers = {
     "x-rapidapi-key": "c4ab16012amsh73b5a257264eb3dp11ade4jsnb69ec0b79098",
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"

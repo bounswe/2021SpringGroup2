@@ -93,7 +93,7 @@ export default function EquipmentScreen() {
                     <Table className={classes.table} aria-label="simple table">
                         <TableHead>
                             <TableCell>Type</TableCell>
-                            <TableCell align="right">Content</TableCell>
+                            <TableCell align="right">Title</TableCell>
                             <TableCell align="right">Location</TableCell>
                             <TableCell align="right">Website Name</TableCell>
                             <TableCell align="right">Link</TableCell>

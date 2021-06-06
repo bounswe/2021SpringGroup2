@@ -119,7 +119,6 @@ function App() {
                 <Route path={'/events'} component={Events}/>
                 <Route path={'/event/:id'} component={EventPage}/>
                 <Route path={'/create-event'} component={CreateEvent}/>
-                <Redirect exact from="/" to="/equipments"/>}
                 <Route path={'/equipments'} component={Equipments}/>
                 <Route path={'/equipment/:id'} component={EquipmentPage}/>
                 <Route path={'/create-equipment'} component={CreateEquipment}/>

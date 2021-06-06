@@ -73,6 +73,17 @@ export default function FilterEquipmentModal(props){
                           />
                       ))
                   }
+                  <TextField
+                      autoFocus
+                      margin="dense"
+                      id={"Istanbul"}
+                      label={"location"}
+                      InputLabelProps={{ shrink: true }}
+                      type="string"
+                      fullWidth
+                      onChange={handleChange}
+                      value={filter["location"]}
+                  />
               </DialogContent>
               <DialogActions>
                   <Button onClick={props.handleClose} color="primary">
@@ -85,4 +96,6 @@ export default function FilterEquipmentModal(props){
           </Dialog>
       </React.Fragment>
   )
+  // TODO (@Bikem): Remove .map's and define text fields one by one.
+
 }
