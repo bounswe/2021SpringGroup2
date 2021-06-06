@@ -3,6 +3,11 @@ from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
+from .dbinit import db, User, Eventpost
+from sqlalchemy.orm import sessionmaker
+
+Session = sessionmaker(db)
+session = Session()
 
 event_api = Blueprint('event_api', __name__)
 API_KEY = "Google API Key"
@@ -90,20 +95,22 @@ headers = {
 
 @event_api.route('/api/v1.0/events/<int:event_id>', methods=['GET'])
 def get_event(event_id):
-    try:
-        event = list(filter(lambda x: x['eventId'] == event_id, events))[0]
-    except IndexError:
+    event = session.query(Eventpost).filter_by(postID=event_id).first()
+    if not event:
         abort(404)
     covid_risk = False
 
     # assume event owners create event only in the country of their registration location
-    user_location = list(filter(lambda x: x['nickname'] == event['owner'], users))[0]['location']
-    resp = requests.get('http://api.geonames.org/searchJSON', {'q': user_location, 'username': 'practice_app'})
+    owner_user = session.query(User).filter_by(user_id=event.ownerID)
+
+    resp = requests.get('http://api.geonames.org/searchJSON', {'q': owner_user.location, 'username': 'practice_app'})
     data = resp.json()
 
     if len(data['geonames']) > 0:
+
         # get country name from location via geonames API
         country = '-'.join(data['geonames'][0]['countryName'].split()).lower()
+
         # set dates to fetch coronavirus cases
         today = datetime.today()
         to_date = str(today)
