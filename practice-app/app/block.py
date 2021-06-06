@@ -3,6 +3,7 @@ from flask import Flask, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
+from dbinit import blocking
 
 app = Flask(__name__)
 API_KEY = "Google API Key"
@@ -83,10 +84,33 @@ equipments2 = [
         "sportType": "Tennis"
     }
 ]
+
+blocking = [
+    {
+        "blockingId": 1,
+        "blockedId": 2
+    }
+]
 headers = {
     "x-rapidapi-key": "c4ab16012amsh73b5a257264eb3dp11ade4jsnb69ec0b79098",
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
+
+@app.route('/api/v1.0/<id:user_id>/blocked-users', methods=['POST'])
+def post_blocked_users(user_id):
+    body = request.json
+    blocking_user_id = body["userId"]
+    user = [user for user in users if user["userId"] == user_id]
+    if len(user) == 0:
+        abort (404)
+    new_block = {
+        "blockedId": user_id,
+        "blockingId": blocking_user_id
+    }
+    blocking.append(new_block)
+    return jsonify({"blockedId": user_id,
+                    "blockingId": blocking_user_id
+                    }), 201
 
 if __name__ == '__main__':
     app.run(debug=True)
