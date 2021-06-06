@@ -63,38 +63,55 @@ class Notification(base):
     def recipientID(cls):
         return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
 
- class Following(base):
-    __tablename__ = "following"
+class Following(base):
+    __tablename__ = "Following"
+
+    @declared_attr
     def followingID(cls):
-        return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
+        return Column(BigInteger,ForeignKey("users.user_id"),nullable=False, primary_key=True)
+
+    @declared_attr
     def followerID(cls):
-        return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
+        return Column(BigInteger,ForeignKey("users.user_id"),nullable=False, primary_key=True)
     
 class Blocking(base):
     __tablename__ = "blocking"
+
+    @declared_attr
     def blockingID(cls):
-        return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
+        return Column(BigInteger,ForeignKey("users.user_id"),nullable=False, primary_key=True)
+
+    @declared_attr
     def blockedID(cls):
-        return Column(BigInteger, ForeignKey("users.user_id"), nullable=False)
+        return Column(BigInteger, ForeignKey("users.user_id"), nullable=False, primary_key=True)
 
 class Comment(base):
     __tablename__ = "comments"
     commentId = Column(BigInteger, primary_key=True)
     commentDate = Column(Date,nullable=False)
     comment = Column(String(300),nullable=False)
+
+    @declared_attr
     def postID(cls):
-        return Column(BigInteger,ForeignKey("post.postID"),nullable=False)
+        return Column(BigInteger,ForeignKey("eventpost.postID"),nullable=False)
+
+    @declared_attr
     def ownerID(cls):
         return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
 
 class Answer(base):
     __tablename__ = "answers"
+    answerId = Column(BigInteger, primary_key=True)
     answerDate = Column(Date,nullable=False)
     answer = Column(String(300),nullable=False)
+
+    @declared_attr
     def ownerID(cls):
         return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
+
+    @declared_attr
     def commentId(cls):
-        return Column(BigInteger,ForeignKey("post.postID"),nullable=False)
+        return Column(BigInteger,ForeignKey("eventpost.postID"),nullable=False)
 
     
 Session = sessionmaker(db)
