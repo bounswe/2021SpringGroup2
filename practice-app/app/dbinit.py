@@ -57,7 +57,7 @@ class Equipmentpost(Post):
     __tablename__ = "equipmentpost"
     equipmentType = Column(String(30), nullable=False)
     websiteName = Column(String(50), nullable=False)
-    link = Column(String(200), nullable=False)    
+    link = Column(String(200), nullable=False)     
     
 class Notification(base):
     __tablename__ = "notification"
