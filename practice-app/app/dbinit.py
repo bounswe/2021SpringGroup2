@@ -53,10 +53,10 @@ class eventpost(post):
     eventLatitude =  Column(Float)
     eventLongitude = Column(Float)
 
-class blocking(base):
+class Blocking(base):
     __tablename__ = "blocking"
-    blockingId = Column(Integer, primary_key=True)
-    blockedId = Column(Integer, nullable=False)
+    blockingId = Column(BigInteger, primary_key=True)
+    blockedId = Column(BigInteger, primary_key=True)
 
 Session = sessionmaker(db)
 session = Session()
