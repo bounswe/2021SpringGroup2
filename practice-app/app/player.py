@@ -1,10 +1,10 @@
 import requests
-from flask import Flask, jsonify, abort, request
+from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
 
-app = Flask(__name__)
+player_api = Blueprint('player_api', __name__)
 API_KEY = "Google API Key"
 
 events = [
@@ -87,14 +87,14 @@ headers = {
     "x-rapidapi-key": "c4ab16012amsh73b5a257264eb3dp11ade4jsnb69ec0b79098",
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
-@app.route('/api/v1.0/events/<int:event_id>/players', methods=['GET'])
+@player_api.route('/api/v1.0/events/<int:event_id>/players', methods=['GET'])
 def get_players(event_id):
     event = [event for event in events if event['eventId']==event_id]
     if len(event) == 0:
         abort(404)
     return jsonify({'evetns': event[0]["events"]})
 
-@app.route('/api/v1.0/events/<int:event_id>/players', methods=['POST'])
+@player_api.route('/api/v1.0/events/<int:event_id>/players', methods=['POST'])
 def apply_as_player(event_id):
     body = request.json
     user_id = body["userId"]
@@ -126,5 +126,3 @@ def apply_as_player(event_id):
                     "applicantNickname": user[0]["nickname"],
                     "applicationServerTime": datetime.now().strftime("%d/%m/%Y %H:%M:%S")}), 201
 
-if __name__ == '__main__':
-    app.run(debug=True)

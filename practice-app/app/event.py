@@ -1,10 +1,10 @@
 import requests
-from flask import Flask, jsonify, abort, request
+from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
 
-app = Flask(__name__)
+event_api = Blueprint('event_api', __name__)
 API_KEY = "Google API Key"
 
 events = [
@@ -88,7 +88,7 @@ headers = {
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
 
-@app.route('/api/v1.0/events/<int:event_id>', methods=['GET'])
+@event_api.route('/api/v1.0/events/<int:event_id>', methods=['GET'])
 def get_event(event_id):
     try:
         event = list(filter(lambda x: x['eventId'] == event_id, events))[0]
@@ -121,7 +121,7 @@ def get_event(event_id):
                     'covid_risk_status': covid_risk,
                     'current_cases': covid_data[-1]['Cases']})
 
-@app.route('/api/v1.0/sportTypes', methods=['GET'])
+@event_api.route('/api/v1.0/sportTypes', methods=['GET'])
 def get_sport_types():
     try:
         response = requests.get("https://sports.api.decathlon.com/sports")
@@ -130,7 +130,7 @@ def get_sport_types():
     except:
         abort(500)
 
-@app.route('/api/v1.0/weather/<string:city>/<int:year>/<int:month>/<int:day>', methods=['GET'])
+@event_api.route('/api/v1.0/weather/<string:city>/<int:year>/<int:month>/<int:day>', methods=['GET'])
 def get_weather(city, year, month, day):
     try:
         response = requests.get("https://www.metaweather.com/api/location/search/?query=" + city)
@@ -149,7 +149,7 @@ def haversineDistance(lat1, lon1, lat2, lon2):
     a = 0.5 - cos((lat2-lat1)*p)/2 + cos(lat1*p) * cos(lat2*p) * (1-cos((lon2-lon1)*p))/2
     return 12742 * asin(sqrt(a))
 
-@app.route('/api/v1.0/events', methods=['GET'])
+@event_api.route('/api/v1.0/events', methods=['GET'])
 def getNearbyEvents():
     useIP = request.args.get('ip')
     address = request.args.get('address')##check, 400
@@ -184,9 +184,9 @@ def getNearbyEvents():
         haversineDistance(lat,lng,event["coordinates"][0], event["coordinates"][1])<=float(radius)]
     return jsonify(nearbyEvents)
 
-@app.route('api/v1.0/events', methods=['POST'])
+@event_api.route('/api/v1.0/events', methods=['POST'])
 def create_event_post():
-    event_id = len(events) == 0 ? 1 : events[-1]['eventId'] + 1
+    event_id = 1 if len(events) == 0 else events[-1]['eventId'] + 1
     location = request.json['location']
     new_event = {
             "eventId": event_id,
@@ -205,10 +205,7 @@ def create_event_post():
             "players": request.json['players']
     }
     events.append(new_event)
-    key = I4AusKojAMUPh2QSaXg9RTGqsM903dJ1
+    key = 'I4AusKojAMUPh2QSaXg9RTGqsM903dJ1'
     response = requests.get("http://www.mapquestapi.com/geocoding/v1/address?key={}&location={}".format(key, location))
     latLng = response["results"][0]["locations"]["latLng"]
     return jsonify({"event": new_event, "latLng": latLng}), 201
-
-if __name__ == '__main__':
-    app.run(debug=True)
