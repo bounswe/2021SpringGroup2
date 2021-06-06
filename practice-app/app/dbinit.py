@@ -70,7 +70,7 @@ class blocking(base):
 
 class Comment(base):
     __tablename__ = "comments"
-    commentId = Column(Integer)
+    commentId = Column(BigInteger, primary_key=True)
     commentDate = Column(Date,nullable=False)
     comment = Column(String(300),nullable=False)
     def postID(cls):
