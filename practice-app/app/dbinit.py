@@ -67,6 +67,26 @@ class blocking(base):
     __tablename__ = "blocking"
     blockingID = Column(Integer, primary_key=True)
     blockedID = Column(Integer, nullable=False)
+
+class Comment(base):
+    __tablename__ = "comments"
+    commentId = Column(Integer)
+    commentDate = Column(Date,nullable=False)
+    comment = Column(String(300),nullable=False)
+    def postID(cls):
+        return Column(BigInteger,ForeignKey("post.postID"),nullable=False)
+    def ownerID(cls):
+        return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
+
+class Answer(base):
+    __tablename__ = "answers"
+    answerDate = Column(Date,nullable=False)
+    answer = Column(String(300),nullable=False)
+    def ownerID(cls):
+        return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
+    def commentId(cls):
+        return Column(BigInteger,ForeignKey("post.postID"),nullable=False)
+
     
 Session = sessionmaker(db)
 session = Session()
