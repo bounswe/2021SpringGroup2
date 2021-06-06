@@ -55,11 +55,13 @@ class eventpost(post):
     
 class notification(base):
     __tablename__ = "notification"
-    ID = Column(Integer, primary_key=True)
+    ID = Column(BigInteger, primary_key=True)
     date = Column(Date,nullable=False)
     description = Column(String,nullable=False)
     isRead = Column(Boolean,nullable=False)
-    recipientId = Column(Integer,nullable=False)
+    @declared_attr
+    def recipientID(cls):
+        return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
 
 class blocking(base):
     __tablename__ = "blocking"
