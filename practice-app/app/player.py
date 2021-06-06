@@ -3,15 +3,14 @@ from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
-import dbinit
-from dbinit import User, eventpost
+from .dbinit import db, User, Eventpost
 from sqlalchemy.orm import sessionmaker
+
+Session = sessionmaker(db)
+session = Session()
 
 player_api = Blueprint('player_api', __name__)
 API_KEY = "Google API Key"
-db = dbinit.db
-Session = sessionmaker(db)
-session = Session()
 
 events = [
     {
@@ -104,7 +103,7 @@ def get_players(event_id):
 def apply_as_player(event_id):
     body = request.json
     user_id = body["userId"]
-    event = session.query(eventpost).filter(eventpost.postID == event_id)
+    event = session.query(Eventpost).filter(Eventpost.postID == event_id)
     user = session.query(User).filter(User.user_id == user_id)
     if event.first() is None:
         abort(404)
