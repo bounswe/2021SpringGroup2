@@ -101,7 +101,7 @@ def get_event(event_id):
     covid_risk = False
 
     # assume event owners create event only in the country of their registration location
-    owner_user = session.query(User).filter_by(user_id=event.ownerID)
+    owner_user = session.query(User).filter_by(user_id=event.ownerID).first()
 
     resp = requests.get('http://api.geonames.org/searchJSON', {'q': owner_user.location, 'username': 'practice_app'})
     data = resp.json()
@@ -124,9 +124,9 @@ def get_event(event_id):
         if covid_data[-1]['Cases'] > covid_data[-2]['Cases'] > covid_data[-3]['Cases']:
             covid_risk = True
 
-    return jsonify({'events': event,
+    return jsonify({'event': {col.name: str(getattr(event, col.name)) for col in event.__table__.columns},
                     'covid_risk_status': covid_risk,
-                    'current_cases': covid_data[-1]['Cases']})
+                    'current_cases': covid_data[-1]['Cases']}), 200
 
 @event_api.route('/api/v1.0/sportTypes', methods=['GET'])
 def get_sport_types():
