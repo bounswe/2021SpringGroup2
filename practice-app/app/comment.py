@@ -87,4 +87,12 @@ headers = {
     "x-rapidapi-key": "c4ab16012amsh73b5a257264eb3dp11ade4jsnb69ec0b79098",
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
+@app.route("/api/v1.0/<int:post_id>/comments",methods=["GET"])
+def getComment(post_id):
+    
+    commentlist=session.query(Comment).filter(Comment.postID==post_id).all()
+    if len(commentlist)==0:
+        return make_response(jsonify({'error': 'There is no comment with this postid'}), 404)
+    else:
+        return jsonify({"comment":commentlist[0].comment}),201
 
