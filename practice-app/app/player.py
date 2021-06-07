@@ -92,12 +92,6 @@ headers = {
     "x-rapidapi-key": "c4ab16012amsh73b5a257264eb3dp11ade4jsnb69ec0b79098",
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
-@player_api.route('/api/v1.0/events/<int:event_id>/players', methods=['GET'])
-def get_players(event_id):
-    event = [event for event in events if event['eventId']==event_id]
-    if len(event) == 0:
-        abort(404)
-    return jsonify({'evetns': event[0]["events"]})
 
 @player_api.route('/api/v1.0/events/<int:event_id>/players', methods=['POST'])
 def apply_as_player(event_id):

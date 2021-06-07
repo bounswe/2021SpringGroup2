@@ -216,3 +216,10 @@ def create_event_post():
     response = requests.get("http://www.mapquestapi.com/geocoding/v1/address?key={}&location={}".format(key, location))
     latLng = response["results"][0]["locations"]["latLng"]
     return jsonify({"event": new_event, "latLng": latLng}), 201
+
+@event_api.route('/api/v1.0/events/<int:event_id>/players', methods=['GET'])
+def get_players(event_id):
+    event = [event for event in events if event['eventId']==event_id]
+    if len(event) == 0:
+        abort(404)
+    return jsonify({'events': event[0]["events"]})
