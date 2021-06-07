@@ -91,11 +91,12 @@ headers = {
 @equipment_api.route('/api/v1.0/equipments/<int:equipmentId>/results', methods=['GET'])
 def results(equipmentId):
     equipment = session.query(Equipmentpost).filter(Equipmentpost.postID == equipmentId)
-    if len(equipment) == 0:
+    if equipment.first() is None:
         abort(404)
-    title=equipment[0]['title']
+   else:
+	equipment=equipment.first()
     query = {
-    "q": equipment[0]['title'],
+    "q": equipment.title,
 }
 
     response=requests.get("https://rapidapi.p.rapidapi.com/api/v1/search/" + urllib.parse.urlencode(query), headers=headers)
