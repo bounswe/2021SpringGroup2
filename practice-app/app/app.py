@@ -89,7 +89,12 @@ headers = {
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
 
-
+@app.route('/api/v1.0/users', methods=['GET'])
+def get_user(nickname):
+    user_list = [user for user in users if users["nickname"] == nickname]
+    if len(user_list) == 0:
+        abort(404)
+    return jsonify(user_list), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
