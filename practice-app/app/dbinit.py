@@ -70,7 +70,7 @@ class Notification(base):
         return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
 
 class Following(base):
-    __tablename__ = "Following"
+    __tablename__ = "following"
 
     @declared_attr
     def followingID(cls):
