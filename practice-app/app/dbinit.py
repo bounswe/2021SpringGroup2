@@ -5,7 +5,7 @@ from sqlalchemy.dialects.postgresql import ENUM, NUMRANGE, INT4RANGE, ARRAY
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.orm import sessionmaker
 
-db = create_engine('postgresql://practice_user:-#My6o0dPa33W0rd#-@localhost:5432/practiceapp_db')
+db = create_engine('postgresql://practice_user:-#My6o0dPa33W0rd#-@database/practiceapp_db')
 base = declarative_base()
 
 class User(base):
@@ -93,7 +93,7 @@ class Blocking(base):
 
 class Comment(base):
     __tablename__ = "comments"
-    commentId = Column(BigInteger, primary_key=True)
+    commentID = Column(BigInteger, primary_key=True)
     commentDate = Column(DateTime,nullable=False)
     comment = Column(String(300),nullable=False)
 
@@ -107,7 +107,7 @@ class Comment(base):
 
 class Answer(base):
     __tablename__ = "answers"
-    answerId = Column(BigInteger, primary_key=True)
+    answerID = Column(BigInteger, primary_key=True)
     answerDate = Column(DateTime,nullable=False)
     answer = Column(String(300),nullable=False)
 
@@ -117,7 +117,7 @@ class Answer(base):
 
     @declared_attr
     def commentId(cls):
-        return Column(BigInteger,ForeignKey("comment.commentID"),nullable=False)
+        return Column(BigInteger,ForeignKey("comments.commentID"),nullable=False)
 
     
 Session = sessionmaker(db)
