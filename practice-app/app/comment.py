@@ -1,10 +1,10 @@
 import requests
-from flask import Flask, jsonify, abort, request
+from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
 
-app = Flask(__name__)
+comment_api = Blueprint('comment_api', __name__)
 API_KEY = "Google API Key"
 
 events = [
@@ -88,5 +88,3 @@ headers = {
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
 
-if __name__ == '__main__':
-    app.run(debug=True)

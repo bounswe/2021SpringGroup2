@@ -1,10 +1,15 @@
 import requests
-from flask import Flask, jsonify, abort, request
+from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
+from .dbinit import db, User, Eventpost
+from sqlalchemy.orm import sessionmaker
 
-app = Flask(__name__)
+Session = sessionmaker(db)
+session = Session()
+
+player_api = Blueprint('player_api', __name__)
 API_KEY = "Google API Key"
 
 events = [
@@ -87,44 +92,45 @@ headers = {
     "x-rapidapi-key": "c4ab16012amsh73b5a257264eb3dp11ade4jsnb69ec0b79098",
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
-@app.route('/api/v1.0/events/<int:event_id>/players', methods=['GET'])
+@player_api.route('/api/v1.0/events/<int:event_id>/players', methods=['GET'])
 def get_players(event_id):
     event = [event for event in events if event['eventId']==event_id]
     if len(event) == 0:
         abort(404)
     return jsonify({'evetns': event[0]["events"]})
 
-@app.route('/api/v1.0/events/<int:event_id>/players', methods=['POST'])
+@player_api.route('/api/v1.0/events/<int:event_id>/players', methods=['POST'])
 def apply_as_player(event_id):
     body = request.json
     user_id = body["userId"]
-    event = [event for event in events if event["eventId"] == event_id]
-    user = [user for user in users if user["userId"] == user_id]
-    if len(event) == 0:
+    event = session.query(Eventpost).filter(Eventpost.postID == event_id)
+    user = session.query(User).filter(User.user_id == user_id)
+    if event.first() is None:
         abort(404)
-    if len(user) == 0:
+    else:
+        event = event.first()
+    if user.first() is None:
         response = requests.get("https://randomapi.com/api/9fekfc0v?key=2UX0-XIT1-7DYM-WDBC")
         json_data = response.json()["results"]
-        new_user = {"userId": user_id,
-                     "nickname": json_data[0]["nickname"],
-                     "first_name": json_data[0]["firstName"],
-                     "last_name": json_data[0]["lastName"],
-                     "biography": json_data[0]["biography"],
-                     "birth_year": json_data[0]["birth_year"],
-                     "avatar": json_data[0]["avatar"],
-                     "location": json_data[0]["location"],
-                     "fav_sports": json_data[0]["favSports"],
-                     "badges": json_data[0]["badges"],
-                     "privacy": json_data[0]["privacy"]}
-        users.append(new_user)
-        user.append(new_user)
+        new_user = User(user_id=user_id,
+                        nickname=json_data[0]["nickname"],
+                        first_name=json_data[0]["firstName"],
+                        last_name=json_data[0]["lastName"],
+                        biography=json_data[0]["biography"],
+                        birth_year=json_data[0]["birth_year"],
+                        avatar=json_data[0]["avatar"],
+                        location=json_data[0]["location"],
+                        privacy=False if json_data[0]["privacy"] == 'private' else True)
+        session.add(new_user)
+        session.commit()
+        user = new_user
+    else:
+        user = user.first()
 
-    event[0]["players"].append(user[0]["nickname"])
+    event.eventPlayers.append(user.nickname)
     return jsonify({"eventId": event_id,
-                    "eventTitle": event[0]["title"],
+                    "eventTitle": event.title,
                     "applicantId": user_id,
-                    "applicantNickname": user[0]["nickname"],
+                    "applicantNickname": user.nickname,
                     "applicationServerTime": datetime.now().strftime("%d/%m/%Y %H:%M:%S")}), 201
 
-if __name__ == '__main__':
-    app.run(debug=True)

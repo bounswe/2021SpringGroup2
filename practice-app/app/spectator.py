@@ -1,10 +1,10 @@
 import requests
-from flask import Flask, jsonify, abort, request
+from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
 
-app = Flask(__name__)
+spectator_api = Blueprint('spectator_api', __name__)
 API_KEY = "Google API Key"
 
 events = [
@@ -104,5 +104,4 @@ def postSpectator(event_id):
     event[0]["spectators"].append({"username":randomname})
     return  jsonify({'spectators': event[0]["spectators"]}),201
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
