@@ -18,7 +18,9 @@ def follow_user(user_id):
     data = request.get_json()
     follower_id = data['follower_id']
 
-    session.add(Following(followingID=user_id, followerID=follower_id))
+    session.merge(Following(followingID=user_id, followerID=follower_id))
     session.commit()
+
+    return {'following_id': user_id, 'follower_id': follower_id}, 201
 
 
