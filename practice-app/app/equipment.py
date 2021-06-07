@@ -88,6 +88,18 @@ headers = {
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
 
+@app.route('/api/v1.0/equipments', methods=['GET'])
+def get_equipments():
+    response = requests.get("https://randomapi.com/api/57yc6ybc?key=EORH-HSZQ-D084-2TU0")
+    data = response.json()["results"]
+    new_equipment = {
+        "equipmentId": data[0]["equipmentId"],
+        "ownerId": data[0]["ownerId"],
+        "title": data[0]["equipmentName"],
+        "location": data[0]["location"]["city"]
+    }
+    return jsonify(new_equipment), 200
+
 @app.route('/api/v1.0/equipments/<int:equipmentId>/results', methods=['GET'])
 def results(equipmentId):
     equipment = [equipment for equipment in equipments2 if equipment['equipmentId'] == equipmentId]
