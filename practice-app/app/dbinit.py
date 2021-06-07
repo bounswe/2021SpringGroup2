@@ -94,7 +94,7 @@ class Blocking(base):
 class Comment(base):
     __tablename__ = "comments"
     commentId = Column(BigInteger, primary_key=True)
-    commentDate = Column(Date,nullable=False)
+    commentDate = Column(DateTime,nullable=False)
     comment = Column(String(300),nullable=False)
 
     @declared_attr
@@ -108,7 +108,7 @@ class Comment(base):
 class Answer(base):
     __tablename__ = "answers"
     answerId = Column(BigInteger, primary_key=True)
-    answerDate = Column(Date,nullable=False)
+    answerDate = Column(DateTime,nullable=False)
     answer = Column(String(300),nullable=False)
 
     @declared_attr
@@ -117,7 +117,7 @@ class Answer(base):
 
     @declared_attr
     def commentId(cls):
-        return Column(BigInteger,ForeignKey("eventpost.postID"),nullable=False)
+        return Column(BigInteger,ForeignKey("comment.commentID"),nullable=False)
 
     
 Session = sessionmaker(db)
