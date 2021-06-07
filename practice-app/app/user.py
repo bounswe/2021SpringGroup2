@@ -1,8 +1,9 @@
-import requests
-from flask import Flask, Blueprint, jsonify, abort, request
-import urllib
-from datetime import datetime, timedelta
-from math import cos, asin, sqrt, pi
+from flask import Blueprint, jsonify, abort
+from .dbinit import db, Following
+from sqlalchemy.orm import sessionmaker
+
+Session = sessionmaker(db)
+session = Session()
 
 user_api = Blueprint('user_api', __name__)
 API_KEY = "Google API Key"
@@ -87,4 +88,12 @@ headers = {
     "x-rapidapi-key": "c4ab16012amsh73b5a257264eb3dp11ade4jsnb69ec0b79098",
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
+
+@user_api.route('/api/v1.0/users/<id:user_id>/followers', methods=['GET'])
+def get_followers(user_id):
+    user = session.query(Following).filter(Following.followingID == user_id)
+    if user.first() is None:
+        abort(404)
+
+    return jsonify(user.__dict__)
 
