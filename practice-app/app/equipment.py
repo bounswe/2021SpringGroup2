@@ -90,7 +90,7 @@ headers = {
 
 @equipment_api.route('/api/v1.0/equipments/<int:equipmentId>/results', methods=['GET'])
 def results(equipmentId):
-    equipment = [equipment for equipment in equipments2 if equipment['equipmentId'] == equipmentId]
+    equipment = session.query(Equipmentpost).filter(Equipmentpost.postID == equipmentId)
     if len(equipment) == 0:
         abort(404)
     title=equipment[0]['title']
@@ -103,10 +103,20 @@ def results(equipmentId):
     return jsonify(mapped), 200
 @equipment_api.route('/api/v1.0/equipments/<int:equipmentId>', methods=['GET'])
 def getEquipment(equipmentId):
-   equipment = [equipment for equipment in equipments2 if equipment['equipmentId'] == equipmentId]
-   if len(equipment) == 0:
+   equipment = session.query(Equipmentpost).filter(Equipmentpost.postID == equipmentId)
+   if equipment.first() is None:
         abort(404)
-   return jsonify({'equipments': equipment[0]})
+   else:
+	equipment=equipment.first()
+   return jsonify({'postID': equipmentId,
+		   'ownerID' : equipment.ownerID,
+		   'content' : equipment.content,
+		   'title' : equipment.title,
+		   'creationDate' : equipment.creationDate,
+		   'location' : equipment.location,
+		   'equipmentType' : equipment.equipmentType,
+		   'websiteName' : equipment.websiteName,
+		   'link' : equipment.link}), 201
 
 @equipment_api.route('/api/v1.0/equipments', methods=['POST'])
 def create_equipment_post():
