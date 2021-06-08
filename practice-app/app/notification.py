@@ -3,6 +3,7 @@ from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
+from .dbinit import Answer, session, Eventpost, Comment, Blocking, User, Notification
 
 notif_api = Blueprint('notif_api', __name__)
 API_KEY = "Google API Key"
@@ -87,5 +88,23 @@ headers = {
     "x-rapidapi-key": "c4ab16012amsh73b5a257264eb3dp11ade4jsnb69ec0b79098",
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
+
+@notif_app.route("/api/v1.0/equipments",methods=["POST"])
+def postNotif():
+    ID = request.form.get('ID')
+    date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    description = request.form.get('description')
+    recipientID = request.form.get('recipientID')
+      
+    if len(session.query(User).filter(User.user_id==recipientID).all())==0:
+        return make_response(jsonify({'error': 'There is no user with given ID'}), 404)
+    newNotification = {"ID": ID, 
+        "date": date,
+        "description": description,
+        "isRead": False
+    	"recipientID": recipientID}
+    session.add(Notification(**newNotification))
+    session.commit()
+    return jsonify(newNotification),201
 
 
