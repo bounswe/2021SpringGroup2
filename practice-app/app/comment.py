@@ -99,15 +99,16 @@ headers = {
 
 @app.route("/api/v1.0/events/<int:post_id>/comments",methods=["POST"])
 def postComment(post_id):
-    if len(session.query(eventpost).filter(eventpost.postID==post_id).all())==0:
-        return make_response(jsonify({'error': 'There is no post with given ID'}), 404)
-    commentValues = request.form
-    if len(session.query(User).filter(User.user_id==commentValues.get('user_id')).all())==0:
-        return make_response(jsonify({'error': 'There is no user with given ID'}), 404)
-    newComment = {"commentDate": datetime.now().strftime("%d/%m/%Y %H:%M:%S"), 
+    ### This function provides a post functionality for comments. Comments are linked with events, so event post id is taken as parameter.
+    if len(session.query(eventpost).filter(eventpost.postID==post_id).all())==0: ## check if an event exists with the given id
+        return make_response(jsonify({'error': 'There is no post with given ID'}), 404) ## if not, return error message
+    commentValues = request.form ## take request parameters
+    if len(session.query(User).filter(User.user_id==commentValues.get('user_id')).all())==0: ## check if a user exists with the given id 
+        return make_response(jsonify({'error': 'There is no user with given ID'}), 404) ## if not, return error message
+    newComment = {"commentDate": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),  ## if an event and a user exist, create a new object
         "comment": commentValues.get('comment'),
         "postID": post_id,
         "ownerID": commentValues.get('user_id')}
-    session.add(Comment(**newComment))
+    session.add(Comment(**newComment)) ## post the object to database
     session.commit()
     return jsonify(newComment), 201
