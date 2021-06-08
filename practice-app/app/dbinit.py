@@ -5,7 +5,7 @@ from sqlalchemy.dialects.postgresql import ENUM, NUMRANGE, INT4RANGE, ARRAY
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.orm import sessionmaker
 
-db = create_engine('postgresql://practice_user:-#My6o0dPa33W0rd#-@localhost:5432/practiceapp_db')
+db = create_engine('postgresql://practice_user:-#My6o0dPa33W0rd#-@database/practiceapp_db')
 base = declarative_base()
 
 class User(base):
@@ -27,7 +27,7 @@ class User(base):
     badge_3 = Column(String)
     privacy = Column(Boolean)
 
-class post(base):
+class Post(base):
     __abstract__ = True
     __tablename__ = "post"
     postID = Column(BigInteger,primary_key=True)
@@ -39,7 +39,7 @@ class post(base):
     creationDate = Column(DateTime,nullable=False)
     location = Column(String(200))
 
-class eventpost(post):
+class Eventpost(Post):
     __tablename__ = "eventpost"
     eventDate = Column(Date,nullable=False)
     eventHours = Column(Time,nullable=False)
@@ -52,7 +52,74 @@ class eventpost(post):
     eventSkillLevel = Column(ENUM('Beginner', 'Preintermediate', 'Intermediate','Advanced','Expert', name='skill'))
     eventLatitude =  Column(Float)
     eventLongitude = Column(Float)
+    
+class Equipmentpost(Post):
+    __tablename__ = "equipmentpost"
+    equipmentType = Column(String(30), nullable=False)
+    websiteName = Column(String(50), nullable=False)
+    link = Column(String(200), nullable=False)     
+    
+class Notification(base):
+    __tablename__ = "notification"
+    ID = Column(BigInteger, primary_key=True)
+    date = Column(Date,nullable=False)
+    description = Column(String,nullable=False)
+    isRead = Column(Boolean,nullable=False)
+    @declared_attr
+    def recipientID(cls):
+        return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
 
+class Following(base):
+    __tablename__ = "following"
+
+    @declared_attr
+    def followingID(cls):
+        return Column(BigInteger,ForeignKey("users.user_id"),nullable=False, primary_key=True)
+
+    @declared_attr
+    def followerID(cls):
+        return Column(BigInteger,ForeignKey("users.user_id"),nullable=False, primary_key=True)
+    
+class Blocking(base):
+    __tablename__ = "blocking"
+
+    @declared_attr
+    def blockingID(cls):
+        return Column(BigInteger,ForeignKey("users.user_id"),nullable=False, primary_key=True)
+
+    @declared_attr
+    def blockedID(cls):
+        return Column(BigInteger, ForeignKey("users.user_id"), nullable=False, primary_key=True)
+
+class Comment(base):
+    __tablename__ = "comments"
+    commentID = Column(BigInteger, primary_key=True)
+    commentDate = Column(DateTime,nullable=False)
+    comment = Column(String(300),nullable=False)
+
+    @declared_attr
+    def postID(cls):
+        return Column(BigInteger,ForeignKey("eventpost.postID"),nullable=False)
+
+    @declared_attr
+    def ownerID(cls):
+        return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
+
+class Answer(base):
+    __tablename__ = "answers"
+    answerID = Column(BigInteger, primary_key=True)
+    answerDate = Column(DateTime,nullable=False)
+    answer = Column(String(300),nullable=False)
+
+    @declared_attr
+    def ownerID(cls):
+        return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
+
+    @declared_attr
+    def commentId(cls):
+        return Column(BigInteger,ForeignKey("comments.commentID"),nullable=False)
+
+    
 Session = sessionmaker(db)
 session = Session()
 

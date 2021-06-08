@@ -1,5 +1,5 @@
 import requests
-from flask import Flask, jsonify, abort, request, make_response
+from flask import Flask, Blueprint, jsonify, abort, request, make_response
 import urllib
 from datetime import datetime, timedelta
 from sqlalchemy import create_engine
@@ -10,9 +10,13 @@ from sqlalchemy.sql.functions import func
 from sqlalchemy import or_, and_
 from datetime import datetime, time, date
 from math import cos, asin, sqrt, pi
-from dbinit import eventpost
+from .dbinit import db, User, Eventpost
+from sqlalchemy.orm import sessionmaker
 
-app = Flask(__name__)
+Session = sessionmaker(db)
+session = Session()
+
+event_api = Blueprint('event_api', __name__)
 API_KEY = "Google API Key"
 
 db = create_engine('postgresql://practice_user:-#My6o0dPa33W0rd#-@localhost:5432/practiceapp_db')
@@ -101,22 +105,24 @@ headers = {
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
 
-@app.route('/api/v1.0/events/<int:event_id>', methods=['GET'])
+@event_api.route('/api/v1.0/events/<int:event_id>', methods=['GET'])
 def get_event(event_id):
-    try:
-        event = list(filter(lambda x: x['eventId'] == event_id, events))[0]
-    except IndexError:
+    event = session.query(Eventpost).filter_by(postID=event_id).first()
+    if not event:
         abort(404)
     covid_risk = False
 
     # assume event owners create event only in the country of their registration location
-    user_location = list(filter(lambda x: x['nickname'] == event['owner'], users))[0]['location']
-    resp = requests.get('http://api.geonames.org/searchJSON', {'q': user_location, 'username': 'practice_app'})
+    owner_user = session.query(User).filter_by(user_id=event.ownerID).first()
+
+    resp = requests.get('http://api.geonames.org/searchJSON', {'q': owner_user.location, 'username': 'practice_app'})
     data = resp.json()
 
     if len(data['geonames']) > 0:
+
         # get country name from location via geonames API
         country = '-'.join(data['geonames'][0]['countryName'].split()).lower()
+
         # set dates to fetch coronavirus cases
         today = datetime.today()
         to_date = str(today)
@@ -130,11 +136,11 @@ def get_event(event_id):
         if covid_data[-1]['Cases'] > covid_data[-2]['Cases'] > covid_data[-3]['Cases']:
             covid_risk = True
 
-    return jsonify({'events': event,
+    return jsonify({'event': {col.name: str(getattr(event, col.name)) for col in event.__table__.columns},
                     'covid_risk_status': covid_risk,
-                    'current_cases': covid_data[-1]['Cases']})
+                    'current_cases': covid_data[-1]['Cases']}), 200
 
-@app.route('/api/v1.0/sportTypes', methods=['GET'])
+@event_api.route('/api/v1.0/sportTypes', methods=['GET'])
 def get_sport_types():
     try:
         response = requests.get("https://sports.api.decathlon.com/sports")
@@ -143,7 +149,7 @@ def get_sport_types():
     except:
         abort(500)
 
-@app.route('/api/v1.0/weather/<string:city>/<int:year>/<int:month>/<int:day>', methods=['GET'])
+@event_api.route('/api/v1.0/weather/<string:city>/<int:year>/<int:month>/<int:day>', methods=['GET'])
 def get_weather(city, year, month, day):
     try:
         response = requests.get("https://www.metaweather.com/api/location/search/?query=" + city)
@@ -155,7 +161,7 @@ def get_weather(city, year, month, day):
     except:
         abort(500)
 
-@app.route('/api/v1.0/events', methods=['GET'])
+@event_api.route('/api/v1.0/events', methods=['GET'])
 def getNearbyEvents():
     ### This method applies some filters on events and returns the list of events that satisfy these filters.
     useIP = request.args.get('ip') ## whether or not use IP address for coordinate calculation
@@ -238,9 +244,9 @@ def getNearbyEvents():
         eventList.append({c.name: str(getattr(i, c.name)) for c in i.__table__.columns}) ## convert to dict array
     return jsonify(eventList), 200
 
-@app.route('api/v1.0/events', methods=['POST'])
+@event_api.route('/api/v1.0/events', methods=['POST'])
 def create_event_post():
-    event_id = len(events) == 0 ? 1 : events[-1]['eventId'] + 1
+    event_id = 1 if len(events) == 0 else events[-1]['eventId'] + 1
     location = request.json['location']
     new_event = {
             "eventId": event_id,
@@ -259,10 +265,14 @@ def create_event_post():
             "players": request.json['players']
     }
     events.append(new_event)
-    key = I4AusKojAMUPh2QSaXg9RTGqsM903dJ1
+    key = 'I4AusKojAMUPh2QSaXg9RTGqsM903dJ1'
     response = requests.get("http://www.mapquestapi.com/geocoding/v1/address?key={}&location={}".format(key, location))
     latLng = response["results"][0]["locations"]["latLng"]
     return jsonify({"event": new_event, "latLng": latLng}), 201
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@event_api.route('/api/v1.0/events/<int:event_id>/players', methods=['GET'])
+def get_players(event_id):
+    event = [event for event in events if event['eventId']==event_id]
+    if len(event) == 0:
+        abort(404)
+    return jsonify({'events': event[0]["events"]})

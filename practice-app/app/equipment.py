@@ -1,10 +1,10 @@
 import requests
-from flask import Flask, jsonify, abort, request
+from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
 
-app = Flask(__name__)
+equipment_api = Blueprint('equipment_api', __name__)
 API_KEY = "Google API Key"
 
 events = [
@@ -88,7 +88,7 @@ headers = {
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
 
-@app.route('/api/v1.0/equipments/<int:equipmentId>/results', methods=['GET'])
+@equipment_api.route('/api/v1.0/equipments/<int:equipmentId>/results', methods=['GET'])
 def results(equipmentId):
     equipment = [equipment for equipment in equipments2 if equipment['equipmentId'] == equipmentId]
     if len(equipment) == 0:
@@ -101,14 +101,14 @@ def results(equipmentId):
     response=requests.get("https://rapidapi.p.rapidapi.com/api/v1/search/" + urllib.parse.urlencode(query), headers=headers)
     mapped=[{"description": j["description"],"link": j["link"], "title":j["title"]} for j in response.json()["results"]]
     return jsonify(mapped), 200
-@app.route('/api/v1.0/equipments/<int:equipmentId>', methods=['GET'])
+@equipment_api.route('/api/v1.0/equipments/<int:equipmentId>', methods=['GET'])
 def getEquipment(equipmentId):
    equipment = [equipment for equipment in equipments2 if equipment['equipmentId'] == equipmentId]
    if len(equipment) == 0:
         abort(404)
    return jsonify({'equipments': equipment[0]})
 
-@app.route('/api/v1.0/equipments', methods=['POST'])
+@equipment_api.route('/api/v1.0/equipments', methods=['POST'])
 def create_equipment_post():
 	# Creates the equipment post
 	if len(equipmentPost) != 0:
@@ -142,7 +142,7 @@ def create_equipment_post():
 	equipmentPost.append(new_equipment)
 	return jsonify({"equipment": new_equipment}), 201
 
-@app.route('/api/v1.0/search-equipment-type/<string:equipmentType>', methods=['GET'])
+@equipment_api.route('/api/v1.0/search-equipment-type/<string:equipmentType>', methods=['GET'])
 def search_equipments_by_type(equipmentType):
     equipment = [equipment for equipment in equipments2 if equipment['equipmentType'] == equipmentType]
     if len(equipment) == 0:
@@ -150,12 +150,10 @@ def search_equipments_by_type(equipmentType):
     return jsonify(equipment), 200
 
 
-@app.route('/api/v1.0/search-equipment-location/<string:location>', methods=['GET'])
+@equipment_api.route('/api/v1.0/search-equipment-location/<string:location>', methods=['GET'])
 def search_equipments_by_location(location):
     equipment = [equipment for equipment in equipments2 if equipment['location'] == location]
     if len(equipment) == 0:
         abort(404)
     return jsonify(equipment), 200
 
-if __name__ == '__main__':
-    app.run(debug=True)
