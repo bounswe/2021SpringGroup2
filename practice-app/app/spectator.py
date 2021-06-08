@@ -3,7 +3,7 @@ from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
-from dbinit import eventpost, session
+from .dbinit import eventpost, session
 
 spectator_api = Blueprint('spectator_api', __name__)
 
