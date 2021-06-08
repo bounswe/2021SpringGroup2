@@ -3,6 +3,8 @@ from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
+from sqlalchemy.orm import sessionmaker
+from .dbinit import db, User, Equipmentpost
 
 equipment_api = Blueprint('equipment_api', __name__)
 API_KEY = "Google API Key"
