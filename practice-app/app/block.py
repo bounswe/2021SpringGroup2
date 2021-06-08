@@ -3,6 +3,8 @@ from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
+from dbinit import Blocking
+from dbinit import session
 
 block_api = Blueprint('block_api', __name__)
 API_KEY = "Google API Key"
@@ -87,3 +89,8 @@ headers = {
     "x-rapidapi-key": "c4ab16012amsh73b5a257264eb3dp11ade4jsnb69ec0b79098",
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
+
+@app.route('/api/v1.0/<id:user_id>/blocked-users', methods=['GET'])
+def get_blocked_users(user_id):
+    blocked_users = session.query(Blocking).filter(Blocking.blockingID == user_id).all()
+    return jsonify({"blockedIDs": list(blocked_users)}), 200
