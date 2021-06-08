@@ -110,16 +110,14 @@ def getEquipment(equipmentId):
         abort(404)
    return jsonify({'equipments': equipment[0]})
 
-@equipment_api.route('/api/v1.0/equipments', methods=['POST'])
+@equipment_api.route('/api/v1.0/equipments/', methods=['POST'])
 def create_equipment_post():
 
-    today = date.today()
-    # dd/mm/YY
-    d1 = today.strftime("%d/%m/%Y")
+    d1 = datetime.today()
 
-    if "title" not in request.json:
+    if "ownerId" not in request.json:
         abort(400)
-    if "creationDate" not in request.json:
+    if "title" not in request.json:
         abort(400)
     if "equipmentType" not in request.json:
         abort(400)
@@ -128,7 +126,8 @@ def create_equipment_post():
     if "link" not in request.json:
         abort(400)
 
-    new_equipment = Equipmentpost(content=request.json["content"],
+    new_equipment = Equipmentpost(ownerID=request.json["ownerId"],
+                                  content=request.json["content"],
                                   title=request.json["title"],
                                   creationDate=d1,
                                   location=request.json["location"],
@@ -139,7 +138,7 @@ def create_equipment_post():
     session.add(new_equipment)
     session.commit()
 
-    return jsonify(new_equipment), 201
+    return jsonify({col.name: str(getattr(new_equipment, col.name)) for col in new_equipment.__table__.columns}), 201
 
 
 @equipment_api.route('/api/v1.0/search-equipment-type/<string:equipmentType>', methods=['GET'])
