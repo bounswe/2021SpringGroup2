@@ -110,37 +110,35 @@ def getEquipment(equipmentId):
 
 @equipment_api.route('/api/v1.0/equipments', methods=['POST'])
 def create_equipment_post():
-	# Creates the equipment post
-	if len(equipmentPost) != 0:
-		new_equipment = {
-			"postId": equipmentPost[-1]['postId'] + 1,
-			"ownerId": request.json['ownerId'],
-			"content": request.json['content'],
-			"title": request.json['title'],
-			"creationDate": request.json["creationDate"],
-			"lastUpdateDate": request.json["lastUpdateDate"],
-			"numberOfClicks": request.json['numberOfClicks'],
-			"location": request.json["location"],
-			"equipmentType": request.json["equipmentType"],
-			"websiteName": request.json["websiteName"],
-			"link": request.json["link"]
-		}
-	else:
-		new_equipment = {
-			"postId": 1,
-			"ownerId": request.json['ownerId'],
-			"content": request.json['content'],
-			"title": request.json['title'],
-			"creationDate": request.json["creationDate"],
-			"lastUpdateDate": request.json["lastUpdateDate"],
-			"numberOfClicks": request.json['numberOfClicks'],
-			"location": request.json["location"],
-			"equipmentType": request.json["equipmentType"],
-			"websiteName": request.json["websiteName"],
-			"link": request.json["link"]
-		}
-	equipmentPost.append(new_equipment)
-	return jsonify({"equipment": new_equipment}), 201
+
+    today = date.today()
+    # dd/mm/YY
+    d1 = today.strftime("%d/%m/%Y")
+
+    if "title" not in request.json:
+        abort(400)
+    if "creationDate" not in request.json:
+        abort(400)
+    if "equipmentType" not in request.json:
+        abort(400)
+    if "websiteName" not in request.json:
+        abort(400)
+    if "link" not in request.json:
+        abort(400)
+
+    new_equipment = Equipmentpost(content=request.json["content"],
+                                  title=request.json["title"],
+                                  creationDate=d1,
+                                  location=request.json["location"],
+                                  equipmentType=request.json["equipmentType"],
+                                  websiteName=request.json["websiteName"],
+                                  link=request.json["link"])
+
+    session.add(new_equipment)
+    session.commit()
+
+    return jsonify(new_equipment), 201
+
 
 @equipment_api.route('/api/v1.0/search-equipment-type/<string:equipmentType>', methods=['GET'])
 def search_equipments_by_type(equipmentType):
