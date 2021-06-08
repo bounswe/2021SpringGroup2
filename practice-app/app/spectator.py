@@ -7,7 +7,7 @@ import time
 Session = sessionmaker(db)
 session = Session()
 
-player_api = Blueprint('player_api', __name__)
+spectator_api = Blueprint('spectator_api', __name__)
 API_KEY = "Google API Key"
 events = [
     {
@@ -141,4 +141,3 @@ def postSpectator(event_id):
                     "applicantId": user_id,
                     "applicantNickname": user.nickname,
                     "applicationServerTime": datetime.now().strftime("%d/%m/%Y %H:%M:%S")}), 201)
-
