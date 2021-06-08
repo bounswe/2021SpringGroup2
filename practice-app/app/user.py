@@ -3,7 +3,8 @@ from flask import Flask, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
-from dbinit import User
+from sqlalchemy.orm import sessionmaker
+from .dbinit import db, User
 
 
 app = Flask(__name__)
