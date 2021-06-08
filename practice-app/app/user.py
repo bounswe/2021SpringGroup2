@@ -116,12 +116,20 @@ def post_user(user_id):
                     "applicationServerTime": datetime.now().strftime("%d/%m/%Y %H:%M:%S")}), 201
 
 
-@user_api.route('/api/v1.0/users', methods=['GET'])
-def get_user(nickname):
-    users_ = session.query(User).filter(nickname == User.nickname)
+@user_api.route('/api/v1.0/users/', methods=['GET'])
+def get_user():
+    users_ = session.query(User)
     if len(users_) == 0:
         abort(404)
-    return jsonify(users_), 200
+    return jsonify({col.name: str(getattr(users_, col.name)) for col in users_.__table__.columns}), 200
+
+
+@user_api.route('/api/v1.0/users/<string: nickname>', methods=['GET'])
+def get_user(nickname):
+    users_ = session.query(User).filter(User.nickname == nickname)
+    if len(users_) == 0:
+        abort(404)
+    return jsonify({col.name: str(getattr(users_, col.name)) for col in users_.__table__.columns}), 200
 
 
 if __name__ == '__main__':
