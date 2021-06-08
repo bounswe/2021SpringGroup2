@@ -3,16 +3,16 @@ from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
-from .dbinit import eventpost, session
+from .dbinit import Eventpost, session
 
 spectator_api = Blueprint('spectator_api', __name__)
 
 @spectator_api.route('/api/v1.0/events/<int:event_id>/spectators', methods=['GET'])
 def get_spectators(event_id):
-    event = session.query(eventpost).get(event_id)
+    event = session.query(Eventpost).get(event_id)
     if event == null:
         abort(404)
-    return jsonify({'spectators': event.eventSpectators})
+    return jsonify({"event_id": event_id, 'spectators': list(event.eventSpectators)})
 
 @spectator_api.route('/api/v1.0/events/<int:event_id>/spectators', methods=['POST'])
 def postSpectator(event_id):
