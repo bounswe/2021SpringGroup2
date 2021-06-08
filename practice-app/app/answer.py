@@ -14,7 +14,7 @@ def get_comment_answers(post_id, comment_id):
     if post is None or comment is None:
         return abort(404)
     answers = session.query(Answer).filter(Answer.commentId==comment_id).all()
-    return jsonify({"post": post, "comment": comment, "answers": list(answers)})
+    return jsonify({"comment_id": comment_id, "answers": list(answers)})
 
 @answer_api.route('/api/v1.0/<int:post_id>/comments/<int:comment_id>/answers', methods=['POST'])
 def post_comment_answers(post_id, comment_id):
