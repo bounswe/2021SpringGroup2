@@ -97,7 +97,7 @@ headers = {
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
 
-@app.route("/api/v1.0/<int:post_id>/comments",methods=["POST"])
+@app.route("/api/v1.0/events/<int:post_id>/comments",methods=["POST"])
 def postComment(post_id):
     if len(session.query(eventpost).filter(eventpost.postID==post_id).all())==0:
         return make_response(jsonify({'error': 'There is no post with given ID'}), 404)
