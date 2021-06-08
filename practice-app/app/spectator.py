@@ -7,7 +7,7 @@ from dbinit import eventpost, session
 
 spectator_api = Blueprint('spectator_api', __name__)
 
-@spectator_api.route('/api/v1.0/spectators/<int:event_id>', methods=['GET'])
+@spectator_api.route('/api/v1.0/events/<int:event_id>/spectators', methods=['GET'])
 def get_spectators(event_id):
     event = session.query(eventpost).get(event_id)
     if event == null:
