@@ -106,7 +106,7 @@ def postNotif():
     new_notif = Notification(ID=body["ID"], 
         		     date=datetime.today(),
         		     description=body["description"],
-			     isRead=False
+			     isRead=False,
     			     recipientID=body["recipientID"])
     session.add(new_notif)
     session.commit()
