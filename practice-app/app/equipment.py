@@ -88,20 +88,16 @@ headers = {
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
 
-@equipment_api.route('/api/v1.0/equipments/<int:equipmentId>/results', methods=['GET'])
-def results(equipmentId):
-    equipment = session.query(Equipmentpost).filter(Equipmentpost.postID == equipmentId)
-    if equipment.first() is None:
-        abort(404)
-   else:
-	equipment=equipment.first()
+
+def results(title):
+   
     query = {
-    "q": equipment.title,
+    "q": title,
 }
 
     response=requests.get("https://rapidapi.p.rapidapi.com/api/v1/search/" + urllib.parse.urlencode(query), headers=headers)
     mapped=[{"description": j["description"],"link": j["link"], "title":j["title"]} for j in response.json()["results"]]
-    return jsonify(mapped), 200
+    return mapped, 200
 @equipment_api.route('/api/v1.0/equipments/<int:equipmentId>', methods=['GET'])
 def getEquipment(equipmentId):
    equipment = session.query(Equipmentpost).filter(Equipmentpost.postID == equipmentId)
@@ -117,7 +113,8 @@ def getEquipment(equipmentId):
 		   'location' : equipment.location,
 		   'equipmentType' : equipment.equipmentType,
 		   'websiteName' : equipment.websiteName,
-		   'link' : equipment.link}), 201
+		   'link' : equipment.link
+		   'results' : results(equipment.title)}), 201
 
 @equipment_api.route('/api/v1.0/equipments', methods=['POST'])
 def create_equipment_post():
