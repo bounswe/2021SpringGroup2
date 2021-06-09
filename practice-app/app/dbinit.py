@@ -70,7 +70,7 @@ class Notification(base):
         return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
 
 class Following(base):
-    __tablename__ = "Following"
+    __tablename__ = "following"
 
     @declared_attr
     def followingID(cls):
@@ -124,3 +124,19 @@ Session = sessionmaker(db)
 session = Session()
 
 base.metadata.create_all(db)
+### Creates Haversine distance formula in Postgresql, combines two sources:
+# https://gist.github.com/carlzulauf/1724506,
+# https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula/21623206#21623206 ###
+db.execute("""CREATE OR REPLACE FUNCTION public.haversineDistance(alat double precision, alng double precision, blat double precision, blng double precision) 
+        RETURNS double precision AS
+        $BODY$
+        SELECT asin(
+            sqrt(0.5-
+        cos(radians($3-$1))/2 +
+        (1-cos(radians($4-$2)))/2 *
+        cos(radians($1)) *
+        cos(radians($3))
+        )) * 12742 AS distance;
+        $BODY$
+        LANGUAGE sql IMMUTABLE
+        COST 100;""") 
