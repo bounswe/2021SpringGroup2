@@ -91,8 +91,5 @@ headers = {
 def getComment(event_id):
     
     commentlist=session.query(Comment).filter(Comment.postID==event_id).all()
-    if len(commentlist)==0:
-        return make_response(jsonify({'error': 'There is no comment with this eventid'}), 404)
-    else:
-        return jsonify({"comment":commentlist[0].comment}),201
+    return jsonify({"comment":list(commentlist)})
 
