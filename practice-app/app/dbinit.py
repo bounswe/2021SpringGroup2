@@ -4,8 +4,14 @@ from sqlalchemy.ext.declarative import declarative_base, declared_attr
 from sqlalchemy.dialects.postgresql import ENUM, NUMRANGE, INT4RANGE, ARRAY
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.orm import sessionmaker
+import os
+
 
 db = create_engine('postgresql://practice_user:-#My6o0dPa33W0rd#-@database/practiceapp_db')
+
+if os.environ.get('MODE') == 'TEST':
+    db = create_engine('postgresql://practice_user:-#My6o0dPa33W0rd#-@localhost:5432/practiceapp_test')
+
 base = declarative_base()
 
 class User(base):
