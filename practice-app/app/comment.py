@@ -11,7 +11,6 @@ app = Flask(__name__)
 
 comment_api = Blueprint('comment_api', __name__)
 
-
 @comment_api.route("/api/v1.0/<int:post_id>/comments",methods=["POST"])
 def postComment(post_id):
     if len(session.query(Eventpost).filter(Eventpost.postID==post_id).all())==0:
@@ -23,6 +22,6 @@ def postComment(post_id):
         "comment": commentValues.get('comment'),
         "postID": post_id,
         "ownerID": commentValues.get('user_id')}
-    session.add(Comment(**newComment))
+    session.add(Comment(**newComment)) ## post the object to database
     session.commit()
     return jsonify(newComment), 201
