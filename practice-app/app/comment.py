@@ -91,5 +91,4 @@ headers = {
 def getComment(event_id):
     
     commentlist=session.query(Comment).filter(Comment.postID==event_id).all()
-    return jsonify({"comment":list(commentlist)})
-
+    return jsonify([{col.name: str(getattr(comment, col.name)) for col in comment.__table__.columns} for comment in commentlist]), 200 
