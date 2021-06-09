@@ -1,7 +1,14 @@
 import requests
-from flask import Flask, Blueprint, jsonify, abort, request
+from flask import Flask, Blueprint, jsonify, abort, request, make_response
 import urllib
 from datetime import datetime, timedelta
+from sqlalchemy import create_engine
+import re
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declared_attr
+from sqlalchemy.sql.functions import func
+from sqlalchemy import or_, and_
+from datetime import datetime, time, date
 from math import cos, asin, sqrt, pi
 from .dbinit import db, User, Eventpost
 from sqlalchemy.orm import sessionmaker
@@ -11,6 +18,11 @@ session = Session()
 
 event_api = Blueprint('event_api', __name__)
 API_KEY = "Google API Key"
+
+db = create_engine('postgresql://practice_user:-#My6o0dPa33W0rd#-@localhost:5432/practiceapp_db')
+
+Session = sessionmaker(db)  
+session = Session()
 
 events = [
     {
@@ -149,47 +161,88 @@ def get_weather(city, year, month, day):
     except:
         abort(500)
 
-def haversineDistance(lat1, lon1, lat2, lon2):
-    ## Calculates the Haversine Distance between two locations.
-    ## Available here:https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
-    p = pi/180
-    a = 0.5 - cos((lat2-lat1)*p)/2 + cos(lat1*p) * cos(lat2*p) * (1-cos((lon2-lon1)*p))/2
-    return 12742 * asin(sqrt(a))
-
 @event_api.route('/api/v1.0/events', methods=['GET'])
 def getNearbyEvents():
-    useIP = request.args.get('ip')
-    address = request.args.get('address')##check, 400
-    radius = request.args.get('radius')
-    eventType = request.args.get('sport')
-    ageRange = request.args.get('ageGroup')
-    skillLevel = request.args.get('skillLevel')
-    filterEmpty = request.args.get('empty')
-    filteredEvents = events
+    ### This method applies some filters on events and returns the list of events that satisfy these filters.
+    useIP = request.args.get('ip') ## whether or not use IP address for coordinate calculation
+    address = request.args.get('address') ## if IP is not used, take the address as string
+    radius = request.args.get('radius') ## integer value for the distance of the events to the given address
+    if useIP is None or not useIP in ["true", "false"]: ## useIP must be given, and it is a boolean
+        return make_response(jsonify({'error': 'Either true or false must be given as the useIP parameter.'}), 400) ## else, return error
+    if radius is None or not radius.isnumeric(): ## radius must be given, and it is an integer
+        return make_response(jsonify({'error': 'A numeric value must be given as the radius parameter.'}), 400)
+    if useIP=="false" and address is None: ## if useIP is false, an address should be provided
+        return make_response(jsonify({'error': 'Either an address should be given or the IP address must be used.'}), 400)
+    query = session.query(eventpost) ##initialize query
     for argument in request.args:
-        print(argument)
         if argument == 'address' or argument == 'radius' or argument =='ip':
             continue
-        elif argument == "empty":
+        elif argument == "empty": ## whether or not to display only the events with empty spots
+            if not request.args["empty"] in ["true","false"]: ## must be boolean
+                return make_response(jsonify({'error': 'Empty argument must be true or false.'}), 400)
             if request.args["empty"]=="true":
-                filteredEvents = list(filter(lambda event: len(event["players"])<int(event["playerCapacity"]),filteredEvents))
-        else:
-            query_value = request.args[argument]
-            filteredEvents = list(filter(lambda event: event[argument] == query_value,filteredEvents))
-    if useIP=="false":
-        getParams = {'address':' '.join(str(address).split()),'key':API_KEY}
+                query = query.filter(func.cardinality(eventpost.eventPlayers)<eventpost.eventPlayerCapacity) ## if given, filter 
+        elif argument == "sport": ## sport type to filter the events
+            if not request.args["sport"].isalpha(): ## must be a string
+                return make_response(jsonify({'error': 'Sport type must consist of alphabetic characters only.'}), 400)
+            query = query.filter(eventpost.eventSport==str(request.args["sport"])) ## return only the events of the given sport 
+        elif argument == "skillLevel": ## skill level of events
+            if not request.args["skillLevel"] in ["Beginner","Pre-intermediate","Intermediate","Advanced","Expert"]: ## must be enum of 5 values
+                return make_response(jsonify({'error': 'Skill level must be one of the following: Beginner,Pre-intermediate,Intermediate,Advanced,Expert.'}), 400)
+            query = query.filter(eventpost.eventSkillLevel==str(request.args["skillLevel"]))
+        elif argument == "search": ## keyword to search in the title and description of events
+            searchContent = request.args["search"]
+            if not searchContent.isalpha(): ## must be string
+                return make_response(jsonify({'error': 'Search content must consist of alphabetic characters only.'}), 400)
+            query = query.filter(or_(eventpost.title.ilike('%'+str(searchContent)+'%'), eventpost.content.ilike('%'+str(searchContent)+'%')))
+        elif argument == "ageGroup": ## an integer tuple that represents the age range
+            ageRange = request.args["ageGroup"]
+            if re.search("^\d+,\d+$",ageRange) is None: ## must be tuple of ints
+                return make_response(jsonify({'error': 'Age range is not in valid format.'}), 400)
+            ageRange = tuple(ageRange.split(","))
+            query = query.filter(and_(int(ageRange[0]) <= func.lower(eventpost.eventAgeGroup),int(ageRange[1]) >= func.upper(eventpost.eventAgeGroup)))
+        elif argument == "dateBegin": ## a datetime object for the lower bound of the dates of events
+            try: ## if dateBegin is given, dateEnd must be also given. Only intervals are supported for now.
+                datetime_begin_object = datetime.strptime(request.args["dateBegin"],"%d/%m/%Y %H:%M:%S") ## format should be DD/MM/YYYY HH:MM:SS
+                datetime_end_object = datetime.strptime(request.args["dateEnd"], "%d/%m/%Y %H:%M:%S")
+            except ValueError:
+                return make_response(jsonify({'error': 'Date and time must be in format DD/MM/YYYY HH:MM:SS'}), 400)
+            query = query.filter(and_(func.date(datetime_begin_object.date())<=func.date(eventpost.eventDate), func.date(datetime_end_object.date())>=func.date(eventpost.eventDate))).\
+                filter(and_(datetime_begin_object.time()<=eventpost.eventHours, datetime_end_object.time()>=eventpost.eventHours))
+    if useIP=="false": ## if useIP is false, find coordinates using Geocoding API
+        getParams = {'address':' '.join(str(address).split()),'key':API_KEY} ## parameters are the address and the key
         addressData = requests.get("https://maps.googleapis.com/maps/api/geocode/json",params=getParams).json()
-        lat = addressData["results"][0]["geometry"]["location"]["lat"]
+        if addressData["status"]!="OK": ## if request was not successful
+            return make_response(jsonify({'error': 'Address was not found.'}), 404)
+        lat = addressData["results"][0]["geometry"]["location"]["lat"] ## take the latitude and longitude values
         lng = addressData["results"][0]["geometry"]["location"]["lng"]
-    else:
-        getParams = {'key':API_KEY}
+    else: ## if useIP is true, find coordinates from IP address using Geolocation API
+        getParams = {'key':API_KEY}  ## parameter is the key
         ipdata = requests.post("https://www.googleapis.com/geolocation/v1/geolocate",params=getParams).json()
+        if "error" in ipdata: ## if error is in request
+            return make_response(jsonify({'error': 'IP address is not valid.'}), 404)
         lat = ipdata["location"]["lat"]
         lng = ipdata["location"]["lng"]
-        print(lat, lng)
-    nearbyEvents = [event for event in filteredEvents if
-        haversineDistance(lat,lng,event["coordinates"][0], event["coordinates"][1])<=float(radius)]
-    return jsonify(nearbyEvents)
+
+    nearbyEvents = query.filter(func.haversineDistance(lat,lng,eventpost.eventLatitude,eventpost.eventLongitude)<=radius)
+    ## filter the events so that only the events within the given radius of the calculated coordinates are displayed. Haversine Distance is used
+    if not request.args.get("orderby") is None: ## if orderby parameter is given
+        if not request.args["orderby"] in eventpost.__table__.columns.keys(): ## it should be a column value
+            return make_response(jsonify({'error': 'Order criterion is not a valid column name.'}), 400)
+        if not request.args.get("order") is None: ## if order direction is given
+            if not request.args["order"] in ["asc","desc"]: ## should be either asc or desc
+                return make_response(jsonify({'error': 'Order direction must be either asc or desc'}), 400)
+            if request.args["order"]=="asc": 
+                nearbyEvents = nearbyEvents.order_by(getattr(eventpost,request.args["orderby"]).asc()) ## ascending order
+            else:
+                nearbyEvents = nearbyEvents.order_by(getattr(eventpost,request.args["orderby"]).desc())
+        else:
+            nearbyEvents = nearbyEvents.order_by(getattr(eventpost,request.args["orderby"]).asc())
+    eventList = [] 
+    nearbyEvents = nearbyEvents.all() ## take the events satisfying the filters
+    for i in nearbyEvents:
+        eventList.append({c.name: str(getattr(i, c.name)) for c in i.__table__.columns}) ## convert to dict array
+    return jsonify(eventList), 200
 
 @event_api.route('/api/v1.0/events', methods=['POST'])
 def create_event_post():
