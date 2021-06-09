@@ -91,9 +91,6 @@ headers = {
 
 @user_api.route('/api/v1.0/users/<id:user_id>/followers', methods=['GET'])
 def get_followers(user_id):
-    user = session.query(Following).filter(Following.followingID == user_id)
-    if user.first() is None:
-        abort(404)
-
-    return jsonify(user.__dict__)
+    followers = session.query(Following).filter(Following.followingID == user_id).all()
+    return jsonify({"followerIDs": list(followers)}), 200
 
