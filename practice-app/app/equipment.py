@@ -97,7 +97,7 @@ def results(title):
 
     response=requests.get("https://rapidapi.p.rapidapi.com/api/v1/search/" + urllib.parse.urlencode(query), headers=headers)
     mapped=[{"description": j["description"],"link": j["link"], "title":j["title"]} for j in response.json()["results"]]
-    return mapped, 200
+    return mapped
 @equipment_api.route('/api/v1.0/equipments/<int:equipmentId>', methods=['GET'])
 def getEquipment(equipmentId):
    equipment = session.query(Equipmentpost).filter(Equipmentpost.postID == equipmentId)
