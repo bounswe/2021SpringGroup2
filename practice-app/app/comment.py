@@ -3,7 +3,7 @@ from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
-
+from .dbinit import session, Comment
 comment_api = Blueprint('comment_api', __name__)
 API_KEY = "Google API Key"
 
@@ -87,12 +87,12 @@ headers = {
     "x-rapidapi-key": "c4ab16012amsh73b5a257264eb3dp11ade4jsnb69ec0b79098",
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
-@app.route("/api/v1.0/<int:post_id>/comments",methods=["GET"])
-def getComment(post_id):
+@comment_api.route("/api/v1.0/events/<id:event_id>/comments",methods=["GET"])
+def getComment(event_id):
     
-    commentlist=session.query(Comment).filter(Comment.postID==post_id).all()
+    commentlist=session.query(Comment).filter(Comment.postID==event_id).all()
     if len(commentlist)==0:
-        return make_response(jsonify({'error': 'There is no comment with this postid'}), 404)
+        return make_response(jsonify({'error': 'There is no comment with this eventid'}), 404)
     else:
         return jsonify({"comment":commentlist[0].comment}),201
 
