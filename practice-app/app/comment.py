@@ -2,14 +2,17 @@ import requests
 from flask import Flask, Blueprint, jsonify, abort, request, make_response
 import urllib
 from datetime import datetime, timedelta
-from math import cos, asin, sqrt, pi
 from sqlalchemy.orm import sessionmaker
 from .dbinit import Comment, Eventpost, User, session
 from sqlalchemy import create_engine
 
-app = Flask(__name__)
-
 comment_api = Blueprint('comment_api', __name__)
+
+@comment_api.route("/api/v1.0/events/<id:event_id>/comments",methods=["GET"])
+def getComment(event_id):
+    
+    commentlist=session.query(Comment).filter(Comment.postID==event_id).all()
+    return jsonify([{col.name: str(getattr(comment, col.name)) for col in comment.__table__.columns} for comment in commentlist]), 200 
 
 @comment_api.route("/api/v1.0/<int:post_id>/comments",methods=["POST"])
 def postComment(post_id):
