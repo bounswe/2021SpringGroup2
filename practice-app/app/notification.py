@@ -89,22 +89,27 @@ headers = {
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
 
-@notif_app.route("/api/v1.0/equipments",methods=["POST"])
+@notif_api.route("/api/v1.0/notification",methods=["POST"])
 def postNotif():
-    ID = request.form.get('ID')
-    date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-    description = request.form.get('description')
-    recipientID = request.form.get('recipientID')
+    body = request.json
+
+    if "ID" not in body:
+        return abort(400)
+    if "description" not in body:
+        return abort(400)
+    if "recipientID" not in body:
+        return abort(400)
+    
       
-    if len(session.query(User).filter(User.user_id==recipientID).all())==0:
+    if len(session.query(User).filter(User.user_id==body["recipientID"]).all())==0:
         return make_response(jsonify({'error': 'There is no user with given ID'}), 404)
-    newNotification = {"ID": ID, 
-        "date": date,
-        "description": description,
-        "isRead": False
-    	"recipientID": recipientID}
-    session.add(Notification(**newNotification))
+    new_notif = Notification(ID=body["ID"], 
+        		     date=datetime.today(),
+        		     description=body["description"],
+			     isRead=False
+    			     recipientID=body["recipientID"])
+    session.add(new_notif)
     session.commit()
-    return jsonify(newNotification),201
+    return jsonify({col.name: str(getattr(new_notif, col.name)) for col in new_notif.__table__.columns}), 200 
 
 
