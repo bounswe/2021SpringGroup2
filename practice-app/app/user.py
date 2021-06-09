@@ -2,12 +2,11 @@ import requests
 from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
-from .dbinit import session, User, Eventpost
+from .dbinit import session, User, Eventpost, Following
 from sqlalchemy.orm import sessionmaker
 
 
 user_api = Blueprint('user_api', __name__)
-API_KEY = "Google API Key"
 
 @user_api.route('/api/v1.0/users', methods=['POST'])
 def post_user(user_id):
@@ -43,5 +42,23 @@ def post_user(user_id):
     session.add(new_user)
     session.commit()
     return jsonify(new_user), 201
+
+@user_api.route('/api/v1.0/users/<int:user_id>/followers', methods=['POST'])
+def follow_user(user_id):
+    data = request.get_json()
+    follower_id = data['follower_id']
+
+    user = session.query(User).filter_by(user_id=user_id).first()
+    if not user:
+        abort(404)
+
+    follower = session.query(User).filter_by(user_id=follower_id).first()
+    if not follower:
+        abort(404)
+
+    session.merge(Following(followingID=user_id, followerID=follower_id))
+    session.commit()
+
+    return {'following_id': user_id, 'follower_id': follower_id}, 201
 
 
