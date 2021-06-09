@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 
 comment_api = Blueprint('comment_api', __name__)
 
-@comment_api.route("/api/v1.0/events/<id:event_id>/comments",methods=["GET"])
+@comment_api.route("/api/v1.0/events/<int:event_id>/comments",methods=["GET"])
 def getComment(event_id):
     
     commentlist=session.query(Comment).filter(Comment.postID==event_id).all()
