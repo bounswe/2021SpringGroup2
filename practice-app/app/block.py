@@ -95,8 +95,7 @@ headers = {
     "x-rapidapi-key": "c4ab16012amsh73b5a257264eb3dp11ade4jsnb69ec0b79098",
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
-
-@app.route('/api/v1.0/<id:user_id>/blocked-users', methods=['POST'])
+@block_api.route('/api/v1.0/<id:user_id>/blocked-users', methods=['POST'])
 def post_blocked_users(user_id):
     body = request.json
     blocking_user_id = body["userId"]

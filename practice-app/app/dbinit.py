@@ -55,8 +55,10 @@ class eventpost(post):
 
 class Blocking(base):
     __tablename__ = "blocking"
-    blockingId = Column(BigInteger, primary_key=True)
-    blockedId = Column(BigInteger, primary_key=True)
+    def blockingID(cls):
+        return Column(BigInteger,ForeignKey("users.user_id"),nullable=False)
+    def blockedID(cls):
+        return Column(BigInteger, ForeignKey("users.user_id"), nullable=False)
 
 Session = sessionmaker(db)
 session = Session()

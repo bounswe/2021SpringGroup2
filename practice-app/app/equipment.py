@@ -1,8 +1,11 @@
 import requests
-from flask import Flask, jsonify, abort, request
+from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
+from sqlalchemy.orm import sessionmaker
+from .dbinit import db, User, Equipmentpost
+
 
 app = Flask(__name__)
 API_KEY = "Google API Key"
@@ -154,20 +157,40 @@ def create_equipment_post():
 	equipmentPost.append(new_equipment)
 	return jsonify({"equipment": new_equipment}), 201
 
-@app.route('/api/v1.0/search-equipment-type/<string:equipmentType>', methods=['GET'])
+@equipment_api.route('/api/v1.0/search-equipment-type/<string:equipmentType>', methods=['GET'])
 def search_equipments_by_type(equipmentType):
-    equipment = [equipment for equipment in equipments2 if equipment['equipmentType'] == equipmentType]
-    if len(equipment) == 0:
+    equipment = session.query(Equipmentpost).filter(Equipmentpost.equipmentType == equipmentType)
+    if equipment.first() is None:
         abort(404)
-    return jsonify(equipment), 200
+    equipment = equipment.first()
+    return jsonify({'postID': equipment.equipmentId,
+                    'ownerID': equipment.ownerID,
+                    'content': equipment.content,
+                    'title': equipment.title,
+                    'creationDate': equipment.creationDate,
+                    'location': equipment.location,
+                    'equipmentType': equipmentType,
+                    'websiteName': equipment.websiteName,
+                    'link': equipment.link,
+                    'results': results(equipment.title)}), 200
 
 
-@app.route('/api/v1.0/search-equipment-location/<string:location>', methods=['GET'])
+@equipment_api.route('/api/v1.0/search-equipment-location/<string:location>', methods=['GET'])
 def search_equipments_by_location(location):
-    equipment = [equipment for equipment in equipments2 if equipment['location'] == location]
-    if len(equipment) == 0:
+    equipment = session.query(Equipmentpost).filter(Equipmentpost.location == location)
+    if equipment.first() is None:
         abort(404)
-    return jsonify(equipment), 200
+    equipment = equipment.first()
+    return jsonify({'postID': equipment.equipmentId,
+                    'ownerID': equipment.ownerID,
+                    'content': equipment.content,
+                    'title': equipment.title,
+                    'creationDate': equipment.creationDate,
+                    'location': location,
+                    'equipmentType': equipment.equipmentType,
+                    'websiteName': equipment.websiteName,
+                    'link': equipment.link,
+                    'results': results(equipment.title)}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
