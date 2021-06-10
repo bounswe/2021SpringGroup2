@@ -3,7 +3,7 @@ import unittest
 from app import dbinit
 from app.dbinit import db, User, Eventpost, base
 from app.app import app
-
+from app.equipment import results
 import datetime
 from datetime import timedelta
 
@@ -104,3 +104,33 @@ class Testplayers(unittest.TestCase):
     def test_is_proper_players_allplayerareappropriate(self):
         result=self.is_proper_players(50,10,"football",[["player1",12,["football","basketbol","f1"]], ["player2 ",35,["bowling","basketbol","football"]  ] ,["player3 ",45,["walking","running","football"] ]])
         self.assertEqual(result,"All players satisfy the needs.")
+       
+class Test_results(unittest.TestCase):
+    def test_shoe(self):
+        tmp=str(results('shoe'))
+        if('Shoe' in tmp and 'title' in tmp and 'description' in tmp and 'link' in tmp):
+            bb=True
+        else: 
+            bb=False
+        self.assertEqual(bb,True)
+    def test_racket(self):
+        tmp=str(results('racket'))
+        if('racket' in tmp and 'title' in tmp and 'description' in tmp and 'link' in tmp):
+            bb=True
+        else: 
+            bb=False
+        self.assertEqual(bb,True)
+    def test_ball(self):
+        tmp=str(results('golf ball'))
+        if('golf ball' in tmp and 'title' in tmp and 'description' in tmp and 'link' in tmp):
+            bb=True
+        else: 
+            bb=False
+        self.assertEqual(bb,True)
+    def test_bar(self):
+        tmp=str(results('pull-up bar'))
+        if('pull-up bar' in tmp and 'title' in tmp and 'description' in tmp and 'link' in tmp):
+            bb=True
+        else: 
+            bb=False
+        self.assertEqual(bb,True)
