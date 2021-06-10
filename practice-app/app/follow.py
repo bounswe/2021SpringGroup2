@@ -1,10 +1,10 @@
 import requests
-from flask import Flask, jsonify, abort, request
+from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
 
-app = Flask(__name__)
+follow_api = Blueprint('follow_api', __name__)
 API_KEY = "Google API Key"
 
 events = [
@@ -87,6 +87,3 @@ headers = {
     "x-rapidapi-key": "c4ab16012amsh73b5a257264eb3dp11ade4jsnb69ec0b79098",
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
-
-if __name__ == '__main__':
-    app.run(debug=True)

@@ -4,6 +4,8 @@ services:
     build: .
     ports:
       - "9000:9000"
+    environment:
+      WAIT_HOSTS: database:5432
 
   database:
     image: "postgres:latest"
