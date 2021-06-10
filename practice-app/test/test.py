@@ -47,5 +47,3 @@ class PostEquipmentTest(unittest.TestCase):
     def tearDown(self):
         session.close()
         base.metadata.drop_all(db)
-
-
