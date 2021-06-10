@@ -97,14 +97,14 @@ def getNearbyEvents():
             if not request.args["empty"] in ["true","false"]: ## must be boolean
                 return make_response(jsonify({'error': 'Empty argument must be true or false.'}), 400)
             if request.args["empty"]=="true":
-                query = query.filter(func.cardinality(Eventpost.eventPlayers)<Eventpost.eventPlayerCapacity) ## if given, filter 
+                query = query.filter(func.cardinality(Eventpost.eventPlayers)<Eventpost.eventPlayerCapacity) ## if given, filter
         elif argument == "sport": ## sport type to filter the events
             if not request.args["sport"].isalpha(): ## must be a string
                 return make_response(jsonify({'error': 'Sport type must consist of alphabetic characters only.'}), 400)
-            query = query.filter(Eventpost.eventSport==str(request.args["sport"])) ## return only the events of the given sport 
+            query = query.filter(Eventpost.eventSport==str(request.args["sport"])) ## return only the events of the given sport
         elif argument == "skillLevel": ## skill level of events
-            if not request.args["skillLevel"] in ["Beginner","Pre-intermediate","Intermediate","Advanced","Expert"]: ## must be enum of 5 values
-                return make_response(jsonify({'error': 'Skill level must be one of the following: Beginner,Pre-intermediate,Intermediate,Advanced,Expert.'}), 400)
+            if not request.args["skillLevel"] in ["Beginner","Preintermediate","Intermediate","Advanced","Expert"]: ## must be enum of 5 values
+                return make_response(jsonify({'error': 'Skill level must be one of the following: Beginner,Preintermediate,Intermediate,Advanced,Expert.'}), 400)
             query = query.filter(Eventpost.eventSkillLevel==str(request.args["skillLevel"]))
         elif argument == "search": ## keyword to search in the title and description of events
             searchContent = request.args["search"]
@@ -148,13 +148,13 @@ def getNearbyEvents():
         if not request.args.get("order") is None: ## if order direction is given
             if not request.args["order"] in ["asc","desc"]: ## should be either asc or desc
                 return make_response(jsonify({'error': 'Order direction must be either asc or desc'}), 400)
-            if request.args["order"]=="asc": 
+            if request.args["order"]=="asc":
                 nearbyEvents = nearbyEvents.order_by(getattr(Eventpost,request.args["orderby"]).asc()) ## ascending order
             else:
                 nearbyEvents = nearbyEvents.order_by(getattr(Eventpost,request.args["orderby"]).desc())
         else:
             nearbyEvents = nearbyEvents.order_by(getattr(Eventpost,request.args["orderby"]).asc())
-    eventList = [] 
+    eventList = []
     nearbyEvents = nearbyEvents.all() ## take the events satisfying the filters
     for i in nearbyEvents:
         eventList.append({c.name: str(getattr(i, c.name)) for c in i.__table__.columns}) ## convert to dict array
@@ -162,29 +162,50 @@ def getNearbyEvents():
 
 @event_api.route('/api/v1.0/events', methods=['POST'])
 def create_event_post():
-    event_id = 1 if len(events) == 0 else events[-1]['eventId'] + 1
-    location = request.json['location']
-    new_event = {
-            "eventId": event_id,
-            "owner": request.json['ownerId'],
-            "title":  request.json['title'],
-            "content": request.json['content'],
-            "location": location,
-            "date": request.json['date'],
-            "hours": request.json['hours'],
-            "sport": request.json['sport'],
-            "ageGroup": request.json['ageGroup'],
-            "skillLevel": request.json['skillLevel'],
-            "playerCapacity": request.json['playerCapacity'],
-            "spectatorCapacity": request.json['spectatorCapacity'],
-            "spectators": request.json['spectators'],
-            "players": request.json['players']
-    }
-    events.append(new_event)
+    if "ownerID" not in request.json:
+        abort(400)
+    if "title" not in request.json:
+        abort(400)
+    if "eventDate" not in request.json:
+        abort(400)
+    if "eventHours" not in request.json:
+        abort(400)
+    if "eventSport" not in request.json:
+        abort(400)
+    if "eventPlayerCapacity" not in request.json:
+        abort(400)
+
+    creation_date = datetime.today()
+    event_players = request.json["eventPlayers"] if "eventPlayers" in request.json else {}
+    event_spectators = request.json["eventSpectators"] if "eventSpectators" in request.json else {}
+    location_address = request.json['location']
+
     key = 'I4AusKojAMUPh2QSaXg9RTGqsM903dJ1'
-    response = requests.get("http://www.mapquestapi.com/geocoding/v1/address?key={}&location={}".format(key, location))
+    response = requests.get("http://www.mapquestapi.com/geocoding/v1/address?key={}&location={}".format(key, location_address))
     latLng = response["results"][0]["locations"]["latLng"]
-    return jsonify({"event": new_event, "latLng": latLng}), 201
+
+    new_event = Eventpost(ownerID = request.json["ownerID"],
+                          content = request.json["content"],
+                          title = request.json["title"],
+                          creationDate = creation_date,
+                          location = location_address,
+                          eventDate = request.json["eventDate"],
+                          eventHours = request.json["eventHours"],
+                          eventSport = request.json["eventSport"],
+                          eventAgeGroup = request.json["eventAgeGroup"],
+                          eventPlayerCapacity = request.json["eventPlayerCapacity"],
+                          eventSpectatorCapacity = request.json["eventSpectatorCapacity"],
+                          eventPlayers = event_players,
+                          eventSpectators = event_spectators,
+                          eventSkillLevel = request.json["eventSkillLevel"],
+                          eventLatitude = latLng[0],
+                          eventLongitude = latLng[1])
+
+    session.add(new_event)
+    session.commit()
+
+    return jsonify({col.name: str(getattr(new_event, col.name)) for col in new_event.__table__.columns}), 201
+
 
 @event_api.route('/api/v1.0/events/<int:event_id>/players', methods=['GET'])
 def get_players(event_id):

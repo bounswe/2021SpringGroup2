@@ -14,7 +14,10 @@ def get_comment_answers(post_id, comment_id):
     if post is None or comment is None:
         return abort(404)
     answers = session.query(Answer).filter(Answer.commentId==comment_id).all()
-    return jsonify({"comment_id": comment_id, "answers": list(answers)})
+    aslist = []
+    for i in answers:
+        aslist.append({c.name: str(getattr(i, c.name)) for c in i.__table__.columns})
+    return jsonify({"comment_id": comment_id, "answers": aslist})
 
 @answer_api.route('/api/v1.0/<int:post_id>/comments/<int:comment_id>/answers', methods=['POST'])
 def post_comment_answers(post_id, comment_id):
@@ -28,7 +31,7 @@ def post_comment_answers(post_id, comment_id):
     new_answer = Answer(commentId=comment_id, answer=request.json["answer"], answerDate=datetime.datetime.utcnow(), ownerID=request.json["owner_id"])
     session.add(new_answer)
     session.commit()
-    return jsonify(new_answer)
+    return jsonify({"success": True, "answer_id": new_answer.id})
 
 
 if __name__ == '__main__':
