@@ -176,12 +176,12 @@ def create_event_post():
         abort(400)
 
     creation_date = datetime.today()
-    event_players = "eventPlayers" in request.json ? request.json["eventPlayers"] : {}
-    event_spectators = "eventSpectators" in request.json ? request.json["eventSpectators"] : {}
+    event_players = request.json["eventPlayers"] if "eventPlayers" in request.json else {}
+    event_spectators = request.json["eventSpectators"] if "eventSpectators" in request.json else {}
     location_address = request.json['location']
 
     key = 'I4AusKojAMUPh2QSaXg9RTGqsM903dJ1'
-    response = requests.get("http://www.mapquestapi.com/geocoding/v1/address?key={}&location={}".format(key, location))
+    response = requests.get("http://www.mapquestapi.com/geocoding/v1/address?key={}&location={}".format(key, location_address))
     latLng = response["results"][0]["locations"]["latLng"]
 
     new_event = Eventpost(ownerID = request.json["ownerID"],

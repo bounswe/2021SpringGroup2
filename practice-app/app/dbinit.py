@@ -125,7 +125,7 @@ class Answer(base):
     def commentId(cls):
         return Column(BigInteger,ForeignKey("comments.commentID"),nullable=False)
 
-    
+     
 Session = sessionmaker(db)
 session = Session()
 
