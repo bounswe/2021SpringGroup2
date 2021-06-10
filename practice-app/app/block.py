@@ -9,12 +9,12 @@ from .dbinit import session
 block_api = Blueprint('block_api', __name__)
 
     
-@block_api.route('/api/v1.0/<int:user_id>/blocked-users', methods=['GET'])
+@block_api.route('/api/v1.0/users/<int:user_id>/blocked-users', methods=['GET'])
 def get_blocked_users(user_id):
     blocked_users = session.query(Blocking).filter(Blocking.blockingID == user_id).all()
     return jsonify({"blockedIDs": [user.blockedID for user in blocked_users]}), 200
   
-@block_api.route('/api/v1.0/<id:user_id>/blocked-users', methods=['POST'])
+@block_api.route('/api/v1.0/users/<int:user_id>/blocked-users', methods=['POST'])
 def post_blocked_users(user_id):
     body = request.json
     blocked_user_id = body["userId"]
