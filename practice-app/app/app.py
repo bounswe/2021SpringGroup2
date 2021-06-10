@@ -1,6 +1,8 @@
 import requests
 from flask import Flask, jsonify, abort, request, send_from_directory, render_template
 import urllib
+from flask_cors import CORS
+
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
 from .answer import answer_api
@@ -16,7 +18,7 @@ from .user import user_api
 app = Flask(__name__)
 
 app = Flask(__name__, static_folder='/build/static', template_folder='/build')
-
+CORS(app)
 app.register_blueprint(answer_api)
 app.register_blueprint(block_api)
 app.register_blueprint(comment_api)

@@ -7,7 +7,7 @@ import datetime
 
 answer_api = Blueprint('answer_api', __name__)
 
-@answer_api.route('/api/v1.0/<int:post_id>/comments/<int:comment_id>/answers', methods=['GET'])
+@answer_api.route('/api/v1.0/events/<int:post_id>/comments/<int:comment_id>/answers', methods=['GET'])
 def get_comment_answers(post_id, comment_id):
     post = session.query(Eventpost).filter(Eventpost.postID==post_id).first()
     comment = session.query(Comment).filter(Comment.commentID==comment_id).first()
@@ -19,7 +19,7 @@ def get_comment_answers(post_id, comment_id):
         aslist.append({c.name: str(getattr(i, c.name)) for c in i.__table__.columns})
     return jsonify({"comment_id": comment_id, "answers": aslist})
 
-@answer_api.route('/api/v1.0/<int:post_id>/comments/<int:comment_id>/answers', methods=['POST'])
+@answer_api.route('/api/v1.0/events/<int:post_id>/comments/<int:comment_id>/answers', methods=['POST'])
 def post_comment_answers(post_id, comment_id):
     if "answer" not in request.json or "owner_id" not in request.json:
         return abort(400)

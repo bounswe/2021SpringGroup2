@@ -3,7 +3,7 @@ import {useParams} from 'react-router-dom'
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import {url} from "../App";
-import {Avatar} from "@material-ui/core";
+import {Avatar, CardContent, Card} from "@material-ui/core";
 
 const userExample = {
     nickname: "asd",
@@ -25,10 +25,12 @@ export default function EventCreator(props){
 
     return(
         <React.Fragment>
-            <Avatar src={user.avatar} style={{alignSelf:"center"}}/>
-            <Typography variant="h4" color={"textSecondary"}>
-                {user.nickname}
-            </Typography>
+                <Card style={{width:250}}>
+                    <Avatar src={user.avatar} style={{alignSelf:"center"}}/>
+                    <Typography variant="body1" color={"textSecondary"}>
+                        {user.nickname}
+                    </Typography>
+                </Card>
         </React.Fragment>
     )
 }

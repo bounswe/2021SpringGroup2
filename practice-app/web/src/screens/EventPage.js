@@ -4,6 +4,7 @@ import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import {url} from "../App";
 import EventCreator from "../components/EventCreator";
+import Comment from "../components/Comment";
 
 const eventexample = {
     "covid_risk_status": false,
@@ -32,13 +33,23 @@ const eventexample = {
 export default function Event(props){
     let {id} = useParams()
     const [event, setEvent] = useState(eventexample)
+    const [comments, setComments] = useState([{commment:"a", commentID: 2}])
+    const [weather, setWeather] = useState([""])
     useEffect(_=>{
         getEvent(id)
     })
     const getEvent = id =>{
+        fetch(url+"api/v1.0/weather/"+event.event.location+"/2021/6/10")
+            .then(r=>r.json())
+            .then(setComments)
+            .catch(e=>console.log(e))
         fetch(url+"api/v1.0/events/"+id)
             .then(r=>r.json())
             .then(setEvent)
+            .catch(e=>console.log(e))
+        fetch(url+"api/v1.0/events/"+id+"/comments")
+            .then(r=>r.json())
+            .then(setComments)
             .catch(e=>console.log(e))
     }
 
@@ -62,6 +73,9 @@ export default function Event(props){
                     High Covid Risk Area: {event.covid_risk_status}
                 </Typography>
                 <Typography variant="body2" color={"textSecondary"}>
+                    Weather: {weather}
+                </Typography>
+                <Typography variant="body2" color={"textSecondary"}>
                     Location: {event.event.location}
                 </Typography>
                 <Typography variant="body2" color={"textSecondary"}>
@@ -80,7 +94,9 @@ export default function Event(props){
                     Event Creator
                 </Typography>
                 <EventCreator id={event.event.ownerID}/>
-
+                {
+                    comments.map(c=><Comment c={c}/>)
+                }
 
             </Container>
         </React.Fragment>

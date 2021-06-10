@@ -59,9 +59,9 @@ def get_user():
     return jsonify(user_list), 200
 
 
-@user_api.route('/api/v1.0/users/<int:id>', methods=['GET'])
+@user_api.route('/api/v1.0/users/<int:userid>', methods=['GET'])
 def get_single_user(userid):
-    users_ = session.query(User).filter(User.user_id == userid)
+    users_ = session.query(User).get(userid)
     if not users_:
         abort(404)
 
@@ -116,7 +116,7 @@ def follow_user(user_id):
     return {'following_id': user_id, 'follower_id': follower_id}, 201
 
 
-@user_api.route('/api/v1.0/users/<id:user_id>/followers', methods=['GET'])
+@user_api.route('/api/v1.0/users/<int:user_id>/followers', methods=['GET'])
 def get_followers(user_id):
     followers = session.query(Following).filter(Following.followingID == user_id).all()
     return jsonify({"followerIDs": [follower.followerID for follower in followers]}), 200

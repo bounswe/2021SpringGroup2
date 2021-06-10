@@ -25,7 +25,7 @@ import UsersPage from "./screens/UsersPage";
 import NotificationPage from "./screens/NotificationPage";
 
 const drawerWidth = 240;
-export const url = "localhost:9000"
+export const url = ""
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -107,13 +107,6 @@ function App() {
                 <ListItem button onClick={_=>{document.location.href="/create-event"}}>
                     <ListItemIcon><ShoppingCartIcon/></ListItemIcon>
                     <ListItemText primary={"Create Event"}/>
-                </ListItem>
-            </List>
-            <Divider />
-            <List>
-                <ListItem button onClick={_=>{document.location.href="/create-equipment"}}>
-                    <ListItemIcon><ShoppingCartIcon/></ListItemIcon>
-                    <ListItemText primary={"Create Equipment"} />
                 </ListItem>
             </List>
             <Divider />
