@@ -129,7 +129,7 @@ def get_user():
     return jsonify(user_list), 200
 
 
-@user_api.route('/api/v1.0/users/<int: id>', methods=['GET'])
+@user_api.route('/api/v1.0/users/<int:id>', methods=['GET'])
 def get_single_user(userid):
     users_ = session.query(User).filter(User.user_id == userid)
     if not users_:
@@ -139,6 +139,8 @@ def get_single_user(userid):
 
     #
     #   API usage starts here
+    #   This api finds the countries according to the given location. But it changes the output format, therefore
+    #   it will not be allowed to work.
     #
     resp = requests.get("https://countriesnow.space/api/v0.1/countries/population/cities")
     datum = resp.json()['data']
@@ -153,9 +155,11 @@ def get_single_user(userid):
         else:
             country = 'not found'
     if country != 'not found':
-        table['country'] = country
+        pass
+        #table['country'] = country
     else:
-        table['country'] = "not known"
+        pass
+        #table['country'] = "not known"
     #
     #   API usage ends here
     #
