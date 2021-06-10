@@ -26,6 +26,7 @@ app.register_blueprint(player_api)
 app.register_blueprint(user_api)
 
 
+
 @app.route('/api/v1.0/', methods=['GET'])
 def index():
     return jsonify({'message': 'hello world'}), 200  # mock message as an example
