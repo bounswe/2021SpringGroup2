@@ -3,9 +3,14 @@ from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
-from .dbinit import Answer, session, Eventpost, Comment, Blocking, User, Equipmentpost
+from sqlalchemy.orm import sessionmaker
+from .dbinit import db, User, Equipmentpost
+
 equipment_api = Blueprint('equipment_api', __name__)
 API_KEY = "Google API Key"
+
+Session = sessionmaker(db)
+session = Session()
 
 events = [
     {
@@ -116,39 +121,36 @@ def getEquipment(equipmentId):
 		   'link' : equipment.link,
 		   'results' : results(equipment.title)}), 201
 
-@equipment_api.route('/api/v1.0/equipments', methods=['POST'])
+@equipment_api.route('/api/v1.0/equipments/', methods=['POST'])
 def create_equipment_post():
-	# Creates the equipment post
-	if len(equipmentPost) != 0:
-		new_equipment = {
-			"postId": equipmentPost[-1]['postId'] + 1,
-			"ownerId": request.json['ownerId'],
-			"content": request.json['content'],
-			"title": request.json['title'],
-			"creationDate": request.json["creationDate"],
-			"lastUpdateDate": request.json["lastUpdateDate"],
-			"numberOfClicks": request.json['numberOfClicks'],
-			"location": request.json["location"],
-			"equipmentType": request.json["equipmentType"],
-			"websiteName": request.json["websiteName"],
-			"link": request.json["link"]
-		}
-	else:
-		new_equipment = {
-			"postId": 1,
-			"ownerId": request.json['ownerId'],
-			"content": request.json['content'],
-			"title": request.json['title'],
-			"creationDate": request.json["creationDate"],
-			"lastUpdateDate": request.json["lastUpdateDate"],
-			"numberOfClicks": request.json['numberOfClicks'],
-			"location": request.json["location"],
-			"equipmentType": request.json["equipmentType"],
-			"websiteName": request.json["websiteName"],
-			"link": request.json["link"]
-		}
-	equipmentPost.append(new_equipment)
-	return jsonify({"equipment": new_equipment}), 201
+
+    creation_date = datetime.today()
+
+    if "ownerId" not in request.json:
+        abort(400)
+    if "title" not in request.json:
+        abort(400)
+    if "equipmentType" not in request.json:
+        abort(400)
+    if "websiteName" not in request.json:
+        abort(400)
+    if "link" not in request.json:
+        abort(400)
+
+    new_equipment = Equipmentpost(ownerID=request.json["ownerId"],
+                                  content=request.json["content"],
+                                  title=request.json["title"],
+                                  creationDate=creation_date,
+                                  location=request.json["location"],
+                                  equipmentType=request.json["equipmentType"],
+                                  websiteName=request.json["websiteName"],
+                                  link=request.json["link"])
+
+    session.add(new_equipment)
+    session.commit()
+
+    return jsonify({col.name: str(getattr(new_equipment, col.name)) for col in new_equipment.__table__.columns}), 201
+
 
 @equipment_api.route('/api/v1.0/search-equipment-type/<string:equipmentType>', methods=['GET'])
 def search_equipments_by_type(equipmentType):
