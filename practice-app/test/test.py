@@ -1,33 +1,96 @@
+
 import unittest
 
+
+
 from app.app import app
+from app.dbinit import db, User, base, session, Equipmentpost
+
 from app import dbinit
 from app.dbinit import db, User, Eventpost, base
+from app.app import app
+from app.equipment import results
 
 import datetime
 from datetime import timedelta
 
 
-class SimpleTestCase(unittest.TestCase):
+class PostEquipmentTest(unittest.TestCase):
 
     def setUp(self):
-        self.client = app.test_client()
-        base.metadata.create_all(db)
-        user = User(user_id=48, nickname='emre121', first_name='emre', last_name='guner')
-        dbinit.session.add(user)
-        dbinit.session.commit()
+        user = User()
+        session.add(user)
+        session.commit()
 
-    def test_content(self):
-        resp = self.client.get('/api/v1.0/events/1')
+        self.client = app.test_client()
+
+    def test_equipment_valid(self):
+        params = {
+            "ownerID": 1,
+            "content": "nohut",
+            "title": "fsfsfs",
+            "location": "ooo",
+            "equipmentType": "pwp",
+            "websiteName": "ooeoo",
+            "link": "ooeoo.com"}
+
+        resp = self.client.post('/api/v1.0/equipments/', data=params)
 
         status = resp.status_code
 
+        self.assertEqual(201, status)
+
+    def test_equipment_invalid(self):
+        params = {
+            "ownerID": 1,
+            "content": "nohut",
+            "title": "fsfsfs",
+            "location": "ooo",
+            "websiteName": "ooeoo",
+            "link": "ooeoo.com"}
+
+        resp = self.client.post('/api/v1.0/equipments/', data=params)
+
+        status = resp.status_code
+
+        self.assertEqual(400, status)
+
+    def tearDown(self):
+        session.close()
+        base.metadata.drop_all(db)
+        
+
+class GetUserTest(unittest.TestCase):
+
+    def setUp(self):
+        user1 = User()
+        user2 = User()
+        session.add_all([user1, user2])
+        session.commit()
+
+        self.client = app.test_client()
+
+    def test_get_valid_single_user(self):
+
+        resp = self.client.get('/api/v1.0/users/1')
+        status = resp.status_code
+        self.assertEqual(200, status)
+
+    def test_get_valid_all_users(self):
+
+        resp = self.client.get('/api/v1.0/users')
+        status = resp.status_code
+        self.assertEqual(200, status)
+
+    def test_get_invalid(self):
+
+        resp = self.client.get('/api/v1.0/users/493')
+        status = resp.status_code
         self.assertEqual(404, status)
 
     def tearDown(self):
-        dbinit.session.close()
-        dbinit.base.metadata.drop_all(db)
-
+        session.close()
+        base.metadata.drop_all(db)
 
 class EventTestCase(unittest.TestCase):
 
@@ -140,3 +203,34 @@ class Testplayers(unittest.TestCase):
     def test_is_proper_players_allplayerareappropriate(self):
         result=self.is_proper_players(50,10,"football",[["player1",12,["football","basketbol","f1"]], ["player2 ",35,["bowling","basketbol","football"]  ] ,["player3 ",45,["walking","running","football"] ]])
         self.assertEqual(result,"All players satisfy the needs.")
+       
+class Test_results(unittest.TestCase):
+    def test_shoe(self):
+        tmp=str(results('shoe'))
+        if('Shoe' in tmp and 'title' in tmp and 'description' in tmp and 'link' in tmp):
+            bb=True
+        else: 
+            bb=False
+        self.assertEqual(bb,True)
+    def test_racket(self):
+        tmp=str(results('racket'))
+        if('racket' in tmp and 'title' in tmp and 'description' in tmp and 'link' in tmp):
+            bb=True
+        else: 
+            bb=False
+        self.assertEqual(bb,True)
+    def test_ball(self):
+        tmp=str(results('golf ball'))
+        if('golf ball' in tmp and 'title' in tmp and 'description' in tmp and 'link' in tmp):
+            bb=True
+        else: 
+            bb=False
+        self.assertEqual(bb,True)
+    def test_bar(self):
+        tmp=str(results('pull-up bar'))
+        if('pull-up bar' in tmp and 'title' in tmp and 'description' in tmp and 'link' in tmp):
+            bb=True
+        else: 
+            bb=False
+        self.assertEqual(bb,True)
+
