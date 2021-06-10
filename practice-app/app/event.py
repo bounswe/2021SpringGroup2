@@ -103,8 +103,8 @@ def getNearbyEvents():
                 return make_response(jsonify({'error': 'Sport type must consist of alphabetic characters only.'}), 400)
             query = query.filter(Eventpost.eventSport==str(request.args["sport"])) ## return only the events of the given sport
         elif argument == "skillLevel": ## skill level of events
-            if not request.args["skillLevel"] in ["Beginner","Pre-intermediate","Intermediate","Advanced","Expert"]: ## must be enum of 5 values
-                return make_response(jsonify({'error': 'Skill level must be one of the following: Beginner,Pre-intermediate,Intermediate,Advanced,Expert.'}), 400)
+            if not request.args["skillLevel"] in ["Beginner","Preintermediate","Intermediate","Advanced","Expert"]: ## must be enum of 5 values
+                return make_response(jsonify({'error': 'Skill level must be one of the following: Beginner,Preintermediate,Intermediate,Advanced,Expert.'}), 400)
             query = query.filter(Eventpost.eventSkillLevel==str(request.args["skillLevel"]))
         elif argument == "search": ## keyword to search in the title and description of events
             searchContent = request.args["search"]
@@ -176,12 +176,12 @@ def create_event_post():
         abort(400)
 
     creation_date = datetime.today()
-    event_players = "eventPlayers" in request.json ? request.json["eventPlayers"] : {}
-    event_spectators = "eventSpectators" in request.json ? request.json["eventSpectators"] : {}
+    event_players = request.json["eventPlayers"] if "eventPlayers" in request.json else {}
+    event_spectators = request.json["eventSpectators"] if "eventSpectators" in request.json else {}
     location_address = request.json['location']
 
     key = 'I4AusKojAMUPh2QSaXg9RTGqsM903dJ1'
-    response = requests.get("http://www.mapquestapi.com/geocoding/v1/address?key={}&location={}".format(key, location))
+    response = requests.get("http://www.mapquestapi.com/geocoding/v1/address?key={}&location={}".format(key, location_address))
     latLng = response["results"][0]["locations"]["latLng"]
 
     new_event = Eventpost(ownerID = request.json["ownerID"],

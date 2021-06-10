@@ -12,7 +12,7 @@ API_KEY = "Google API Key"
 @notif_api.route("/api/v1.0/notification",methods=["GET"])
 def get_notification(user_id):
     notifications = session.query(Notification).filter(Notification.recipientID == user_id).all()
-    return {'notifications': [col.name: str(getattr(notification, col.name)) for col in notification.__table__.columns for notification in notifications]}, 200
+    return {'notifications': [{col.name: str(getattr(notification, col.name)) for col in notification.__table__.columns} for notification in notifications]}, 200
 
 
 @notif_api.route("/api/v1.0/notification",methods=["POST"])
