@@ -12,9 +12,10 @@ from datetime import datetime, time, date
 from math import cos, asin, sqrt, pi
 from .dbinit import db, User, Eventpost, session
 from sqlalchemy.orm import sessionmaker
+import os
 
 event_api = Blueprint('event_api', __name__)
-API_KEY = "Google API Key"
+API_KEY = str(os.getenv("API_KEY"))
 
 headers = {
     "x-rapidapi-key": "c4ab16012amsh73b5a257264eb3dp11ade4jsnb69ec0b79098",
