@@ -9,6 +9,9 @@ from .dbinit import db, User, Equipmentpost
 equipment_api = Blueprint('equipment_api', __name__)
 API_KEY = "Google API Key"
 
+Session = sessionmaker(db)
+session = Session()
+
 events = [
     {
         "eventId": 1,
