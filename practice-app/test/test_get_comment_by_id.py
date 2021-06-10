@@ -10,7 +10,7 @@ from faker import Faker
 from datetime import datetime
 from app.app import app
 from app import dbinit
-class Test(unittest.TestCase):
+class CommentTest(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.client = app.app.test_client()
