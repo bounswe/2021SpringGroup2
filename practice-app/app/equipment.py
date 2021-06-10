@@ -113,7 +113,7 @@ def getEquipment(equipmentId):
 		   'location' : equipment.location,
 		   'equipmentType' : equipment.equipmentType,
 		   'websiteName' : equipment.websiteName,
-		   'link' : equipment.link
+		   'link' : equipment.link,
 		   'results' : results(equipment.title)}), 201
 
 @equipment_api.route('/api/v1.0/equipments', methods=['POST'])
