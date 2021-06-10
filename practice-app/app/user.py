@@ -1,11 +1,8 @@
 from flask import Blueprint, jsonify, abort, request
-from .dbinit import db, Following
+from .dbinit import db, Following, session
 from sqlalchemy.orm import sessionmaker
 from .dbinit import db, User, Eventpost, Following
 import requests
-
-Session = sessionmaker(db)
-session = Session()
 
 user_api = Blueprint('user_api', __name__)
 
