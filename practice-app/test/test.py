@@ -234,3 +234,15 @@ class Test_results(unittest.TestCase):
             bb=False
         self.assertEqual(bb,True)
 
+
+class Test_sports(unittest.TestCase):
+    def setUp(self):
+        self.client = app.test_client()
+    def test_sports(self):
+        resp = self.client.get('/api/v1.0/sportTypes/')
+
+        status = resp.status_code
+
+        self.assertEqual(200, status)
+
+
