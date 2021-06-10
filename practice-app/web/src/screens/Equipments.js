@@ -15,21 +15,21 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import {useHistory} from "react-router-dom";
 import FilterEquipmentModal from "../components/FilterEquipmentModal";
+import {url} from "../App";
 
-const equipments = [
-  {
-		"postId": 1,
-		"ownerId": 1,
-		"content": "A nice ball",
-		"title": "Well-conditioned ball",
-		"creationDate": "29.05.2021",
-		"lastUpdateDate": "29.05.2021",
-		"numberOfClicks": 1,
-		"location": "İstanbul",
-		"equipmentType": "Ball",
-		"websiteName": "ismycomputeron",
-		"link": "www.ismycomputeron.com"
-	}
+const equip = [
+    {
+        "equipments": {
+            "content": "I have a pair of shoes in good condition that i want to sell.",
+            "equipment type": "Shoes",
+            "equipmentId": 2,
+            "link": "letgo.com/245323",
+            "ownerId": 1,
+            "title": "Tennis rackets for sale!",
+            "website name": "letgo",
+            "location": "Ankara"
+        }
+    }
 ]
 
 const useStyles = makeStyles({
@@ -39,6 +39,16 @@ const useStyles = makeStyles({
 });
 
 export default function EquipmentScreen() {
+    const [equipments, setEvents] = useState([equip])
+    const getUser = _ =>{
+        fetch(url+"api/v1.0/search-equipment-type/+")
+            .then(r=>r.json())
+            .then(setEvents)
+            .catch(e=>console.log(e))
+    }
+    useEffect(_=>{
+        getUser()
+    })
     const [open, setOpen] = useState(false);
     const [filter, setFilter] = useState({});
     const handleClose = () => {
@@ -103,7 +113,7 @@ export default function EquipmentScreen() {
                                 <EquipmentRow
                                     onClick={_=>history.push("/equipment/"+equipment.postId)}
                                     key={equipment.title}
-                                    {...equipment}
+                                    {...equipment.equipment}
                                 />
                             ))}
                         </TableBody>

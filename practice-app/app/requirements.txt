@@ -4,3 +4,4 @@ requests==2.25.1
 sqlalchemy
 SQLAlchemy==1.4.17
 psycopg2
+flask-cors

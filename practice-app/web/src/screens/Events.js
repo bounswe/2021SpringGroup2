@@ -15,12 +15,13 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import {useHistory} from "react-router-dom";
 import FilterEventModal from "../components/FilterEventModal";
+import {url} from "../App";
 
-const events = [
-    {
+const eventsx = [
+    {event:{
         eventId: 1,
         owner: "emre_gundogu",
-        title:  "Tennis Game for Everyone",
+        title: "Tennis Game for Everyone",
         content: "People who are looking for a tennis court can apply this event. Our court is for you if you are seeking for a clean and well-lit court.",
         location: "Bebek Tennis Club",
         date: "01.05.2021",
@@ -33,6 +34,7 @@ const events = [
         spectators: [],
         players: []
     }
+}
 ]
 const useStyles = makeStyles({
     table: {
@@ -51,6 +53,16 @@ const useStyles = makeStyles({
 
 
 export default function EventScreen() {
+    const [events, setEvents] = useState(eventsx)
+    const getUser = _ =>{
+        fetch(url+"api/v1.0/events?ip=false&radius=100&address=İstanbul")
+            .then(r=>r.json())
+            .then(console.log)
+            .catch(e=>console.log(e))
+    }
+    useEffect(_=>{
+        getUser()
+    })
     const [open, setOpen] = useState(false);
     const [filter, setFilter] = useState({});
     const handleClose = () => {
@@ -114,11 +126,11 @@ export default function EventScreen() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {events.map(event => (
+                            {events.map((event) => (
                                 <EventRow
-                                    onClick={_=>history.push("/event/"+event.eventId)}
+                                    onClick={_=>history.push("/event/"+event.event.eventId)}
                                     key={event.title}
-                                    {...event}
+                                    {...event.event}
                                 />
                             ))}
                         </TableBody>

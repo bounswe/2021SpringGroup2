@@ -19,9 +19,13 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import MenuIcon from '@material-ui/icons/Menu';
 import CreateEvent from "./screens/CreateEvent";
 import CreateEquipment from "./screens/CreateEquipment";
+import FollowPage from "./screens/FollowPage";
+import BlockPage from "./screens/BlockPage";
+import UsersPage from "./screens/UsersPage";
+import NotificationPage from "./screens/NotificationPage";
 
 const drawerWidth = 240;
-
+export const url = ""
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -107,9 +111,16 @@ function App() {
             </List>
             <Divider />
             <List>
-                <ListItem button onClick={_=>{document.location.href="/create-equipment"}}>
+                <ListItem button onClick={_=>{document.location.href="/users"}}>
                     <ListItemIcon><ShoppingCartIcon/></ListItemIcon>
-                    <ListItemText primary={"Create Equipment"} />
+                    <ListItemText primary={"Users"} />
+                </ListItem>
+            </List>
+            <Divider />
+            <List>
+                <ListItem button onClick={_=>{document.location.href="/notifications"}}>
+                    <ListItemIcon><ShoppingCartIcon/></ListItemIcon>
+                    <ListItemText primary={"Notifications"} />
                 </ListItem>
             </List>
         </Drawer>
@@ -122,6 +133,10 @@ function App() {
                 <Route path={'/equipments'} component={Equipments}/>
                 <Route path={'/equipment/:id'} component={EquipmentPage}/>
                 <Route path={'/create-equipment'} component={CreateEquipment}/>
+                <Route path={'/follow/:user_id'} component={FollowPage}/>
+                <Route path={'/block/:user_id'} component={BlockPage}/>
+                <Route path={'/users'} component={UsersPage}/>
+                <Route path={'/notifications'} component={NotificationPage}/>
             </Switch>
         </Router>
     </React.Fragment>

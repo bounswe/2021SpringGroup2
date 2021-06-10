@@ -9,6 +9,7 @@ ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait
 RUN chmod +x /wait
 
 ADD app/ /app
+ADD web/build /build
 WORKDIR /
 
 CMD /wait && gunicorn --bind 0.0.0.0:9000 -w 1 app.app:app
