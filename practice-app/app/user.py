@@ -1,15 +1,11 @@
 from flask import Blueprint, jsonify, abort, request
 from .dbinit import db, Following
 from sqlalchemy.orm import sessionmaker
+from .dbinit import db, User, Eventpost, Following
+import requests
 
 Session = sessionmaker(db)
 session = Session()
-
-from .dbinit import db, User, Eventpost, Following
-
-import requests
-
-
 
 user_api = Blueprint('user_api', __name__)
 
@@ -90,16 +86,15 @@ def get_single_user(userid):
             country = 'not found'
     if country != 'not found':
         pass
-        #table['country'] = country
+        # table['country'] = country
     else:
         pass
-        #table['country'] = "not known"
+        # table['country'] = "not known"
     #
     #   API usage ends here
     #
 
     return jsonify(table), 200
-
 
 
 @user_api.route('/api/v1.0/users/<int:user_id>/followers', methods=['POST'])
