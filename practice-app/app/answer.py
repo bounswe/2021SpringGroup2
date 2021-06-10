@@ -16,7 +16,7 @@ def get_comment_answers(post_id, comment_id):
     answers = session.query(Answer).filter(Answer.commentId==comment_id).all()
     aslist = []
     for i in answers:
-        aslist.append({c.name: str(getattr(i, c.name)) for c in i.table.columns})
+        aslist.append({c.name: str(getattr(i, c.name)) for c in i.__table__.columns})
     return jsonify({"comment_id": comment_id, "answers": aslist})
 
 @answer_api.route('/api/v1.0/<int:post_id>/comments/<int:comment_id>/answers', methods=['POST'])
