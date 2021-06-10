@@ -93,25 +93,33 @@ headers = {
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
 
-@equipment_api.route('/api/v1.0/equipments/<int:equipmentId>/results', methods=['GET'])
-def results(equipmentId):
-    equipment = [equipment for equipment in equipments2 if equipment['equipmentId'] == equipmentId]
-    if len(equipment) == 0:
-        abort(404)
-    title=equipment[0]['title']
+
+def results(title):
+   
     query = {
-    "q": equipment[0]['title'],
+    "q": title,
 }
 
     response=requests.get("https://rapidapi.p.rapidapi.com/api/v1/search/" + urllib.parse.urlencode(query), headers=headers)
     mapped=[{"description": j["description"],"link": j["link"], "title":j["title"]} for j in response.json()["results"]]
-    return jsonify(mapped), 200
+    return mapped
 @equipment_api.route('/api/v1.0/equipments/<int:equipmentId>', methods=['GET'])
 def getEquipment(equipmentId):
-   equipment = [equipment for equipment in equipments2 if equipment['equipmentId'] == equipmentId]
-   if len(equipment) == 0:
+   equipment = session.query(Equipmentpost).filter(Equipmentpost.postID == equipmentId)
+   if equipment.first() is None:
         abort(404)
-   return jsonify({'equipments': equipment[0]})
+   else:
+	equipment=equipment.first()
+   return jsonify({'postID': equipmentId,
+		   'ownerID' : equipment.ownerID,
+		   'content' : equipment.content,
+		   'title' : equipment.title,
+		   'creationDate' : equipment.creationDate,
+		   'location' : equipment.location,
+		   'equipmentType' : equipment.equipmentType,
+		   'websiteName' : equipment.websiteName,
+		   'link' : equipment.link,
+		   'results' : results(equipment.title)}), 201
 
 @equipment_api.route('/api/v1.0/equipments/', methods=['POST'])
 def create_equipment_post():
