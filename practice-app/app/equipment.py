@@ -178,8 +178,7 @@ def search_equipments_by_type(equipmentType):
                     'location': equipment.location,
                     'equipmentType': equipmentType,
                     'websiteName': equipment.websiteName,
-                    'link': equipment.link,
-                    'results': results(equipment.title)}), 200
+                    'link': equipment.link}), 200
 
 
 @equipment_api.route('/api/v1.0/search-equipment-location/<string:location>', methods=['GET'])
@@ -196,6 +195,5 @@ def search_equipments_by_location(location):
                     'location': location,
                     'equipmentType': equipment.equipmentType,
                     'websiteName': equipment.websiteName,
-                    'link': equipment.link,
-                    'results': results(equipment.title)}), 200
+                    'link': equipment.link}), 200
 
