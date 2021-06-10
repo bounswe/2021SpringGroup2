@@ -45,3 +45,7 @@ class ApplyEventTest(unittest.TestCase):
         user_id=1))
         status = resp.status_code
         self.assertEqual(404, status)
+
+    def tearDown(self):
+        session.close()
+        base.metadata.drop_all(db)
