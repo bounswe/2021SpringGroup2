@@ -34,7 +34,7 @@ class Testplayers(unittest.TestCase):
 
 def is_proper_players(maxage,minage,sport,players):
     number=0
-    print(players)
+    
     for a in range (len(players)):
         if players[a][1]>maxage:
             return "There is an older player."
