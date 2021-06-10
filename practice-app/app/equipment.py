@@ -109,7 +109,7 @@ def getEquipment(equipmentId):
    if equipment.first() is None:
         abort(404)
    else:
-	equipment=equipment.first()
+       equipment=equipment.first()
    return jsonify({'postID': equipmentId,
 		   'ownerID' : equipment.ownerID,
 		   'content' : equipment.content,
