@@ -103,8 +103,8 @@ def getNearbyEvents():
                 return make_response(jsonify({'error': 'Sport type must consist of alphabetic characters only.'}), 400)
             query = query.filter(Eventpost.eventSport==str(request.args["sport"])) ## return only the events of the given sport
         elif argument == "skillLevel": ## skill level of events
-            if not request.args["skillLevel"] in ["Beginner","Pre-intermediate","Intermediate","Advanced","Expert"]: ## must be enum of 5 values
-                return make_response(jsonify({'error': 'Skill level must be one of the following: Beginner,Pre-intermediate,Intermediate,Advanced,Expert.'}), 400)
+            if not request.args["skillLevel"] in ["Beginner","Preintermediate","Intermediate","Advanced","Expert"]: ## must be enum of 5 values
+                return make_response(jsonify({'error': 'Skill level must be one of the following: Beginner,Preintermediate,Intermediate,Advanced,Expert.'}), 400)
             query = query.filter(Eventpost.eventSkillLevel==str(request.args["skillLevel"]))
         elif argument == "search": ## keyword to search in the title and description of events
             searchContent = request.args["search"]
