@@ -15,55 +15,169 @@ import Button from '@material-ui/core/Button';
 import {useHistory} from "react-router-dom";
 import FilterEventModal from "../components/FilterEventModal";
 import TextField from "@material-ui/core/TextField";
+import DateFnsUtils from '@date-io/date-fns';
+import 'date-fns';
+import {
+    MuiPickersUtilsProvider,
+    KeyboardTimePicker,
+    KeyboardDatePicker,
+    TimePicker
+} from '@material-ui/pickers';
+import {url} from "../App";
 
-const events = [
-    {
-        eventId: 1,
-        owner: "emre_gundogu",
-        title:  "Tennis Game for Everyone",
-        content: "People who are looking for a tennis court can apply this event. Our court is for you if you are seeking for a clean and well-lit court.",
-        location: "Bebek Tennis Club",
-        date: "01.05.2021",
-        hours: "15.00",
-        sport: "Tennis",
-        ageGroup: "Any age",
-        skillLevel: "Any level",
-        playerCapacity: "2",
-        spectatorCapacity: "8",
-        spectators: [],
-        players: []
-    }
-]
-
-const fields = [
-    "Age",
-    "Location",
-    "Location Range",
-    "Gender",
-    "Skill Level"
-]
 
 export default function CreateEvent() {
 
-    return (
-        <React.Fragment>
-            <Container maxWidth={"md"}>
-                {
-                    fields.map(field=>(
-                        <TextField
-                            key={field}
-                            autoFocus
-                            margin="dense"
-                            id={field}
-                            label={field}
-                            type="string"
-                            fullWidth
+    const [selectedDate, setSelectedDate] = React.useState(new Date('2021-06-10T12:00:00'));
+    const [filter, setFilter] = React.useState({});
 
-                        />
-                    ))
-                }
-            </Container>
-        </React.Fragment>
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+    };
+    const [selectedTime, setSelectedTime] = React.useState(null);
+    const handleChange = e=>{
+        const f = {...filter}
+        f[e.target.id] = e.target.value
+        setFilter(f)
+    }
+    const handleTimeChange = (time) => {
+        setSelectedTime(time);
+    };
+    const submit = _=>{
+        fetch(url+"/events",{
+            method: "post",
+            body:JSON.stringify({
+                ownerID: filter["user_id"],
+                title: filter["Title"],
+                content: filter["Description"],
+                eventDate: selectedDate,
+                eventHours: selectedTime,
+                eventSport: filter["Sport"],
+                eventPlayerCapacity: filter["Player Capacity"],
+                eventSpectatorCapacity: filter["Spectator Capacity"],
+                eventSkillLevel: filter["Skil Level"]
+            })
+        })
+    }
+    return (
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <React.Fragment>
+                <Container maxWidth="sm">
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="Title"
+                        label="Title"
+                        type="string"
+                        value={filter["Title"]||""}
+                        fullWidth
+                        onChange={handleChange}
+                    />
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="Description"
+                        label="Description"
+                        type="string"
+                        value={filter["Description"]||""}
+                        onChange={handleChange}
+                        fullWidth
+                    />
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="Sport"
+                        label="Sport"
+                        type="string"
+                        value={filter["Sport"]||""}
+                        onChange={handleChange}
+                        fullWidth
+                    /><TextField
+                    autoFocus
+                    margin="dense"
+                    id="Location"
+                    label="Location"
+                    type="string"
+                    onChange={handleChange}
+                    value={filter["Location"]||""}
+                    fullWidth
+                />
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="Skil Level"
+                        label="Skill Level"
+                        type="string"
+                        onChange={handleChange}
+                        value={filter["Skil Level"]||""}
+                        fullWidth
+                    />
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="Age Group"
+                        label="Age Group"
+                        type="string"
+                        onChange={handleChange}
+                        value={filter["Age Group"]||""}
+                        fullWidth
+                    />
+                    <KeyboardDatePicker
+                        disableToolbar
+                        variant="inline"
+                        format="dd/MM/yyyy"
+                        margin="normal"
+                        id="Event Date"
+                        label="Event Date"
+                        value={selectedDate}
+                        onChange={handleDateChange}
+                        KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                        }}
+                    />
+                    <TimePicker
+                        clearable
+                        ampm={false}
+                        label="Event Hours"
+                        value={selectedTime}
+                        value={filter["Title"]||""}
+                        onChange={handleTimeChange}
+                    />
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="Player Capacity"
+                        label="Player Capacity"
+                        type="string"
+                        onChange={handleChange}
+                        value={filter["Player Capacity"]||""}
+                        fullWidth
+                    />
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="Spectator Capacity"
+                        label="Spectator Capacity"
+                        type="string"
+                        onChange={handleChange}
+                        value={filter["Spectator Capacity"]||""}
+                        fullWidth
+                    />
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="user_id"
+                        label="Creator"
+                        type="string"
+                        onChange={handleChange}
+                        value={filter["user_id"]||""}
+                        fullWidth
+                    />
+                    <Button onClick={submit} variant={"outlined"}>
+                        Gönder
+                    </Button>
+                </Container>
+            </React.Fragment>
+        </MuiPickersUtilsProvider>
     );
 }
-

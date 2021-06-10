@@ -56,9 +56,9 @@ def get_user():
     return jsonify(user_list), 200
 
 
-@user_api.route('/api/v1.0/users/<int:id>', methods=['GET'])
+@user_api.route('/api/v1.0/users/<int:userid>', methods=['GET'])
 def get_single_user(userid):
-    users_ = session.query(User).filter(User.user_id == userid)
+    users_ = session.query(User).get(userid)
     if not users_:
         abort(404)
 
