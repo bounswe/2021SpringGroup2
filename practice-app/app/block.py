@@ -11,4 +11,4 @@ block_api = Blueprint('block_api', __name__)
 @block_api.route('/api/v1.0/<int:user_id>/blocked-users', methods=['GET'])
 def get_blocked_users(user_id):
     blocked_users = session.query(Blocking).filter(Blocking.blockingID == user_id).all()
-    return jsonify({col.name: str(getattr(blocked_users, col.name)) for col in blocked_users.__table__.columns}), 200
+    return jsonify({"blockedIDs": [user.blockedID for user in blocked_users]}), 200
