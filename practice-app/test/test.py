@@ -1,8 +1,9 @@
 import unittest
 
 from app.app import app
-from app.dbinit import db, User, base, session
+from app.dbinit import db, User, base, session, Equipmentpost
 from app import dbinit
+
 
 class GetUserTest(unittest.TestCase):
 
