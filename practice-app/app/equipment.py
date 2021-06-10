@@ -91,7 +91,7 @@ headers = {
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
 
-@app.route('/api/v1.0/equipments', methods=['GET'])
+@equipment_api.route('/api/v1.0/equipments', methods=['GET'])
 def get_equipments():
     response = requests.get("https://randomapi.com/api/57yc6ybc?key=EORH-HSZQ-D084-2TU0")
     data = response.json()["results"]
