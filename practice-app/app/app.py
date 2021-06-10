@@ -13,6 +13,8 @@ from .notification import notif_api
 from .player import player_api
 from .user import user_api
 
+app = Flask(__name__)
+
 app = Flask(__name__, static_folder='/build/static', template_folder='/build')
 
 app.register_blueprint(answer_api)
