@@ -1,4 +1,3 @@
-import requests
 from flask import Blueprint, jsonify, abort, request
 from .dbinit import db, Following
 from sqlalchemy.orm import sessionmaker
@@ -8,7 +7,9 @@ session = Session()
 
 from .dbinit import db, User, Eventpost, Following
 
-from sqlalchemy.orm import sessionmaker
+import requests
+
+
 
 user_api = Blueprint('user_api', __name__)
 
