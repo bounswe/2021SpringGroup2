@@ -1,11 +1,8 @@
 from flask import Blueprint, jsonify, abort, request
-from .dbinit import db, Following
+from .dbinit import db, Following, session
 from sqlalchemy.orm import sessionmaker
 from .dbinit import db, User, Eventpost, Following
 import requests
-
-Session = sessionmaker(db)
-session = Session()
 
 user_api = Blueprint('user_api', __name__)
 
@@ -116,7 +113,7 @@ def follow_user(user_id):
     return {'following_id': user_id, 'follower_id': follower_id}, 201
 
 
-@user_api.route('/api/v1.0/users/<id:user_id>/followers', methods=['GET'])
+@user_api.route('/api/v1.0/users/<int:user_id>/followers', methods=['GET'])
 def get_followers(user_id):
     followers = session.query(Following).filter(Following.followingID == user_id).all()
     return jsonify({"followerIDs": [follower.followerID for follower in followers]}), 200

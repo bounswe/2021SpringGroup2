@@ -1,8 +1,8 @@
 import unittest
 
+from app.app import app
 from app import dbinit
 from app.dbinit import db, User, Eventpost, base
-from app.app import app
 
 import datetime
 from datetime import timedelta
@@ -63,6 +63,42 @@ class EventTestCase(unittest.TestCase):
     def tearDown(self):
         dbinit.session.close()
         dbinit.base.metadata.drop_all(db)
+
+
+class FollowTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.client = app.test_client()
+        base.metadata.create_all(db)
+        user1 = User(user_id=67, nickname='emre171', first_name='emre', last_name='guner')
+        user2 = User(user_id=71, nickname='hamdi99', first_name='hamdi', last_name='dogan')
+
+        dbinit.session.add(user1)
+        dbinit.session.add(user2)
+        dbinit.session.commit()
+
+    def test_follow(self):
+        resp = self.client.post('/api/v1.0/users/67/followers', json={'follower_id': 71})
+        data = resp.get_json()
+
+        self.assertEqual(201, resp.status_code)
+        self.assertIn('following_id', data)
+        self.assertIn('follower_id', data)
+
+        self.assertEqual(data['following_id'], 67)
+        self.assertEqual(data['follower_id'], 71)
+
+    def test_no_follower_exists(self):
+        resp = self.client.post('/api/v1.0/users/67/followers', json={'follower_id': 89})
+        self.assertEqual(404, resp.status_code)
+
+    def test_no_user_exists(self):
+        resp = self.client.post('/api/v1.0/users/35/followers', json={'follower_id': 67})
+        self.assertEqual(404, resp.status_code)
+
+    def tearDown(self):
+        dbinit.session.close()
+        dbinit.base.metadata.drop_all(dbinit.db)
 
 
 
