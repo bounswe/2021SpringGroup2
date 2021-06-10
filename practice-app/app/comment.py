@@ -33,9 +33,9 @@ def postComment(post_id):
 def getCommentByID(post_id,comment_id):
     if len(session.query(Eventpost).filter(Eventpost.postID==post_id).all())==0: ## check if the event exists
         return make_response(jsonify({'error': 'There is no post with given ID'}), 404)
-    if len(session.query(Comment).filter(Comment.commentId==comment_id).all())==0: ## check if the comment exists
+    if len(session.query(Comment).filter(Comment.commentID==comment_id).all())==0: ## check if the comment exists
         return make_response(jsonify({'error': 'There is no comment with given ID'}), 404)
-    comment = session.query(Comment).filter(Comment.commentId==comment_id).first() ## if so, select the comment by id
+    comment = session.query(Comment).filter(Comment.commentID==comment_id).first() ## if so, select the comment by id
     if int(comment.postID) != post_id: ##check if the comment is comment of given event
         return make_response(jsonify({'error': 'Post has no comment with the given ID'}), 404)
     comment_dict = {c.name: str(getattr(comment, c.name)) for c in comment.__table__.columns} ## convert comment object to dictionary
