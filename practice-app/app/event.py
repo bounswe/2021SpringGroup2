@@ -209,7 +209,7 @@ def create_event_post():
 
 @event_api.route('/api/v1.0/events/<int:event_id>/players', methods=['GET'])
 def get_players(event_id):
-    event = [event for event in events if event['eventId']==event_id]
+    event = session.query(Eventpost).get(event_id)
     if len(event) == 0:
         abort(404)
-    return jsonify({'events': event[0]["events"]})
+    return jsonify({"event_id": event_id, 'players': list(event.eventPlayers)})
