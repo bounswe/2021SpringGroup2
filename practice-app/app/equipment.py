@@ -3,9 +3,14 @@ from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
+from sqlalchemy.orm import sessionmaker
+from .dbinit import db, User, Equipmentpost
 
 equipment_api = Blueprint('equipment_api', __name__)
 API_KEY = "Google API Key"
+
+Session = sessionmaker(db)
+session = Session()
 
 events = [
     {
@@ -88,72 +93,107 @@ headers = {
     "x-rapidapi-host" :"google-search3.p.rapidapi.com"
 }
 
-@equipment_api.route('/api/v1.0/equipments/<int:equipmentId>/results', methods=['GET'])
-def results(equipmentId):
-    equipment = [equipment for equipment in equipments2 if equipment['equipmentId'] == equipmentId]
-    if len(equipment) == 0:
-        abort(404)
-    title=equipment[0]['title']
+@equipment_api.route('/api/v1.0/equipments', methods=['GET'])
+def get_equipments():
+    response = requests.get("https://randomapi.com/api/57yc6ybc?key=EORH-HSZQ-D084-2TU0")
+    data = response.json()["results"]
+    new_equipment = {
+        "equipmentId": data[0]["equipmentId"],
+        "ownerId": data[0]["ownerId"],
+        "title": data[0]["equipmentName"],
+        "location": data[0]["location"]["city"]
+    }
+    return jsonify(new_equipment), 200
+
+
+def results(title):
+   
     query = {
-    "q": equipment[0]['title'],
+    "q": title,
 }
 
     response=requests.get("https://rapidapi.p.rapidapi.com/api/v1/search/" + urllib.parse.urlencode(query), headers=headers)
     mapped=[{"description": j["description"],"link": j["link"], "title":j["title"]} for j in response.json()["results"]]
-    return jsonify(mapped), 200
+    return mapped
 @equipment_api.route('/api/v1.0/equipments/<int:equipmentId>', methods=['GET'])
 def getEquipment(equipmentId):
-   equipment = [equipment for equipment in equipments2 if equipment['equipmentId'] == equipmentId]
-   if len(equipment) == 0:
+   equipment = session.query(Equipmentpost).filter(Equipmentpost.postID == equipmentId)
+   if equipment.first() is None:
         abort(404)
-   return jsonify({'equipments': equipment[0]})
+   else:
+       equipment=equipment.first()
+   return jsonify({'postID': equipmentId,
+		   'ownerID' : equipment.ownerID,
+		   'content' : equipment.content,
+		   'title' : equipment.title,
+		   'creationDate' : equipment.creationDate,
+		   'location' : equipment.location,
+		   'equipmentType' : equipment.equipmentType,
+		   'websiteName' : equipment.websiteName,
+		   'link' : equipment.link,
+		   'results' : results(equipment.title)}), 201
 
-@equipment_api.route('/api/v1.0/equipments', methods=['POST'])
+@equipment_api.route('/api/v1.0/equipments/', methods=['POST'])
 def create_equipment_post():
-	# Creates the equipment post
-	if len(equipmentPost) != 0:
-		new_equipment = {
-			"postId": equipmentPost[-1]['postId'] + 1,
-			"ownerId": request.json['ownerId'],
-			"content": request.json['content'],
-			"title": request.json['title'],
-			"creationDate": request.json["creationDate"],
-			"lastUpdateDate": request.json["lastUpdateDate"],
-			"numberOfClicks": request.json['numberOfClicks'],
-			"location": request.json["location"],
-			"equipmentType": request.json["equipmentType"],
-			"websiteName": request.json["websiteName"],
-			"link": request.json["link"]
-		}
-	else:
-		new_equipment = {
-			"postId": 1,
-			"ownerId": request.json['ownerId'],
-			"content": request.json['content'],
-			"title": request.json['title'],
-			"creationDate": request.json["creationDate"],
-			"lastUpdateDate": request.json["lastUpdateDate"],
-			"numberOfClicks": request.json['numberOfClicks'],
-			"location": request.json["location"],
-			"equipmentType": request.json["equipmentType"],
-			"websiteName": request.json["websiteName"],
-			"link": request.json["link"]
-		}
-	equipmentPost.append(new_equipment)
-	return jsonify({"equipment": new_equipment}), 201
+
+    creation_date = datetime.today()
+
+    if "ownerId" not in request.json:
+        abort(400)
+    if "title" not in request.json:
+        abort(400)
+    if "equipmentType" not in request.json:
+        abort(400)
+    if "websiteName" not in request.json:
+        abort(400)
+    if "link" not in request.json:
+        abort(400)
+
+    new_equipment = Equipmentpost(ownerID=request.json["ownerId"],
+                                  content=request.json["content"],
+                                  title=request.json["title"],
+                                  creationDate=creation_date,
+                                  location=request.json["location"],
+                                  equipmentType=request.json["equipmentType"],
+                                  websiteName=request.json["websiteName"],
+                                  link=request.json["link"])
+
+    session.add(new_equipment)
+    session.commit()
+
+    return jsonify({col.name: str(getattr(new_equipment, col.name)) for col in new_equipment.__table__.columns}), 201
+
 
 @equipment_api.route('/api/v1.0/search-equipment-type/<string:equipmentType>', methods=['GET'])
 def search_equipments_by_type(equipmentType):
-    equipment = [equipment for equipment in equipments2 if equipment['equipmentType'] == equipmentType]
-    if len(equipment) == 0:
+    equipment = session.query(Equipmentpost).filter(Equipmentpost.equipmentType == equipmentType)
+    if equipment.first() is None:
         abort(404)
-    return jsonify(equipment), 200
+    equipment = equipment.first()
+    return jsonify({'postID': equipment.postID,
+                    'ownerID': equipment.ownerID,
+                    'content': equipment.content,
+                    'title': equipment.title,
+                    'creationDate': equipment.creationDate,
+                    'location': equipment.location,
+                    'equipmentType': equipmentType,
+                    'websiteName': equipment.websiteName,
+                    'link': equipment.link}), 200
 
 
 @equipment_api.route('/api/v1.0/search-equipment-location/<string:location>', methods=['GET'])
 def search_equipments_by_location(location):
-    equipment = [equipment for equipment in equipments2 if equipment['location'] == location]
-    if len(equipment) == 0:
+    equipment = session.query(Equipmentpost).filter(Equipmentpost.location == location)
+    if equipment.first() is None:
         abort(404)
-    return jsonify(equipment), 200
+    equipment = equipment.first()
+    return jsonify({'postID': equipment.postID,
+                    'ownerID': equipment.ownerID,
+                    'content': equipment.content,
+                    'title': equipment.title,
+                    'creationDate': equipment.creationDate,
+                    'location': location,
+                    'equipmentType': equipment.equipmentType,
+                    'websiteName': equipment.websiteName,
+                    'link': equipment.link}), 200
 
