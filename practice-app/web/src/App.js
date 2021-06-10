@@ -25,7 +25,7 @@ import UsersPage from "./screens/UsersPage";
 import NotificationPage from "./screens/NotificationPage";
 
 const drawerWidth = 240;
-
+export const url = "localhost:9000"
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
