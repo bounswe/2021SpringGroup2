@@ -184,7 +184,7 @@ def create_event_post():
     response = requests.get("http://www.mapquestapi.com/geocoding/v1/address?key={}&location={}".format(key, location))
     latLng = response["results"][0]["locations"]["latLng"]
 
-    new_event = Eventpost(ownerID = requestt.json["ownerID"],
+    new_event = Eventpost(ownerID = request.json["ownerID"],
                           content = request.json["content"],
                           title = request.json["title"],
                           creationDate = creation_date,
@@ -203,7 +203,7 @@ def create_event_post():
 
     session.add(new_event)
     session.commit()
-    
+
     return jsonify({col.name: str(getattr(new_event, col.name)) for col in new_event.__table__.columns}), 201
 
 
