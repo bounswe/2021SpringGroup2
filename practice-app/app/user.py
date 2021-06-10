@@ -1,8 +1,12 @@
-import requests
-from flask import Flask, Blueprint, jsonify, abort, request
-import urllib
-from datetime import datetime, timedelta
-from .dbinit import session, User, Eventpost, Following
+from flask import Blueprint, jsonify, abort
+from .dbinit import db, Following
+from sqlalchemy.orm import sessionmaker
+
+Session = sessionmaker(db)
+session = Session()
+
+from .dbinit import db, User, Eventpost, Following
+
 from sqlalchemy.orm import sessionmaker
 
 
@@ -62,3 +66,7 @@ def follow_user(user_id):
     return {'following_id': user_id, 'follower_id': follower_id}, 201
 
 
+@user_api.route('/api/v1.0/users/<id:user_id>/followers', methods=['GET'])
+def get_followers(user_id):
+    followers = session.query(Following).filter(Following.followingID == user_id).all()
+    return jsonify({"followerIDs": [follower.followerID for follower in followers]}), 200
