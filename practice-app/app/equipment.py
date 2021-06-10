@@ -116,7 +116,7 @@ def getEquipment(equipmentId):
 @equipment_api.route('/api/v1.0/equipments/', methods=['POST'])
 def create_equipment_post():
 
-    d1 = datetime.today()
+    creation_date = datetime.today()
 
     if "ownerId" not in request.json:
         abort(400)
@@ -132,7 +132,7 @@ def create_equipment_post():
     new_equipment = Equipmentpost(ownerID=request.json["ownerId"],
                                   content=request.json["content"],
                                   title=request.json["title"],
-                                  creationDate=d1,
+                                  creationDate=creation_date,
                                   location=request.json["location"],
                                   equipmentType=request.json["equipmentType"],
                                   websiteName=request.json["websiteName"],
