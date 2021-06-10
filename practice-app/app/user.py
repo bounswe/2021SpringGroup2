@@ -117,36 +117,16 @@ def post_user(user_id):
 
 
 @user_api.route('/api/v1.0/users/', methods=['GET'])
-def get_all_users():
+def get_user():
     users_ = session.query(User)
     if not users_ == 0:
         abort(404)
-    table = {col.name: str(getattr(users_, col.name)) for col in users_.__table__.columns}
 
-    #
-    #   API usage starts here
-    #
-    resp = requests.get("https://countriesnow.space/api/v0.1/countries/population/cities")
-    datum = resp.json()['data']
-    city = table['location']
-    country = ""
-    list1 = [[nohut['city'], nohut['country']] for nohut in datum]
-    for i in list1:
-        print(i[0])
-        if city == i[0]:
-            country = i[1]
-            break
-        else:
-            country = 'not found'
-    if country != 'not found':
-        table['country'] = country
-    else:
-        table['country'] = "not known"
-    #
-    #   API usage ends here
-    #
+    user_list = []
+    for single_user in users_:
+        user_list.append({col.name: str(getattr(single_user, col.name)) for col in single_user.__table__.columns})
 
-    return jsonify(table), 200
+    return jsonify(user_list), 200
 
 
 @user_api.route('/api/v1.0/users/<int: id>', methods=['GET'])
