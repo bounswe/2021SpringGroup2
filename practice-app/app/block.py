@@ -3,7 +3,7 @@ from flask import Flask, Blueprint, jsonify, abort, request
 import urllib
 from datetime import datetime, timedelta
 from math import cos, asin, sqrt, pi
-from .dbinit import Blocking
+from .dbinit import Blocking, User
 from .dbinit import session
 
 block_api = Blueprint('block_api', __name__)
@@ -17,15 +17,14 @@ def get_blocked_users(user_id):
 @block_api.route('/api/v1.0/<id:user_id>/blocked-users', methods=['POST'])
 def post_blocked_users(user_id):
     body = request.json
-    blocking_user_id = body["userId"]
-    user = [user for user in users if user["userId"] == user_id]
-    if len(user) == 0:
-        abort (404)
+    blocked_user_id = body["userId"]
+    blocked_users = session.query(User).filter(User.user_id == blocked_user_id).all()
+    if len(blocked_users) == 0:
+        abort(404)
     new_block = {
-        "blockedId": user_id,
-        "blockingId": blocking_user_id
+        "blockedId": blocked_user_id,
+        "blockingId": user_id
     }
-    blocking.append(new_block)
-    return jsonify({"blockedId": user_id,
-                    "blockingId": blocking_user_id
-                    }), 201
+    session.add(Blocking(**new_block))
+    session.commit()
+    return jsonify(new_block), 201
