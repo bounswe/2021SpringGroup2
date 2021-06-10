@@ -170,7 +170,7 @@ def search_equipments_by_type(equipmentType):
     if equipment.first() is None:
         abort(404)
     equipment = equipment.first()
-    return jsonify({'postID': equipment.equipmentId,
+    return jsonify({'postID': equipment.postID,
                     'ownerID': equipment.ownerID,
                     'content': equipment.content,
                     'title': equipment.title,
@@ -187,7 +187,7 @@ def search_equipments_by_location(location):
     if equipment.first() is None:
         abort(404)
     equipment = equipment.first()
-    return jsonify({'postID': equipment.equipmentId,
+    return jsonify({'postID': equipment.postID,
                     'ownerID': equipment.ownerID,
                     'content': equipment.content,
                     'title': equipment.title,
