@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Find Sport Events</string>
+    <string name="username">Email/Username</string>
+    <string name="login">LOGIN</string>
+    <string name="password">Password</string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="home_fragment">Home Fragment</string>
+    <string name="profile_fragment">Profile Fragment</string>
+    <string name="name">Name</string>
+    <string name="birth_date">Birth Date</string>
+    <string name="mail">Mail</string>
+    <string name="skills">Skills will be shown here</string>
+    <string name="badges">Badges will be shown here</string>
+    <string name="followed">Followed users will be listed here</string>
+    <string name="following">Followers will be listed here</string>
+    <string name="post_history">Post history will be shown here</string>
+    <string name="update_password">UPDATE PASSWORD</string>
+    <string name="delete_profile">DELETE PROFILE</string>
+    <string name="logout">LOGOUT</string>
+    <string name="signup">SIGNUP</string>
+</resources>
