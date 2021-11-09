@@ -7,7 +7,8 @@ import {
 
 import Home from './Views/Home/Index'
 import Login from './Views/Login/Index'
-import Header from './Views/Shared/Header'
+import Layout from './Views/Shared/Layout'
+import Signup from './Views/Signup/Index'
 
 
 
@@ -16,9 +17,10 @@ const App = () => {
     return (
         <React.Fragment>
             <Routes>
-                <Route path="/" element={<Header />}>
+                <Route path="/" element={<Layout />}>
                     <Route index element={<Home/>}/>
                     <Route path='login' element={<Login/>}/>
+                    <Route path='signup' element={<Signup/>}/>
                     <Route path="*" element={<Home />} />
                 </Route>
             </Routes>
