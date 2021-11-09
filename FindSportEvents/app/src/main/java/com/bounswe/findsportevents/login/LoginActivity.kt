@@ -56,10 +56,15 @@ class LoginActivity : AppCompatActivity() {
                 MainActivity.addExtras(this, true)
             }
         }
+        binding.buttonSignup.setOnClickListener {
+            startActivity<SignupActivity> {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            }
+        }
     }
 
     private fun checkFields() {
-        binding.buttonLogin.isEnabled = binding.etUsername.text.toString().length >= 5 && binding.etPassword.text.toString().length >= 3
+        binding.buttonLogin.isEnabled = binding.etUsername.text.toString().length >= 5 && binding.etPassword.text.toString().length >= 5
                 && isValidEmail(binding.etUsername.text.toString())
     }
 

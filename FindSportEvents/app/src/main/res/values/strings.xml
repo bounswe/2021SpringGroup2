@@ -19,4 +19,8 @@
     <string name="delete_profile">DELETE PROFILE</string>
     <string name="logout">LOGOUT</string>
     <string name="signup">SIGNUP</string>
+    <string name="username_signup">Username</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="interests">Interests</string>
+    <string name="sign_up">SIGN UP</string>
 </resources>
