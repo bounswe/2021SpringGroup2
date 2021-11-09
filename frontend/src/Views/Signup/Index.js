@@ -14,14 +14,15 @@ import Typography from "@mui/material/Typography";
 import { makeStyles, createStyles } from "@mui/styles";
 import Container from "@mui/material/Container";
 import Joi from 'joi'
+import {useNavigate} from 'react-router-dom'
 
 
 const useStyles = makeStyles(theme => createStyles({
-    /*"@global": {
+    "@global": {
         body: {
             backgroundColor: theme.palette.common.white
         }
-    },*/
+    },
     paper: {
         marginTop: theme.spacing(8),
         display: "flex",
@@ -111,6 +112,7 @@ const initialState = {
 
 export default function SignUp() {
     const classes = useStyles();
+    const navigate = useNavigate()
 
     const [state, setState] = useState(initialState)
 
@@ -305,7 +307,7 @@ export default function SignUp() {
                     </Button>
                     <Grid container justify="flex-end">
                         <Grid item>
-                            <Link href="/" variant="body2">
+                            <Link href="/login" variant="body2">
                                 Already have an account? Sign in
                             </Link>
                         </Grid>
