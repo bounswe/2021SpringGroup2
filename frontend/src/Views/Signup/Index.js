@@ -14,7 +14,6 @@ import Typography from "@mui/material/Typography";
 import { makeStyles, createStyles } from "@mui/styles";
 import Container from "@mui/material/Container";
 import Joi from 'joi'
-import {useNavigate} from 'react-router-dom'
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -112,7 +111,6 @@ const initialState = {
 
 export default function SignUp() {
     const classes = useStyles();
-    const navigate = useNavigate()
 
     const [state, setState] = useState(initialState)
 
@@ -273,7 +271,7 @@ export default function SignUp() {
                                 required
                                 fullWidth
                                 name="repeat_password"
-                                label="Password"
+                                label="Repeat Password"
                                 type="password"
                                 id="repeat_password"
                                 autoComplete="current-repeatpassword"
