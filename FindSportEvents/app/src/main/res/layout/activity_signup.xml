@@ -41,12 +41,18 @@
                 android:layout_marginHorizontal="@dimen/space_xx_large"
                 android:hint="@string/name" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_birth_date"
+            <TextView
+                android:id="@+id/tv_birth_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:hint="@string/birth_date" />
+                />
+            <Button
+                android:id="@+id/btn_date_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="32dp"
+                android:text="Select Birth Date"/>
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_mail"
