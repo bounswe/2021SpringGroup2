@@ -292,8 +292,7 @@ export default function SignUp() {
                                 fullWidth
                                 variant="contained"
                                 color="primary"
-                                className={classes.submit}
-                            >
+                                className={classes.submit}>
                                 Sign Up
                             </Button>
                         </Grid>
