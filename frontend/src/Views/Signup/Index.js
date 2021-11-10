@@ -1,16 +1,15 @@
 import React, {useState} from "react";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Alert from "@mui/material/Alert";
 import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { makeStyles, createStyles } from "@mui/styles";
 import Container from "@mui/material/Container";
 import Joi from 'joi'
 import {useNavigate} from 'react-router-dom'
+import image from '../../logos/reb und(400 x 100 px).png'
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -147,9 +146,7 @@ export default function SignUp() {
         <Container component="main" maxWidth="md">
             <CssBaseline />
             <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
+                <img src={image} alt={"logo"}/>
                 <Typography component="h1" variant="h5">
                     Sign up
                 </Typography>
