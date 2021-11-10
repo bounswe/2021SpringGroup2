@@ -4,13 +4,13 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Alert from "@mui/material/Alert";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { makeStyles, createStyles } from "@mui/styles";
 import Container from "@mui/material/Container";
 import Joi from 'joi'
+import {useNavigate} from 'react-router-dom'
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -63,7 +63,7 @@ const schema = Joi.object({
     repeat_password: Joi.ref('password'),
 
     email: Joi.string()
-        .email({ minDomainSegments: 2 })
+        .email({ minDomainSegments: 2 , tlds: { allow: ['com', 'net', "edu"] }})
 })
     .with('password', 'repeat_password');
 
@@ -107,8 +107,8 @@ const initialState = {
 }
 
 export default function SignUp() {
-    const classes = useStyles();
-
+    const classes = useStyles()
+    const navigate = useNavigate()
     const [state, setState] = useState(initialState)
 
     const getValue = state => ({
@@ -302,9 +302,9 @@ export default function SignUp() {
                         <Grid item xs={3}>
                         </Grid>
                         <Grid item xs={6} textAlign={"center"}>
-                            <Link href="/login" variant="body2">
+                            <Typography style={{ cursor: "pointer" }} variant="body2" color="textSecondary" align="center" onClick={_=>navigate("/login")}>
                                 Already have an account? Sign in
-                            </Link>
+                            </Typography>
                         </Grid>
                     </Grid>
                 </form>
