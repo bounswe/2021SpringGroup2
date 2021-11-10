@@ -6,7 +6,6 @@ import TextField from "@mui/material/TextField";
 import Alert from "@mui/material/Alert";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { makeStyles, createStyles } from "@mui/styles";
@@ -310,12 +309,6 @@ export default function SignUp() {
                     </Grid>
                 </form>
             </div>
-            <Box mt={5}>
-                <Typography variant="body2" color="textSecondary" align="center">
-                    Built by reBOUNd team.
-                </Typography>
-            </Box>
-
         </Container>
     );
 }
