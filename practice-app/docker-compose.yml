@@ -4,9 +4,19 @@ services:
     build: .
     ports:
       - "9000:9000"
+    environment:
+      WAIT_HOSTS: database:5432
+      API_KEY: my_api_key
+
+  database:
+    image: "postgres:latest"
+    env_file:
+      - database.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - database-data:/var/lib/postgresql/data/
 
 volumes:
-  data:
-  cache:
-  analytics:
+  database-data:
 
