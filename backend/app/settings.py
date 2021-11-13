@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'authentication',
+    'django_rest_passwordreset',
+    'emailer'''
 ]
 
 MIDDLEWARE = [
@@ -161,3 +163,9 @@ SIMPLE_JWT = {
 
 AUTH_USER_MODEL = "authentication.User"
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = '451reboundapp@gmail.com'
+EMAIL_HOST_PASSWORD = '@Reboundaqpqpq'
