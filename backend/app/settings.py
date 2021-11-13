@@ -168,4 +168,4 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = '451reboundapp@gmail.com'
-EMAIL_HOST_PASSWORD = '@Reboundaqpqpq'
+EMAIL_HOST_PASSWORD = 'not-actual-password'
