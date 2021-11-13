@@ -1,6 +1,7 @@
 package com.bounswe.findsportevents.login
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
@@ -10,6 +11,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bounswe.findsportevents.databinding.ActivitySignupBinding
+import com.bounswe.findsportevents.extensions.startActivity
+import com.bounswe.findsportevents.main.MainActivity
+import com.bounswe.findsportevents.main.fragments.FragmentHome
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -89,6 +93,12 @@ class SignupActivity: AppCompatActivity() {
                 checkFields()
             }
         })
+        binding.buttonSignup.setOnClickListener{
+            startActivity<MainActivity>{
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                MainActivity.addExtras(this, true)
+            }
+        }
         binding.btnDatePicker.setOnClickListener{View -> clickDatePicker(View)}
     }
     private fun checkFields(){
