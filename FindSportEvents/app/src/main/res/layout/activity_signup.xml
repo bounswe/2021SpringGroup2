@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,25 +38,11 @@
                 android:layout_marginHorizontal="@dimen/space_xx_large"
                 android:hint="@string/confirm_password" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:hint="@string/name" />
 
-            <TextView
-                android:id="@+id/tv_birth_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_xx_large"
-                />
-            <Button
-                android:id="@+id/btn_date_picker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="32dp"
-                android:text="Select Birth Date"/>
+
+
+
+
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_mail"
@@ -61,40 +51,46 @@
                 android:layout_marginHorizontal="@dimen/space_xx_large"
                 android:hint="@string/mail" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_skills"
+
+
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:text="@string/skills" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_interests"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:text="@string/interests" />
+                <TextView
+                    android:id="@+id/tv_terms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/space_xx_large"
+                    android:layout_marginTop="12dp"
+                    android:text="Terms and Conditions"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tv_terms"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:text="Terms and Conditions" />
+                <CheckBox
+                    android:id="@+id/cb_terms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_terms"
+                    app:layout_constraintStart_toStartOf="@+id/tv_terms"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:onClick="onCheckboxClicked"
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <CheckBox
-                android:id="@+id/cb_terms"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
             <Button
                 android:id="@+id/button_signup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
                 android:layout_marginHorizontal="@dimen/space_xx_large"
+                android:enabled="false"
                 android:text="@string/sign_up" />
-
 
 
         </LinearLayout>
