@@ -13,7 +13,7 @@ const Layout = () => {
             <ThemeProvider theme={theme}>
 
                 <div>
-                    <Header loggedIn={true}/>
+                    <Header loggedIn={false}/>
                     <Outlet />
                 </div>
             </ThemeProvider>
