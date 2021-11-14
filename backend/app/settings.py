@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-c90htu(asg$c7d_bexlhc)3csc2w4hi$49@uv8rt0w3_asva-j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', None) == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -90,7 +90,7 @@ DATABASES = {
 
         'HOST': 'localhost' if DEBUG else 'database',
 
-        'PORT': '', #5432
+        'PORT': '5432',
 
     }
 }
