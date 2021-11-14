@@ -8,7 +8,9 @@ import {
 import Home from './Views/Home/Index'
 import Login from './Views/Login/Index'
 import Layout from './Views/Shared/Layout'
+import CreateEventPage from "./Views/Create Event/CreateEventPage";
 import Signup from './Views/Signup/Index'
+
 
 
 
@@ -21,6 +23,7 @@ const App = () => {
                     <Route index element={<Home/>}/>
                     <Route path='login' element={<Login/>}/>
                     <Route path='signup' element={<Signup/>}/>
+                    <Route path="createevent" element={<CreateEventPage/>}/>
                     <Route path="*" element={<Home />} />
                 </Route>
             </Routes>
