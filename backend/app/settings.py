@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 from datetime import timedelta
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,7 +40,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'authentication',
     'django_rest_passwordreset',
-    'emailer'''
 ]
 
 MIDDLEWARE = [
@@ -79,17 +79,17 @@ WSGI_APPLICATION = 'app.wsgi.application'
 DATABASES = {
     'default': {
 
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
 
-        'NAME': 'cmpe451',
+        'NAME': os.environ.get('POSTGRES_DB', None),
 
-        'USER': 'postgres',
+        'USER': os.environ.get('POSTGRES_USER', None),
 
-        'PASSWORD': '1234',
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', None),
 
-        'HOST': 'localhost',
+        'HOST': 'localhost' if DEBUG else 'database',
 
-        'PORT': '5432',
+        'PORT': '', #5432
 
     }
 }
@@ -167,5 +167,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = '451reboundapp@gmail.com'
-EMAIL_HOST_PASSWORD = 'not-actual-password'
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER', None)
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', None)
