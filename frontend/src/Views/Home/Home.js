@@ -4,33 +4,67 @@ import { styled, alpha } from '@mui/material/styles';
 import {Card, CardActionArea, CardContent, CardMedia, Grid, Typography} from '@mui/material';
 import {useEffect, useState} from "react";
 import {getSports} from "../../Controllers/SportsController";
-import SportsEventCard from './SportsEventCard'
-import Button from "@mui/material/Button";
+import SportsInfoCard from "./SportsInfoCard";
+import IconButton from "@mui/material/IconButton";
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import {getSampleEvents} from "../../Controllers/SampleEventController";
+import EventInfoCard from "./EventCard";
 function Homepage() {
     const [sports, setSports] = useState([{}])
-    const [index, setIndex] = useState((0))
+    const [events, setEvents] = useState([{}])
+    const [sportIndex, setSportIndex] = useState((0))
+    const [eventIndex, setEventIndex] = useState((0))
     useEffect(_=>{
         getSports().then(r=>setSports(r))
             .catch(console.log)
+        getSampleEvents().then(r=>setEvents(r))
+            .catch(console.log)
     }, [])
-  return (
-    <div className="Homepage">
-             <Button onClick={() => {
-                 setIndex(index>0?index-1:0);
-            }}>Previous</Button>
-            <Grid container spacing={2}>
-                {sports.slice(index,index+3).map(s=>(
-                    <Grid item md={4}>
-                        <SportsEventCard {...s}/>
-                    </Grid>)
-                )}
-            </Grid>
-            <Button onClick={() => {
-            setIndex(index<9?index+1:9);
-            }}>Next</Button>
-
-    </div>
-  );
+    return (
+        <div className="Homepage">
+            <h2>Discover Sports</h2>
+            <div style={{
+                display: 'flex',
+                alignItems: 'center'}}>
+                <IconButton style={{marginRight:25,marginLeft: 10}} onClick={() => {
+                    setSportIndex(sportIndex>2?sportIndex-3:0);}}>
+                    <ArrowBackIosIcon/>
+                </IconButton>
+                <Grid container spacing={2} alignItems="stretch">
+                    {sports.slice(sportIndex,sportIndex+3).map(s=>(
+                        <Grid item md={4} style={{display: 'flex'}}>
+                            <SportsInfoCard {...s}/>
+                        </Grid>)
+                    )}
+                </Grid>
+                <IconButton style={{marginRight:10}} onClick={() => {
+                    setSportIndex(sportIndex<9?sportIndex+3:9);}}>
+                    <ArrowForwardIosIcon/>
+                </IconButton>
+            </div>
+            <h2>Browse Events</h2>
+            <div style={{
+                display: 'flex',
+                alignItems: 'center'}}>
+                <IconButton style={{marginRight:25,marginLeft: 10}} onClick={() => {
+                    setEventIndex(eventIndex>2?eventIndex-3:0);}}>
+                    <ArrowBackIosIcon/>
+                </IconButton>
+                <Grid container spacing={2} alignItems="stretch">
+                    {events.slice(eventIndex,eventIndex+3).map(s=>(
+                        <Grid item md={4} style={{display: 'flex'}}>
+                            <EventInfoCard {...s}/>
+                        </Grid>)
+                    )}
+                </Grid>
+                <IconButton style={{marginRight:10}} onClick={() => {
+                    setEventIndex(eventIndex<9?eventIndex+3:9);}}>
+                    <ArrowForwardIosIcon/>
+                </IconButton>
+            </div>
+        </div>
+    );
 }
 
 export default Homepage;
