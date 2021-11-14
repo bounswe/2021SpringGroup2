@@ -119,7 +119,8 @@ const Header = props => {
                                     aria-label="show 17 new notifications"
                                     color="inherit"
                                 >
-                                    <Badge badgeContent={12} color="error">
+                                    <Badge badgeContent={12} color="error" component={Link} to="/notifications">
+
                                         <NotificationsIcon />
                                     </Badge>
                                 </IconButton>
