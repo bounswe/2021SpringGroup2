@@ -174,7 +174,6 @@ const Header = props => {
 
 
             </nav>
-            <hr />
         </React.Fragment>
     )
 }
