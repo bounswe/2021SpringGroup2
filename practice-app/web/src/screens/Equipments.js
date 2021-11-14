@@ -3,7 +3,7 @@ import Container from "@material-ui/core/Container";
 import {InputAdornment, makeStyles, TextField} from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import EventRow from '../components/EventRow'
+import EquipmentRow from '../components/EquipmentRow'
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -14,50 +14,36 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import {useHistory} from "react-router-dom";
-import FilterEventModal from "../components/FilterEventModal";
+import FilterEquipmentModal from "../components/FilterEquipmentModal";
 import {url} from "../App";
 
-const eventsx = [
-    {event:{
-        eventId: 1,
-        owner: "emre_gundogu",
-        title: "Tennis Game for Everyone",
-        content: "People who are looking for a tennis court can apply this event. Our court is for you if you are seeking for a clean and well-lit court.",
-        location: "Bebek Tennis Club",
-        date: "01.05.2021",
-        hours: "15.00",
-        sport: "Tennis",
-        ageGroup: "Any age",
-        skillLevel: "Any level",
-        playerCapacity: "2",
-        spectatorCapacity: "8",
-        spectators: [],
-        players: []
+const equip = [
+    {
+        "equipments": {
+            "content": "I have a pair of shoes in good condition that i want to sell.",
+            "equipment type": "Shoes",
+            "equipmentId": 2,
+            "link": "letgo.com/245323",
+            "ownerId": 1,
+            "title": "Tennis rackets for sale!",
+            "website name": "letgo",
+            "location": "Ankara"
+        }
     }
-}
 ]
+
 const useStyles = makeStyles({
     table: {
         minWidth: 650,
     },
 });
 
-/*
-* Filter
-* {
-*   field: {
-*       range:[int,int],
-*   }
-* }
-* */
-
-
-export default function EventScreen() {
-    const [events, setEvents] = useState(eventsx)
+export default function EquipmentScreen() {
+    const [equipments, setEvents] = useState([equip])
     const getUser = _ =>{
-        fetch(url+"api/v1.0/events?ip=false&radius=100&address=İstanbul")
+        fetch(url+"api/v1.0/search-equipment-type/+")
             .then(r=>r.json())
-            .then(console.log)
+            .then(setEvents)
             .catch(e=>console.log(e))
     }
     useEffect(_=>{
@@ -88,7 +74,7 @@ export default function EventScreen() {
                 <Grid container justify={"space-between"} style={{marginBottom:20}}>
                     <Grid item xs={width>600?10:9}>
                         <TextField
-                            placeholder={"Search Event"}
+                            placeholder={"Search Equipment"}
                             fullWidth
                             value={text}
                             onChange={e=>setText(e.target.value)}
@@ -116,28 +102,25 @@ export default function EventScreen() {
                 <TableContainer component={Paper}>
                     <Table className={classes.table} aria-label="simple table">
                         <TableHead>
-                            <TableRow>
-                                <TableCell>Event Creator</TableCell>
-                                <TableCell align="right">Sport</TableCell>
-                                <TableCell align="right">Field</TableCell>
-                                <TableCell align="right">Players</TableCell>
-                                <TableCell align="right">Spectators</TableCell>
-                                <TableCell align="right">Date</TableCell>
-                            </TableRow>
+                            <TableCell>Type</TableCell>
+                            <TableCell align="right">Title</TableCell>
+                            <TableCell align="right">Location</TableCell>
+                            <TableCell align="right">Website Name</TableCell>
+                            <TableCell align="right">Link</TableCell>
                         </TableHead>
                         <TableBody>
-                            {events.map((event) => (
-                                <EventRow
-                                    onClick={_=>history.push("/event/"+event.event.eventId)}
-                                    key={event.title}
-                                    {...event.event}
+                            {equipments.map(equipment => (
+                                <EquipmentRow
+                                    onClick={_=>history.push("/equipment/"+equipment.postId)}
+                                    key={equipment.title}
+                                    {...equipment.equipment}
                                 />
                             ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
             </Container>
-            <FilterEventModal
+            <FilterEquipmentModal
                 open={open}
                 handleClose={handleClose}
                 setFilter={setFilter}
@@ -145,4 +128,3 @@ export default function EventScreen() {
         </React.Fragment>
     );
 }
-
