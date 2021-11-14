@@ -15,7 +15,13 @@ const App = () => {
     console.log("sa")
     return (
         <React.Fragment>
-            <Login/>
+            <Routes>
+                <Route path="/" element={<Header />}>
+                    <Route index element={<Home/>}/>
+                    <Route path='login' element={<Login/>}/>
+                    <Route path="*" element={<Home />} />
+                </Route>
+            </Routes>
         </React.Fragment>
     )
 }
