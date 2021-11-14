@@ -21,9 +21,9 @@ const App = () => {
                 <Route path="/" element={<Layout />}>
                     <Route index element={<Home/>}/>
                     <Route path='login' element={<Login/>}/>
-                    <Route path="*" element={<Home />} />
                     <Route path='signup' element={<Signup/>}/>
                     <Route path="createevent" element={<CreateEventPage/>}/>
+                    <Route path="*" element={<Home />} />
                 </Route>
             </Routes>
         </React.Fragment>
