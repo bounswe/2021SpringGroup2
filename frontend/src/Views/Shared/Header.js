@@ -12,6 +12,12 @@ import {createStyles} from "@mui/styles";
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToApp';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import Badge from "@mui/material/Badge"
+import {IconButton} from "@mui/material";
+
+
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -32,7 +38,6 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 2),
     height: '100%',
     position: 'absolute',
-    pointerEvents: 'none',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -109,7 +114,15 @@ const Header = props => {
                                         />
                                     </Search>
                                 </Toolbar>
-
+                                <IconButton
+                                    size="large"
+                                    aria-label="show 17 new notifications"
+                                    color="inherit"
+                                >
+                                    <Badge badgeContent={12} color="error">
+                                        <NotificationsIcon />
+                                    </Badge>
+                                </IconButton>
                                 <Button
                                     component={Link} to="/home"
                                     color="primary"
@@ -130,6 +143,18 @@ const Header = props => {
                                 <img src={image} alt={"logo"} />
                                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                                 </Typography>
+                                <Toolbar>
+                                    <Search>
+                                        <SearchIconWrapper>
+                                            <SearchIcon />
+                                        </SearchIconWrapper>
+                                        <StyledInputBase
+                                            placeholder="Search"
+                                            inputProps={{ 'aria-label': 'search' }}
+                                        />
+                                    </Search>
+                                </Toolbar>
+
                                 <Button
                                     component={Link} to="/home"
                                     color="primary"
@@ -146,7 +171,6 @@ const Header = props => {
                                 </Button>
                             </Toolbar>
                 }
-
 
 
             </nav>
