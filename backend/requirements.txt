@@ -1,0 +1,7 @@
+django
+gunicorn
+psycopg2
+djangorestframework
+djangorestframework-jsonapi
+djangorestframework_simplejwt
+django_rest_passwordreset
