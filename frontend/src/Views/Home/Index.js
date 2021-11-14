@@ -5,7 +5,6 @@ const Home = () => {
     return (
         <React.Fragment>
             <div>
-                <Button variant="contained">Hello World</Button>
             </div>
         </React.Fragment>
     )
