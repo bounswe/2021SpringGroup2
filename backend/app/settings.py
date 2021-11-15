@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'authentication',
     'django_rest_passwordreset',
     'eventposts',
+    'profiles',
 ]
 
 MIDDLEWARE = [
