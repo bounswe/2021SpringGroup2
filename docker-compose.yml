@@ -6,7 +6,7 @@ services:
       - "9000:9000"
     environment:
       WAIT_HOSTS: database:5432
-      DEBUG: 'False'
+      DEBUG: 'True'
     env_file:
       - database.env
   database:
