@@ -11,10 +11,12 @@ module.exports = {
                 loader: 'babel-loader',
                 options: { presets: ['@babel/env','@babel/preset-react'] },
             },
+
             {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
                 type: 'asset/resource',
             },
+
         ],
     },
     resolve: {

@@ -22,20 +22,22 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
     )
 
 class User(AbstractUser):
-    id = models.BigAutoField(primary_key=True)
-    bio = models.TextField()
+    bio = models.TextField(default="")
 
-    birthday = models.DateTimeField()
+    birthday = models.DateTimeField(auto_now_add=True, blank=True)
 
-    avatar = models.TextField()
-    location = models.TextField()
+    avatar = models.TextField(default="")
+    location = models.TextField(default="")
 
-    fav_sport_1 = models.TextField()
-    fav_sport_2 = models.TextField()
-    fav_sport_3 = models.TextField()
+    fav_sport_1 = models.TextField(default="")
+    fav_sport_2 = models.TextField(default="")
+    fav_sport_3 = models.TextField(default="")
 
-    badge_1 = models.TextField()
-    badge_2 = models.TextField()
-    badge_3 = models.TextField()
+    badge_1 = models.TextField(default="")
+    badge_2 = models.TextField(default="")
+    badge_3 = models.TextField(default="")
 
-    privacy = models.BooleanField()
+    privacy = models.BooleanField(default=True)
+
+    class Meta:
+        app_label = 'authentication'

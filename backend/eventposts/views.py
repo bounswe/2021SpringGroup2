@@ -5,7 +5,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
-import eventposts
 from .models import EventPost, Post
 from .serializers import EventPostSerializer, PostSerializer
 from rest_framework.views import APIView

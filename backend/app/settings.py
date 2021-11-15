@@ -90,6 +90,7 @@ DATABASES = {
 
         'HOST': 'localhost' if DEBUG else 'database',
 
+
         'PORT': '5432',
 
     }
