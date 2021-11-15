@@ -62,12 +62,12 @@ export default function LoginPage(props){
                 <Typography style = {typographyStyle}>
                     Username
                 </Typography>
-                <TextField fullWidth required  size="small" style={textFieldStyle}
+                <TextField fullWidth required id="username"  size="small" style={textFieldStyle}
                 InputProps={inputStyle} value={state.username.value||""} onChange={handleChange}></TextField>
                 <Typography style = {typographyStyle}>
                     Password
                 </Typography>
-                <TextField fullWidth type="password"
+                <TextField fullWidth type="password" id="password"
                            value={state.password.value||""} onChange={handleChange} required size="small" style={textFieldStyle}></TextField>
                     <Box textAlign='center' style={{marginTop: 5,marginBottom:3}}>
 
