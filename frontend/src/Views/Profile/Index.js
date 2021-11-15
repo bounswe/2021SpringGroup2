@@ -3,6 +3,6 @@ import Container from "@mui/material/Container";
 import {Outlet, Route} from "react-router-dom";
 
 
-const Index = props =><Container component="main" maxWidth="md"><Outlet/></Container>
+const Index = props =><Container component="main" maxWidth="sm"><Outlet/></Container>
 
 export default Index
