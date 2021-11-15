@@ -7,6 +7,8 @@ services:
     environment:
       WAIT_HOSTS: database:5432
       DEBUG: 'False'
+    env_file:
+      - database.env
   database:
     image: "postgres:latest"
     env_file:
