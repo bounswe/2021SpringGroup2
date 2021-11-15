@@ -65,10 +65,6 @@ class LoginActivity : AppCompatActivity() {
 
     private fun checkFields() {
         binding.buttonLogin.isEnabled = binding.etUsername.text.toString().length >= 5 && binding.etPassword.text.toString().length >= 5
-                && isValidEmail(binding.etUsername.text.toString())
     }
 
-    private fun isValidEmail(email: String): Boolean {
-        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    }
 }
