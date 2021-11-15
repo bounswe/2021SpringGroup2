@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bounswe.findsportevents.databinding.ActivitySignupBinding
 import com.bounswe.findsportevents.extensions.startActivity
-import com.bounswe.findsportevents.main.MainActivity
 import com.bounswe.findsportevents.network.ReboundAPI
 import com.bounswe.findsportevents.network.modalz.requests.SignupRequest
 import com.bounswe.findsportevents.network.modalz.responses.SignupResponse
@@ -92,10 +91,16 @@ class SignupActivity : AppCompatActivity() {
                     ) {
 
                         if (response.isSuccessful) {
-                            startActivity<MainActivity> {
+                            Toast.makeText(
+                                applicationContext,
+                                "Signup successful!",
+                                Toast.LENGTH_LONG
+                            ).show()
+
+                            startActivity<LoginActivity> {
                                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                MainActivity.addExtras(this, true)
                             }
+
                         } else {
                             Toast.makeText(
                                 applicationContext,

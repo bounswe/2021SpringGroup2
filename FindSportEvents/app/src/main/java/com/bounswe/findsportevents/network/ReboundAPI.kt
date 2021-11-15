@@ -2,7 +2,9 @@ package com.bounswe.findsportevents.network
 
 
 import com.bounswe.findsportevents.BuildConfig
+import com.bounswe.findsportevents.network.modalz.requests.ObtainTokenRequest
 import com.bounswe.findsportevents.network.modalz.requests.SignupRequest
+import com.bounswe.findsportevents.network.modalz.responses.ObtainTokenResponse
 import com.bounswe.findsportevents.network.modalz.responses.SignupResponse
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -15,15 +17,19 @@ import java.util.concurrent.TimeUnit
 
 interface ReboundAPI {
 
-    @POST("user/create/")
+    @POST("api/user/create/")
     fun createUser(
         @Body request: SignupRequest
     ): Call<SignupResponse>
 
+    @POST("api/token/obtain/")
+    fun obtainToken(
+        @Body request: ObtainTokenRequest
+    ): Call<ObtainTokenResponse>
 
     companion object {
 
-        var BASE_URL = "http://34.122.205.8/api/"
+        var BASE_URL = "http://34.122.205.8/"
 
         fun create(): ReboundAPI {
 
