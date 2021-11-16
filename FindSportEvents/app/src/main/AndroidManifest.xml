@@ -23,6 +23,8 @@
 
         <activity android:name=".login.LoginActivity" />
         <activity android:name=".login.SignupActivity" />
+        <activity android:name=".login.ForgotPasswordActivity" />
+        <activity android:name=".login.ResetPasswordActivity" />
     </application>
 
 </manifest>

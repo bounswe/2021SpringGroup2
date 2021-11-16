@@ -2,9 +2,13 @@ package com.bounswe.findsportevents.network
 
 
 import com.bounswe.findsportevents.BuildConfig
+import com.bounswe.findsportevents.network.modalz.requests.ConfirmResetPasswordRequest
 import com.bounswe.findsportevents.network.modalz.requests.ObtainTokenRequest
+import com.bounswe.findsportevents.network.modalz.requests.ResetPasswordRequest
 import com.bounswe.findsportevents.network.modalz.requests.SignupRequest
+import com.bounswe.findsportevents.network.modalz.responses.ConfirmResetPasswordResponse
 import com.bounswe.findsportevents.network.modalz.responses.ObtainTokenResponse
+import com.bounswe.findsportevents.network.modalz.responses.ResetPasswordResponse
 import com.bounswe.findsportevents.network.modalz.responses.SignupResponse
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -26,6 +30,16 @@ interface ReboundAPI {
     fun obtainToken(
         @Body request: ObtainTokenRequest
     ): Call<ObtainTokenResponse>
+
+    @POST("api/password/reset/")
+    fun resetPassword(
+        @Body request: ResetPasswordRequest
+    ): Call<ResetPasswordResponse>
+
+    @POST("api/password/reset/confirm/")
+    fun confirmResetPassword(
+        @Body request: ConfirmResetPasswordRequest
+    ): Call<ConfirmResetPasswordResponse>
 
     companion object {
 
