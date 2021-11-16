@@ -9,13 +9,13 @@ from .models import EventPost, Post
 from .serializers import EventPostSerializer, PostSerializer
 from rest_framework.views import APIView
 from django.forms.models import model_to_dict
-
+from rest_framework import status, permissions
 
 
 
 
 class EventPostView(APIView):
-    
+    permission_classes = (permissions.AllowAny,)
     def get(self, request, id):                
         try:           
             eventpost = EventPost.objects.get(id=id)
