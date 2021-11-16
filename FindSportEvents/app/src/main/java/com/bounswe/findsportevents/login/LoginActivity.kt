@@ -100,9 +100,7 @@ class LoginActivity : AppCompatActivity() {
                 })
         }
         binding.buttonSignup.setOnClickListener {
-            startActivity<SignupActivity> {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            }
+            startActivity<SignupActivity> {}
         }
         binding.tvForgotPassword.setOnClickListener {
             startActivity<ForgotPasswordActivity> {}
