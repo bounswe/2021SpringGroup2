@@ -56,8 +56,7 @@ export default function ResetPasswordPage(props){
         setState(newState)
     }
     function handleClick() {
-        postResetPassword(state.password.value,state.to)
-            .then(r => console.log(r))
+        postResetPassword(state.email.value)
             .then(function(r){
                 if(r.status===undefined){
                     const newState = {...state}
@@ -73,8 +72,7 @@ export default function ResetPasswordPage(props){
             })
     }
     function handleResetClick() {
-        postResetPasswordConfirmation(state.email.value,state.token.value)
-            .then(r => console.log(r))
+        postResetPasswordConfirmation(state.password.value,state.token.value)
             .then(function(r){
                 if(r.status===undefined){
                     const newState = {...state}
