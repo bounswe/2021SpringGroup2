@@ -44,7 +44,6 @@ export default function LoginPage(props){
     }
     function handleLogin() {
          obtainToken(state.username.value,state.password.value)
-             .then(r => console.log(r))
              .then(function(r){
                  if(r.detail!==undefined){
                      const newState = {...state}
