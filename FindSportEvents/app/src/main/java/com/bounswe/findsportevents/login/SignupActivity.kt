@@ -80,7 +80,9 @@ class SignupActivity : AppCompatActivity() {
 
             val signupRequest = SignupRequest(
                 binding.etUsername.text.toString(),
-                binding.etMail.text.toString(), binding.etPassword.text.toString()
+                binding.etMail.text.toString(), binding.etPassword.text.toString(),
+                binding.etFirstName.text.toString(), binding.etLastName.text.toString(),
+                binding.etBio.text.toString(), binding.etFavSport.text.toString(), binding.etLocation.text.toString()
             )
 
             ReboundAPI.create().createUser(signupRequest)
