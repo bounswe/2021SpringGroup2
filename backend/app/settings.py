@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-c90htu(asg$c7d_bexlhc)3csc2w4hi$49@uv8rt0w3_asva-j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', None) == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -41,12 +41,15 @@ INSTALLED_APPS = [
     'authentication',
     'django_rest_passwordreset',
     'eventposts',
+    'profiles',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -88,9 +91,9 @@ DATABASES = {
 
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', None),
 
-        'HOST': 'localhost' if DEBUG else 'database',
+        'HOST': 'database', #'localhost' if DEBUG else 'database',
 
-        'PORT': '', #5432
+        'PORT': '5432',
 
     }
 }
@@ -170,3 +173,6 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get('EMAIL_USER', None)
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', None)
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True

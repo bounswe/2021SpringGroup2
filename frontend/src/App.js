@@ -10,6 +10,7 @@ import Login from './Views/Login/Index'
 import Layout from './Views/Shared/Layout'
 import CreateEventPage from "./Views/Create Event/CreateEventPage";
 import Signup from './Views/Signup/Index'
+import ResetPasswordPage from "./Views/Login/ForgotPassword";
 
 
 
@@ -26,6 +27,7 @@ const App = () => {
                     <Route path="createevent" element={<CreateEventPage/>}/>
                     <Route path="home" element={<Home />} />
                     <Route path="*" element={<Home />} />
+                    <Route path="resetpassword" element={<ResetPasswordPage/>}/>
                 </Route>
             </Routes>
         </React.Fragment>
