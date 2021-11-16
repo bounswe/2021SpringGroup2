@@ -10,9 +10,9 @@ from .serializers import ProfileSerializer
 
 class ProfileView(APIView):
 
-    def get(self, request, id):
+    def get(self, request, username):
         try:
-            profile = User.objects.get(id=id)
+            profile = User.objects.get(username=username)
         except:
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(ProfileSerializer(profile).data)
