@@ -7,6 +7,6 @@ data class SignupRequest(
     val first_name: String?,
     val last_name: String?,
     val bio: String?,
-    val fav_sport1: String?,
+    val fav_sport_1: String?,
     val location: String?
 )
