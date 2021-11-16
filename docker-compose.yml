@@ -7,6 +7,8 @@ services:
     environment:
       WAIT_HOSTS: database:5432
       DEBUG: 'True'
+      EMAIL_USER: '451reboundapp@gmail.com'
+      EMAIL_PASSWORD: 'aimboytouueedvla'
     env_file:
       - database.env
   database:
