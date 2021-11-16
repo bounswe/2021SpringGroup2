@@ -12,7 +12,7 @@ export function refreshToken(refresh_token){
     const options = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({Refresh:refresh_token})
+        body: JSON.stringify({refresh:refresh_token})
     }
     return fetch("http://34.122.205.8/api/token/refresh/",options)
         .then(response=>response.json())

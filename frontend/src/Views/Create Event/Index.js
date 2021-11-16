@@ -1,10 +1,10 @@
 import React from 'react';
-import LoginPage from "./Login";
+import CreateEventPage from "./CreateEventPage";
 
-const Login = () => {
+const CreateEvent = () => {
     return (
-        <LoginPage/>
+        <CreateEventPage/>
     )
 }
 
-export default Login
+export default CreateEvent
