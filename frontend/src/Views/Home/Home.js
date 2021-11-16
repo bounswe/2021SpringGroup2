@@ -21,50 +21,54 @@ function Homepage() {
         getSampleEvents().then(r=>setEvents(r))
             .catch(console.log)
     }, [])
-    return (
-        <div className="Homepage">
-            <h2>Discover Sports</h2>
-            <div style={{
-                display: 'flex',
-                alignItems: 'center'}}>
-                <IconButton style={{marginRight:25,marginLeft: 10}} onClick={() => {
-                    setSportIndex(sportIndex>2?sportIndex-3:0);}}>
-                    <ArrowBackIosIcon/>
-                </IconButton>
-                <Grid container spacing={2} alignItems="stretch">
-                    {sports.slice(sportIndex,sportIndex+3).map(s=>(
-                        <Grid item md={4} style={{display: 'flex'}}>
-                            <SportsInfoCard {...s}/>
-                        </Grid>)
-                    )}
-                </Grid>
-                <IconButton style={{marginRight:10}} onClick={() => {
-                    setSportIndex(sportIndex<9?sportIndex+3:9);}}>
-                    <ArrowForwardIosIcon/>
-                </IconButton>
-            </div>
-            <h2>Browse Events</h2>
-            <div style={{
-                display: 'flex',
-                alignItems: 'center'}}>
-                <IconButton style={{marginRight:25,marginLeft: 10}} onClick={() => {
-                    setEventIndex(eventIndex>2?eventIndex-3:0);}}>
-                    <ArrowBackIosIcon/>
-                </IconButton>
-                <Grid container spacing={2} alignItems="stretch">
-                    {events.slice(eventIndex,eventIndex+3).map(s=>(
-                        <Grid item md={4} style={{display: 'flex'}}>
-                            <EventInfoCard {...s}/>
-                        </Grid>)
-                    )}
-                </Grid>
-                <IconButton style={{marginRight:10}} onClick={() => {
-                    setEventIndex(eventIndex<9?eventIndex+3:9);}}>
-                    <ArrowForwardIosIcon/>
-                </IconButton>
-            </div>
+  return (
+    <div className="Homepage">
+        <h2 style={{ color: "#FF7518", fontFamily: 'Trocchi', fontSize: "30px", fontWeight: "normal", lineHeight: "48px", textAlign: "center", marginTop: 30, marginBottom: 30}}>
+            Discover Sports
+        </h2>
+        <div style={{
+            display: 'flex',
+            alignItems: 'center'}}>
+            <IconButton style={{marginRight:25,marginLeft: 10}} onClick={() => {
+                setSportIndex(sportIndex>2?sportIndex-3:0);}}>
+                <ArrowBackIosIcon/>
+            </IconButton>
+            <Grid container spacing={2} alignItems="stretch">
+                {sports.slice(sportIndex,sportIndex+3).map(s=>(
+                    <Grid item md={4} style={{display: 'flex'}}>
+                        <SportsInfoCard {...s}/>
+                    </Grid>)
+                )}
+            </Grid>
+            <IconButton style={{marginRight:10}} onClick={() => {
+                setSportIndex(sportIndex<9?sportIndex+3:9);}}>
+                <ArrowForwardIosIcon/>
+            </IconButton>
         </div>
-    );
+        <h2 style={{ color: "#FF7518", fontFamily: 'Trocchi', fontSize: "30px", fontWeight: "normal", lineHeight: "48px", textAlign: "center", marginTop: 30, marginBottom: 30}}>
+            Browse Events
+        </h2>
+        <div style={{
+            display: 'flex',
+            alignItems: 'center'}}>
+            <IconButton style={{marginRight:25,marginLeft: 10}} onClick={() => {
+                setEventIndex(eventIndex>2?eventIndex-3:0);}}>
+                <ArrowBackIosIcon/>
+            </IconButton>
+            <Grid container spacing={2} alignItems="stretch">
+                {events.slice(eventIndex,eventIndex+3).map(s=>(
+                    <Grid item md={4} style={{display: 'flex'}}>
+                        <EventInfoCard {...s}/>
+                    </Grid>)
+                )}
+            </Grid>
+            <IconButton style={{marginRight:10}} onClick={() => {
+                setEventIndex(eventIndex<9?eventIndex+3:9);}}>
+                <ArrowForwardIosIcon/>
+            </IconButton>
+        </div>
+    </div>
+  );
 }
 
 export default Homepage;
