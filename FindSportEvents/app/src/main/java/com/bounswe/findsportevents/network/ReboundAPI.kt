@@ -6,10 +6,7 @@ import com.bounswe.findsportevents.network.modalz.requests.ConfirmResetPasswordR
 import com.bounswe.findsportevents.network.modalz.requests.ObtainTokenRequest
 import com.bounswe.findsportevents.network.modalz.requests.ResetPasswordRequest
 import com.bounswe.findsportevents.network.modalz.requests.SignupRequest
-import com.bounswe.findsportevents.network.modalz.responses.ConfirmResetPasswordResponse
-import com.bounswe.findsportevents.network.modalz.responses.ObtainTokenResponse
-import com.bounswe.findsportevents.network.modalz.responses.ResetPasswordResponse
-import com.bounswe.findsportevents.network.modalz.responses.SignupResponse
+import com.bounswe.findsportevents.network.modalz.responses.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -40,6 +37,12 @@ interface ReboundAPI {
     fun confirmResetPassword(
         @Body request: ConfirmResetPasswordRequest
     ): Call<ConfirmResetPasswordResponse>
+
+    @GET("api/users/{username}")
+    fun getUser(
+        @Header("Authorization") token: String,
+        @Path("username") username: String
+    ): Call<UserResponse>
 
     companion object {
 

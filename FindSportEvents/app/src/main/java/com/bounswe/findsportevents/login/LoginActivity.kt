@@ -74,7 +74,7 @@ class LoginActivity : AppCompatActivity() {
                             ).show()
                             startActivity<MainActivity> {
                                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                MainActivity.addExtras(this, true)
+                                MainActivity.addExtras(this, true, response.body()!!.access, binding.etUsername.text.toString())
                             }
                         }else{
                             Toast.makeText(
