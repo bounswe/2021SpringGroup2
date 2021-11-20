@@ -15,6 +15,8 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener, Fra
     private lateinit var binding: ActivityMainBinding
 
     private var login = false
+    private var token = ""
+    private var username = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +25,8 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener, Fra
 
         if (intent.extras != null) {
             login = intent.extras!!.getBoolean(LOGIN_KEY)
+            token = intent.extras!!.getString(TOKEN_KEY) ?: ""
+            username = intent.extras!!.getString(USERNAME_KEY) ?: ""
         }
 
         if (savedInstanceState == null && supportFragmentManager.findFragmentById(binding.containerMain.id) == null) {
@@ -38,7 +42,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener, Fra
                         false
                     }
                     R.id.bottom_profile -> {
-                        displayProfileFragment()
+                        displayProfileFragment(token, username)
                         false
                     }
                     else -> false
@@ -55,8 +59,8 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener, Fra
         supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentHome(), FragmentHome.TAG).commit()
     }
 
-    private fun displayProfileFragment() {
-        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentProfile(), FragmentProfile.TAG).commit()
+    private fun displayProfileFragment(token: String, username: String) {
+        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentProfile.newInstance(token, username), FragmentProfile.TAG).commit()
     }
 
     private fun setObservers() {
@@ -72,9 +76,13 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener, Fra
     companion object {
 
         private const val LOGIN_KEY = "login_key"
+        private const val TOKEN_KEY = "token_key"
+        private const val USERNAME_KEY = "username_key"
 
-        fun addExtras(intent: Intent, login: Boolean) {
+        fun addExtras(intent: Intent, login: Boolean, token: String, username:String) {
             intent.putExtra(LOGIN_KEY, login)
+            intent.putExtra(TOKEN_KEY, token)
+            intent.putExtra(USERNAME_KEY, username)
         }
     }
 }

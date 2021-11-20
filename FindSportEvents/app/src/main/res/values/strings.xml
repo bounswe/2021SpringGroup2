@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Rebound</string>
-    <string name="username">Email/Username</string>
+    <string name="username">Username</string>
     <string name="login">LOGIN</string>
     <string name="password">Password</string>
     <string name="home">Home</string>
@@ -24,4 +24,11 @@
     <string name="interests">Interests</string>
     <string name="sign_up">SIGN UP</string>
     <string name="rebound_image">rebound image</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="email">Email</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="confirm">CONFIRM</string>
+    <string name="token">Token</string>
+    <string name="reset_password_desc">Check your email and enter the token to confirm resetting the password.</string>
+    <string name="new_password">New Password</string>
 </resources>
