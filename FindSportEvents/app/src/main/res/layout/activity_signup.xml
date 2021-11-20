@@ -29,6 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/space_xx_large"
+                android:inputType="textPassword"
                 android:hint="@string/password" />
 
             <com.google.android.material.textfield.TextInputEditText
@@ -36,6 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/space_xx_large"
+                android:inputType="textPassword"
                 android:hint="@string/confirm_password" />
 
             <com.google.android.material.textfield.TextInputEditText

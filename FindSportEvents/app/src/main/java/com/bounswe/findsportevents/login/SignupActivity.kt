@@ -60,6 +60,14 @@ class SignupActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
+                if((binding.etPasswordConfirm.text?.length ?: 0 == binding.etPassword.text?.length ?:0) &&
+                    binding.etPasswordConfirm.text.toString() != binding.etPassword.text.toString() ) {
+                    Toast.makeText(
+                        applicationContext,
+                        "Password and confirmation password do not match!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
                 checkFields()
             }
         })
