@@ -43,7 +43,7 @@ interface ReboundAPI {
 
     companion object {
 
-        var BASE_URL = "http://34.122.205.8/"
+        var BASE_URL = "http://34.68.66.109/"
 
         fun create(): ReboundAPI {
 
