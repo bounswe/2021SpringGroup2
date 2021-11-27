@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'eventposts',
     'profiles',
     'corsheaders',
+    'frontend',
 ]
 
 MIDDLEWARE = [
