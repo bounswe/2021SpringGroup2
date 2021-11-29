@@ -43,6 +43,15 @@ interface ReboundAPI {
         @Header("Authorization") token: String,
         @Path("username") username: String
     ): Call<UserResponse>
+    @GET("api/posts/all")
+    fun getEvents(
+        @Header("Authorization")token:String
+    ): Call<AllEventsResponse>
+    @GET("api/posts/{eventId}")
+    fun getEventbyId(
+        @Header("Authorization") token : String,
+        @Path("eventId") eventId : Int,
+    ): Call<EventResponse>
 
     companion object {
 

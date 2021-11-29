@@ -3,14 +3,18 @@ package com.bounswe.findsportevents.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bounswe.findsportevents.R
+import com.bounswe.findsportevents.adapter.RecyclerAdapter
 import com.bounswe.findsportevents.databinding.ActivityMainBinding
 import com.bounswe.findsportevents.extensions.startActivity
 import com.bounswe.findsportevents.login.LoginActivity
 import com.bounswe.findsportevents.main.fragments.FragmentHome
 import com.bounswe.findsportevents.main.fragments.FragmentProfile
+import com.bounswe.findsportevents.main.fragments.FragmentViewAllEvents
 
-class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener, FragmentProfile.FragmentProfileListener {
+class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener, FragmentProfile.FragmentProfileListener,FragmentViewAllEvents.FragmentViewAllEventsListener {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -22,6 +26,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener, Fra
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         if (intent.extras != null) {
             login = intent.extras!!.getBoolean(LOGIN_KEY)
@@ -50,11 +55,13 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener, Fra
 
             }
         }
-
+        initListeners()
         setObservers()
     }
 
-
+    private fun displayViewAllEventsFragment(){
+        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentViewAllEvents.newInstance(token), FragmentViewAllEvents.TAG).commit()
+    }
     private fun displayHomeFragment() {
         supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentHome(), FragmentHome.TAG).commit()
     }
@@ -71,6 +78,9 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener, Fra
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             }
         }
+    }
+    private fun initListeners(){
+       //
     }
 
     companion object {
