@@ -1,17 +1,15 @@
-#from typing import ValuesView
-from django.shortcuts import render
-from django.http import HttpResponse
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
 from rest_framework import status
-
-from .models import EventPost, Post
-from .serializers import EventPostSerializer, PostSerializer
+from .models import EventPost
+from .serializers import EventPostSerializer
 from rest_framework.views import APIView
-from django.forms.models import model_to_dict
+from rest_framework.pagination import PageNumberPagination
 
 
-
+class EventPostsPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
 
 
 class EventPostView(APIView):
@@ -19,23 +17,36 @@ class EventPostView(APIView):
     def get(self, request, id):                
         try:           
             eventpost = EventPost.objects.get(id=id)
-        except:  
+        except Exception as e:
             return Response(status=status.HTTP_204_NO_CONTENT)     
         return Response(EventPostSerializer(eventpost).data)
+
 
 class EventPostViewAll(APIView):
     
     def get(self, request):                
         try:          
-            eventpost = EventPost.objects.all()
+            posts = EventPost.objects.all()
         except:     
             return Response(status=status.HTTP_204_NO_CONTENT)
-        eventserializer=EventPostSerializer(eventpost,many=True)
-        
-        return Response(eventserializer.data)
+
+        serializer=EventPostSerializer(posts, many=True)
+
+        return Response(serializer.data)
 
 
-class EventPostPostView(APIView):
+class EventPostPostView(APIView, EventPostsPagination):
+
+    def get(self, request):
+        try:
+            posts = EventPost.objects.all()
+            results = self.paginate_queryset(posts, request, view=self)
+        except Exception as e:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        serializer = EventPostSerializer(results, many=True)
+
+        return Response(serializer.data)
 
     def post(self, request):
         serializer = EventPostSerializer(data=request.data)
