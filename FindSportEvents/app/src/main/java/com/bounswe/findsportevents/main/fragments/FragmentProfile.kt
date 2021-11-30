@@ -1,6 +1,7 @@
 package com.bounswe.findsportevents.main.fragments
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,15 +13,20 @@ import com.bounswe.findsportevents.databinding.FragmentProfileBinding
 import com.bounswe.findsportevents.main.MainActivity
 import com.bounswe.findsportevents.network.ReboundAPI
 import com.bounswe.findsportevents.network.modalz.responses.UserResponse
+import com.bounswe.findsportevents.util.DialogManager
+import com.bounswe.findsportevents.util.LoadingDialog
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
-class FragmentProfile : Fragment() {
+class FragmentProfile : Fragment(), DialogManager {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
+
+    private var dialog: LoadingDialog? = null
 
     private lateinit var profileFragListener: FragmentProfileListener
     private var token = ""
@@ -32,10 +38,12 @@ class FragmentProfile : Fragment() {
         token = requireArguments().getString(TOKEN_KEY) ?: ""
         username = requireArguments().getString(USERNAME_KEY) ?: ""
 
-
-
+        context?.run {
+            showLoading(this)
+        }
         ReboundAPI.create().getUser(token, username).enqueue(object: Callback<UserResponse> {
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+                hideLoading()
                 if(response.isSuccessful){
                     binding.etFirstName.setText(response.body()?.first_name ?: "")
                     binding.etLastName.setText(response.body()?.last_name ?: "")
@@ -48,7 +56,7 @@ class FragmentProfile : Fragment() {
             }
 
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-//                TODO("Not yet implemented")
+                hideLoading()
             }
 
         })
@@ -96,6 +104,26 @@ class FragmentProfile : Fragment() {
                 it.putString(TOKEN_KEY, token)
                 it.putString(USERNAME_KEY, username)
             }
+        }
+    }
+
+    override fun showLoading(context: Context) {
+        try {
+            hideLoading()
+            dialog = LoadingDialog(context)
+            dialog?.setCancelable(false)
+            dialog?.show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun hideLoading() {
+        try {
+            dialog?.dismiss()
+            dialog = null
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }
