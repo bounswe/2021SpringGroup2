@@ -7,3 +7,10 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name',
                   'bio', 'fav_sport_1', 'fav_sport_2', 'fav_sport_3',
                   'location')
+
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name',
+                  'bio', 'fav_sport_1', 'fav_sport_2', 'fav_sport_3',
+                  'location', 'avatar', 'privacy')
