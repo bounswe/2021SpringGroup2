@@ -1,13 +1,12 @@
 const headers = {}
-export default headers
 
-const setHeaders = (accessToken, refreshToken) =>{
+export const setHeaders = (accessToken, refreshToken) =>{
     headers.access = accessToken
     headers.refresh = refreshToken
     headers.accessTimeStamp = new Date().getTime()
 }
 
-const getToken = async _=>{
+export const getToken = async _=>{
     if(headers.accessTimeStamp === null) return false
     if(new Date().getTime()-headers.accessTimeStamp < 1000*60*5) return headers.access
     const options = {
