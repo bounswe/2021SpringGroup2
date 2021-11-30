@@ -8,6 +8,8 @@ from authentication.models import User
 from .serializers import ProfileSerializer, ProfileUpdateSerializer
 from rest_framework import status, permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from django.core.exceptions import PermissionDenied
+
 
 
 class ProfileView(generics.RetrieveAPIView):
@@ -19,13 +21,14 @@ class ProfileUpdateView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = ProfileUpdateSerializer
     lookup_field = 'username'
+    JWTauth = JWTAuthentication()
 
     def authenticate(self):
-        username, _ = JWTAuthentication.authenticate(self.request)
-        return username == self.request.username
+        user, _ = self.JWTauth.authenticate(self.request)
+        return user.username == self.kwargs['username']
 
-    def get(self, request, *args, **kwargs):
-        if authenticate():
-            super.get(request, *args, **kwargs)
+    def put(self, request, *args, **kwargs):
+        if self.authenticate():
+            return self.update(request, *args, **kwargs)
         else:
-            raise Exception("Wrong")
+            raise PermissionDenied()
