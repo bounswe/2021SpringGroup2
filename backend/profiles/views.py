@@ -8,7 +8,8 @@ from authentication.models import User
 from .serializers import ProfileSerializer, ProfileUpdateSerializer
 from rest_framework import status, permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse
+
 
 
 
@@ -31,4 +32,4 @@ class ProfileUpdateView(generics.RetrieveUpdateAPIView):
         if self.authenticate():
             return self.update(request, *args, **kwargs)
         else:
-            raise PermissionDenied()
+            return HttpResponse('Unauthorized', status=401)
