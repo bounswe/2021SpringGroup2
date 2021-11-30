@@ -10,6 +10,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import {getSampleEvents} from "../../Controllers/SampleEventController";
 import EventInfoCard from "./EventCard";
+import AuthInfo from "../../Controllers/AuthInfo";
 function Homepage() {
     const [sports, setSports] = useState([{}])
     const [events, setEvents] = useState([{}])
