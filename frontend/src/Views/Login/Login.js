@@ -7,6 +7,7 @@ import Joi from 'joi'
 import {obtainToken} from "../../Controllers/LoginController";
 import {useState} from "react";
 import {Alert} from "@mui/lab";
+import AuthInfo from "../../Controllers/AuthInfo";
 
 const initialState = {
     username: {
@@ -51,6 +52,8 @@ export default function LoginPage(props){
                      setState(newState)
                  }
                  else{
+                     AuthInfo["refresh"] = r.refresh
+                     AuthInfo["access"] = r.access
                      navigate("/")
                  }
              })
