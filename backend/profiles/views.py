@@ -1,14 +1,11 @@
 from django.shortcuts import render
 
 # Create your views here.
-from rest_framework import status
 from rest_framework import generics
-from rest_framework.response import Response
 from authentication.models import User
 from .serializers import ProfileSerializer, ProfileUpdateSerializer
-from rest_framework import status, permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from django.http import HttpResponse
+from django.http import JsonResponse
 
 
 
@@ -32,4 +29,4 @@ class ProfileUpdateView(generics.RetrieveUpdateAPIView):
         if self.authenticate():
             return self.update(request, *args, **kwargs)
         else:
-            return HttpResponse('Unauthorized', status=401)
+            return JsonResponse(status=401, data={'detail':'Unauthorized.'})
