@@ -17,17 +17,18 @@ class Post(models.Model):
 
 class EventPost(Post):
     date = models.DateTimeField(auto_now_add=True)
-    duration = models.TimeField(auto_now_add=True)
+    duration = models.IntegerField(default=60)
 
     sport = models.CharField(max_length=30)
-    age_group = models.IntegerField(default=-1)
+    min_age = models.IntegerField(default=18)
+    max_age = models.IntegerField(default=75)
 
-    player_capacity = models.IntegerField(default=-1)
-    spec_capacity = models.IntegerField(default=-1)
-    players = models.IntegerField(default=-1)
-    spectators = models.IntegerField(default=-1)
+    player_capacity = models.IntegerField(default=10)
+    spec_capacity = models.IntegerField(default=0)
+    players = models.IntegerField(default=1)
+    spectators = models.IntegerField(default=0)
 
     skill_level = models.TextChoices('skill_level', 'Beginner Preintermediate Intermediate Advanced Expert')
 
-    latitude = models.FloatField(default=-1.0)
-    longitude = models.FloatField(default=-1.0)
+    latitude = models.FloatField(default=1.0)
+    longitude = models.FloatField(default=1.0)

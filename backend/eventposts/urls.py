@@ -3,7 +3,6 @@ from . import views
 
 urlpatterns=[
     
-    path('<int:id>/', views.EventPostView.as_view(), name="EventPost"),
-    path('all/', views.EventPostViewAll.as_view(), name="EventPostAll"),
-    path('', views.EventPostPostView.as_view(), name="EventPostPost"),
+    path('<int:id>/', views.EventView.as_view(), name="EventView"),
+    path('create/', views.EventCreateView.as_view(), name="EventCreate"),
 ]
