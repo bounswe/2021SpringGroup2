@@ -1,13 +1,12 @@
-import React from 'react'
-import Container from "@mui/material/Container";
+import React, {useEffect, useState} from 'react'
 import {useParams} from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import {createStyles, makeStyles, styled} from "@mui/styles";
 import Paper from "@mui/material/Paper";
-import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
-import {ListItemText} from "@mui/material";
+import {CircularProgress, ListItemText} from "@mui/material";
+import {getProfile} from "../../Controllers/ProfileController";
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -45,7 +44,7 @@ const useStyles = makeStyles(theme => createStyles({
     },
 }));
 
-const profile = {
+const initialProfile = {
     firstName: {
         value: "Doğukan",
         changed: false,
@@ -84,12 +83,32 @@ const profile = {
     },
 }
 
-const Index = props =>{
+const Index = _ =>{
     const classes = useStyles()
     const params = useParams()
     const userid = params.userid
+    const [loading, setLoading] = useState(true)
+    const [profile, setProfile] = useState(initialProfile)
+    useEffect(function(){
+        if(loading){
+            getProfile(userid)
+                .then(p=>{
+                    setLoading(false)
+                    const newProfile = {...profile}
+                    for(let i in p){
+                        newProfile[i].value = p[i]
+                    }
+                    setProfile(newProfile)
+                })
+                .catch(console.log)
+        }
+    }, [])
+
     console.log(userid)
-    return(
+
+    return loading? <CircularProgress />
+        :
+    (
         <div className={classes.paper}>
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={12}>
