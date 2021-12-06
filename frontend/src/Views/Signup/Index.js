@@ -171,9 +171,9 @@ export default function SignUp() {
         const result = schema.validate(value, {abortEarly: false})
         if(result.error)return
         SignUpFunction(value).then(_=>{
-            navigate("/profile/"+value.username)
-            }
-        )
+                navigate("/profile/"+value.username)
+                enqueueSnackbar("Your account is successfully created.", {variant: "success"})
+            })
             .catch(e=>{
                 enqueueSnackbar("An error occured in the server.", {variant: "error"})
                 console.log(e)
