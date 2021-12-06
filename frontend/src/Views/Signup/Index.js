@@ -11,6 +11,7 @@ import Joi from 'joi'
 import {useNavigate} from 'react-router-dom'
 import image from '../../logos/reb und(400 x 100 px).png'
 import SignUpFunction from "../../Controllers/SignUpController";
+import {useSnackbar} from "notistack";
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -128,6 +129,8 @@ export default function SignUp() {
     const classes = useStyles()
     const navigate = useNavigate()
     const [state, setState] = useState(initialState)
+    const { enqueueSnackbar } = useSnackbar();
+
 
     const getValue = state => ({
         username: state.username.value,
@@ -171,6 +174,10 @@ export default function SignUp() {
             navigate("/profile/"+value.username)
             }
         )
+            .catch(e=>{
+                enqueueSnackbar("An error occured in the server.", {variant: "error"})
+                console.log(e)
+            })
 
 
     }
