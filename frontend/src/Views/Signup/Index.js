@@ -178,8 +178,6 @@ export default function SignUp() {
                 enqueueSnackbar("An error occured in the server.", {variant: "error"})
                 console.log(e)
             })
-
-
     }
 
     return (
