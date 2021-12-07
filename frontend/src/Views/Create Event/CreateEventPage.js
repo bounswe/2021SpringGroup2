@@ -1,6 +1,17 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
-import {Grid, Paper, TextField, Typography, Box, SvgIcon, Container, Divider} from "@mui/material";
+import {
+    Grid,
+    Paper,
+    TextField,
+    Typography,
+    Box,
+    SvgIcon,
+    Container,
+    Divider,
+    Dialog,
+    DialogContent, DialogTitle
+} from "@mui/material";
 import {makeStyles, createStyles} from '@mui/styles'
 import {Link} from 'react-router-dom'
 import Joi from 'joi'
@@ -11,6 +22,8 @@ import DatePicker from '@mui/lab/DatePicker'
 import {Autocomplete} from "@mui/lab";
 import {useEffect, useState} from "react";
 import {getSportsList} from "../../Controllers/SportsController";
+import {getLocationMatches} from "../../Controllers/GeocodingController";
+import MapWithMarker from "./MapWithMarker";
 
 const initialState = {
     title: {
@@ -19,11 +32,6 @@ const initialState = {
         error: undefined
     },
     description: {
-        value: "",
-        changed: false,
-        error: undefined
-    },
-    location: {
         value: "",
         changed: false,
         error: undefined
@@ -67,6 +75,14 @@ export default function CreateEventPage(props){
     const skillOptions = [{label: "Beginner"},{label: "Preintermediate"},{label: "Intermediate"},
         {label: "Advanced"},{label: "Expert"}]
     const [inputs, setInputs] = useState(initialState)
+    const [locationOpen, setLocationOpen] = React.useState(false);
+    const handleClickOpen = () => {
+        setLocationOpen(true);
+    };
+
+    const handleClose = () => {
+        setLocationOpen(false);
+    };
     const getValue = inputs => ({
         title: inputs.title.value,
         description: inputs.description.value,
@@ -106,9 +122,11 @@ export default function CreateEventPage(props){
     const handleEndChange = (newValue) => {
         setTimeEnd(newValue);
     }
+
     function createEvent(){
 
     }
+
     return(
         <Container component="main" maxWidth="md">
             <Paper elevation={8} style={paperStyle}>
@@ -141,9 +159,16 @@ export default function CreateEventPage(props){
 
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <TextField id="location" fullWidth required label="Event Location" size="small" variant="outlined" style={textFieldStyle}
-                                       value={inputs.location.value||""} onChange={handleChange}         InputProps={inputStyle}></TextField>
-                        </Grid>
+                            <Button variant="outlined" onClick={handleClickOpen}>
+                                Select location
+                            </Button>
+                            <Dialog open={locationOpen} onClose={handleClose} fullWidth maxWidth="md">
+                                <DialogTitle>Select location from map</DialogTitle>
+                                <DialogContent>
+                                <MapWithMarker/>
+                                </DialogContent>
+                            </Dialog>
+                            </Grid>
                     </Grid>
                     <Grid container spacing={1}>
                         <Grid item xs={12} sm={4}>
