@@ -6,7 +6,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ('first_name', 'last_name',
                   'bio', 'fav_sport_1', 'fav_sport_2', 'fav_sport_3',
-                  'location')
+                  'location', 'avatar')
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
