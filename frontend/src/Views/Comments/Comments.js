@@ -4,7 +4,11 @@ import Button from "@mui/material/Button";
 import TextField from '@mui/material/TextField';
 import Comment from "./Comment";
 import List from '@mui/material/List';
-
+import {
+    getAnswersOfComment,
+    getCommentByID,
+    getCommentsAndAnswersOfEvent, postAnswer, postComment
+} from "../../Controllers/CommentAnswerController";
 import Grid from "@mui/material/Grid";
 import DialogContent from "@mui/material/DialogContent";
 import {useRef} from "react";
@@ -21,6 +25,12 @@ export default function Comments(props){
         setNewComment(event.target.value);
     };
     const handlePostComment = () => {
+        if(newComment.includes("@")){
+            postAnswer();
+        }
+        else{
+            postComment();
+        }
     };
     const comments = [{avatar:"https://avatars.githubusercontent.com/u/52797716?v=4}",
         username:"bdoner", content:"It was nice playing with you.", isAnswer:false,
