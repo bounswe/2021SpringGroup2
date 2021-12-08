@@ -42,14 +42,13 @@ export default function Comments(props){
                 username:"sefika", content:":)", isAnswer:true}]},
             {avatar:"https://avatars.githubusercontent.com/u/36790615?v=4}",
                 username:"dogukanakar", content:"Do you wanna play a rematch?", isAnswer:false,
-                answers:[{avatar:"https://avatars.githubusercontent.com/u/52797716?v=4}",
-                    username:"bdoner", content:"Sure!", isAnswer:true},
+                answers:[{
+                    username:"bdoner", content:"Sure!", isAnswer:true}
             ]}];
     return (
         <div>
             <Button onClick={handleOpen}>View Comments</Button>
-            <Dialog open={open} onClose={handleClose} fullWidth>
-                <DialogTitle>Comments</DialogTitle>
+            <Dialog open={open} onClose={handleClose}   disableScrollLock={ true } fullWidth>
                 <DialogContent>
                     <List>
                         {comments.map(d=>
@@ -58,10 +57,10 @@ export default function Comments(props){
                             </React.Fragment>
                         )}
                     </List>
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} >
                         <Grid item sm={10}>
                             <TextField id="comment" fullWidth size="small" variant="outlined" placeholder="Add comment..."
-                                  inputRef={textInput}   autoFocus style={{marginLeft:"3%",marginBottom:"3%"}}    value={newComment||""} onChange={handleInput}></TextField>
+                                       inputRef={textInput} style={{marginLeft:"3%",marginBottom:"3%"}}    value={newComment||""} onChange={handleInput}></TextField>
                         </Grid>
                         <Grid item sm={2}>
                             <Button onClick={handlePostComment}>Share</Button>

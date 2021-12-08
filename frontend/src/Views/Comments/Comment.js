@@ -16,7 +16,7 @@ const Comment = React.forwardRef((props,ref) => {
         }
         setTimeout(() => {
             ref.current.focus();
-        }, 100);
+        }, 200);
     }
     const formatDate = (dateString) => {
         const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -41,10 +41,12 @@ const Comment = React.forwardRef((props,ref) => {
         <React.Fragment>
             <ListItem alignItems="flex-start" style={listStyle}>
                 <ListItemAvatar>
-                    <Avatar src={object.avatar}/>
+                        <Avatar src={object.avatar}/>
+
                 </ListItemAvatar>
                 <Stack direction="column">
-                    <ListItemText style={{paddingTop: 0, paddingBottom: 0}} primary={object.username}
+                    <ListItemText style={{paddingTop: 0, paddingBottom: 0}}
+                                  primary={<Typography style={{fontWeight:"550"}}>{object.username}</Typography>}
                                   secondary={<Typography style={contentStyle}>{object.content}</Typography>}/>
                     <Stack direction="row" spacing={1}>
                         {object.creationDate ?
@@ -55,7 +57,7 @@ const Comment = React.forwardRef((props,ref) => {
                         }
                         <button style={{
                             background: "none", border: "none", marginBottom: "2px", padding: 0,
-                            cursor: "pointer", color: "#525960", fontWeight: "bold"
+                            cursor: "pointer", color: "#677079", fontWeight: "bold"
                         }}
                                 onClick={handleReply}>reply
                         </button>
