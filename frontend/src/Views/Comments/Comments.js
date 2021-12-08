@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import TextField from '@mui/material/TextField';
 import Comment from "./Comment";
 import List from '@mui/material/List';
+
 import Grid from "@mui/material/Grid";
 import DialogContent from "@mui/material/DialogContent";
 import {useRef} from "react";
@@ -12,6 +13,7 @@ export default function Comments(props){
     const typoStyle = {fontSize:13,display:"flex", flexDirection: "column", justifyContent: "center"}
     const [open, setOpen] = React.useState(false);
     const [newComment, setNewComment] = React.useState("");
+    let textInput = useRef(null);
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -49,7 +51,7 @@ export default function Comments(props){
                     <Grid container spacing={3}>
                         <Grid item sm={10}>
                             <TextField id="comment" fullWidth size="small" variant="outlined" placeholder="Add comment..."
-                                    autoFocus style={{marginLeft:"3%",marginBottom:"3%"}}    value={newComment||""} onChange={handleInput}></TextField>
+                                  inputRef={textInput}   autoFocus style={{marginLeft:"3%",marginBottom:"3%"}}    value={newComment||""} onChange={handleInput}></TextField>
                         </Grid>
                         <Grid item sm={2}>
                             <Button onClick={handlePostComment}>Share</Button>

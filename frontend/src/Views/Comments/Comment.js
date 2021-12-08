@@ -4,7 +4,7 @@ import Avatar from '@mui/material/Avatar';
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-export default function Comment(props){
+const Comment = React.forwardRef((props,ref) => {
     const [open, setOpen] = React.useState(true);
     const object = props.content
     const handleClick = () => {
@@ -14,6 +14,9 @@ export default function Comment(props){
         if (!props.newcomment.includes("@")) {
             props.setReply("@" + object.username + " " + props.newcomment)
         }
+        setTimeout(() => {
+            ref.current.focus();
+        }, 100);
     }
     const formatDate = (dateString) => {
         const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -61,10 +64,12 @@ export default function Comment(props){
             </ListItem>
             {object.answers !== null && object.answers !== undefined && object.answers !== []
                 ? object.answers.map(d =>
-                    <Comment content={d} newcomment={props.newcomment} setReply={props.setReply}/>
+                    <Comment content={d} newcomment={props.newcomment} setReply={props.setReply} ref={ref}/>
                 )
                 : null
             }
         </React.Fragment>
     );
-}
+})
+export default Comment;
+
