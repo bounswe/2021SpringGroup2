@@ -15,7 +15,17 @@ export default function Comment(props){
             props.setReply("@" + object.username + " " + props.newcomment)
         }
     }
-
+    const formatDate = (dateString) => {
+        const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        let date = new Date(Date.parse(dateString))
+        let month = months[date.getMonth()]
+        let day = date.getDay()
+        let year = date.getFullYear()
+        let hours = date.getHours() < 10 ? "0" + String(date.getHours()) : date.getHours()
+        let minutes = date.getMinutes() < 10 ? "0" + String(date.getMinutes()) : date.getMinutes()
+        let dateFormatted = month + " " + String(day) + " " + String(year) + ", " + String(hours) + ":" + String(minutes)
+        return dateFormatted
+    }
     const contentStyle = {fontSize: 14, display: "inline"}
     const infoStyle = {fontSize: 12, display: "inline", color: "#677079"}
 
@@ -37,7 +47,7 @@ export default function Comment(props){
                         {object.creationDate ?
                             <Typography style={infoStyle}>
                                 {(!object.isAnswer ? "commented at " : "answered at ") +
-                                object.creationDate}</Typography>
+                                formatDate(object.creationDate)}</Typography>
                             : null
                         }
                         <button style={{
