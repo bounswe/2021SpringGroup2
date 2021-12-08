@@ -28,7 +28,8 @@ class EventPost(Post):
     players = models.IntegerField(default=1)
     spectators = models.IntegerField(default=0)
 
-    skill_level = models.TextChoices('skill_level', 'Beginner Preintermediate Intermediate Advanced Expert')
+    min_skill_level = models.IntegerField(default=0)
+    max_skill_level = models.IntegerField(default=0)
 
     latitude = models.FloatField(default=1.0)
     longitude = models.FloatField(default=1.0)
