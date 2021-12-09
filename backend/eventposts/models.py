@@ -1,5 +1,6 @@
 from django.db import models
 from authentication.models import User
+from django.contrib.postgres.fields import ArrayField
 
 class Post(models.Model):
 
@@ -25,8 +26,8 @@ class EventPost(Post):
 
     player_capacity = models.IntegerField(default=10)
     spec_capacity = models.IntegerField(default=0)
-    players = models.IntegerField(default=1)
-    spectators = models.IntegerField(default=0)
+    players = ArrayField(models.IntegerField(), default=[])
+    spectators = ArrayField(models.IntegerField(), default=[])
 
     min_skill_level = models.IntegerField(default=0)
     max_skill_level = models.IntegerField(default=0)
