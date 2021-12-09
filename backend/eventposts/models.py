@@ -2,6 +2,9 @@ from django.db import models
 from authentication.models import User
 from django.contrib.postgres.fields import ArrayField
 
+def empty_list():
+    return list([])
+
 class Post(models.Model):
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -26,8 +29,9 @@ class EventPost(Post):
 
     player_capacity = models.IntegerField(default=10)
     spec_capacity = models.IntegerField(default=0)
-    players = ArrayField(models.IntegerField(), default=[])
-    spectators = ArrayField(models.IntegerField(), default=[])
+    players = ArrayField(models.IntegerField(), default=empty_list)
+    applicants = ArrayField(models.IntegerField(), default=empty_list)
+    spectators = ArrayField(models.IntegerField(), default=empty_list)
 
     min_skill_level = models.IntegerField(default=0)
     max_skill_level = models.IntegerField(default=0)

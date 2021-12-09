@@ -36,10 +36,10 @@ class EventViewSet(viewsets.ModelViewSet):
              "eventSport": data["sport"], "eventMinAge": data["min_age"], "eventMaxAge": data["max_age"],
              "eventMinSkillLevel": data["min_skill_level"], "eventMaxSkillLevel": data["max_skill_level"],
              "eventPlayerCapacity": data["player_capacity"], "eventSpectatorCapacity": data["spec_capacity"],
-             "eventApplicants": [], "eventPlayers": [data["owner"]] if len(data["players"]) == 0 else data["players"]}
+             "eventApplicants": data["applicants"], "eventPlayers": [data["owner"]] if len(data["players"]) == 0
+            else data["players"]}
 
         return response
-
 
     def authenticate(self):
         user, _ = self.JWTauth.authenticate(self.request)
