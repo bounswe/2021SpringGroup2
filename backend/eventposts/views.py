@@ -36,8 +36,7 @@ class EventViewSet(viewsets.ModelViewSet):
              "eventSport": data["sport"], "eventMinAge": data["min_age"], "eventMaxAge": data["max_age"],
              "eventMinSkillLevel": data["min_skill_level"], "eventMaxSkillLevel": data["max_skill_level"],
              "eventPlayerCapacity": data["player_capacity"], "eventSpectatorCapacity": data["spec_capacity"],
-             "eventApplicants": data["applicants"], "eventPlayers": [data["owner"]] if len(data["players"]) == 0
-            else data["players"]}
+             "eventApplicants": data["applicants"], "eventPlayers": data["players"]}
 
         return response
 
@@ -55,7 +54,6 @@ class EventViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
-            serializer.save(players=[request.data["owner"]])
             headers = self.get_success_headers(serializer.data)
             return Response(self.wrap(request, serializer.data), status=status.HTTP_201_CREATED, headers=headers)
         else:
