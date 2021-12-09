@@ -15,15 +15,13 @@ import com.bounswe.findsportevents.databinding.FragmentHomeBinding
 class FragmentHome : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private var token = ""
-
-
     private lateinit var homeFragListener: FragmentHomeListener
+    private var token = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         homeFragListener = requireActivity() as FragmentHomeListener
-
+        token = requireArguments().getString(TOKEN_KEY) ?: ""
     }
 
     override fun onCreateView(
@@ -51,13 +49,20 @@ class FragmentHome : Fragment() {
     }
 
     private fun setClickListeners() {
-    binding.btnViewEvents.setOnClickListener{
-        val viewAllEventsFragment= FragmentViewAllEvents()
-        val transaction:FragmentTransaction=parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.home_container,FragmentViewAllEvents.newInstance(token),)
+        binding.btnViewEvents.setOnClickListener{
+            val viewAllEventsFragment= FragmentViewAllEvents()
+            val transaction:FragmentTransaction=parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.home_container,FragmentViewAllEvents.newInstance(token),)
 
-        transaction.commit()
+            transaction.commit()
     }
+        binding.btnSearchEvent.setOnClickListener {
+            val searchEventFragment=FragmentSearchEvent()
+            val transaction:FragmentTransaction=parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.home_container,FragmentSearchEvent.newInstance(token),FragmentSearchEvent.TAG)
+
+            transaction.commit()
+        }
     }
 
     interface FragmentHomeListener {
@@ -66,5 +71,11 @@ class FragmentHome : Fragment() {
 
     companion object {
         const val TAG = "home"
+        private const val TOKEN_KEY = "token_key"
+        fun newInstance(token : String) = FragmentHome().apply {
+            arguments = Bundle().apply {
+                putString(TOKEN_KEY, token)
+            }
+        }
     }
 }

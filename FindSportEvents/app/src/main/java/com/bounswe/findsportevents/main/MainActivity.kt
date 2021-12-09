@@ -12,9 +12,10 @@ import com.bounswe.findsportevents.extensions.startActivity
 import com.bounswe.findsportevents.login.LoginActivity
 import com.bounswe.findsportevents.main.fragments.FragmentHome
 import com.bounswe.findsportevents.main.fragments.FragmentProfile
+import com.bounswe.findsportevents.main.fragments.FragmentSearchEvent
 import com.bounswe.findsportevents.main.fragments.FragmentViewAllEvents
 
-class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener, FragmentProfile.FragmentProfileListener,FragmentViewAllEvents.FragmentViewAllEventsListener {
+class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener,FragmentSearchEvent.FragmentSearchEventListener, FragmentProfile.FragmentProfileListener,FragmentViewAllEvents.FragmentViewAllEventsListener {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -36,18 +37,26 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener, Fra
 
         if (savedInstanceState == null && supportFragmentManager.findFragmentById(binding.containerMain.id) == null) {
             supportFragmentManager.beginTransaction()
-                .add(binding.containerMain.id, FragmentHome(), FragmentHome.TAG).commit()
+                .add(binding.containerMain.id, FragmentHome.newInstance(token), FragmentHome.TAG).commit()
         }
 
         binding.bottomNav.apply {
             setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.bottom_home -> {
-                        displayHomeFragment()
+                        displayHomeFragment(token)
                         false
                     }
                     R.id.bottom_profile -> {
-                        displayProfileFragment(token, username)
+                        displayProfileFragment(token,username)
+                        false
+                    }
+                    R.id.bottom_event -> {
+                        displayViewAllEventsFragment(token)
+                        false
+                    }
+                    R.id.bottom_search -> {
+                        displaySearchEventFragment(token)
                         false
                     }
                     else -> false
@@ -58,12 +67,14 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener, Fra
         initListeners()
         setObservers()
     }
-
-    private fun displayViewAllEventsFragment(){
+    private fun displaySearchEventFragment(token: String){
+        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentSearchEvent.newInstance(token), FragmentSearchEvent.TAG).commit()
+    }
+    private fun displayViewAllEventsFragment(token: String){
         supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentViewAllEvents.newInstance(token), FragmentViewAllEvents.TAG).commit()
     }
-    private fun displayHomeFragment() {
-        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentHome(), FragmentHome.TAG).commit()
+    private fun displayHomeFragment(token: String) {
+        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentHome.newInstance(token), FragmentHome.TAG).commit()
     }
 
     private fun displayProfileFragment(token: String, username: String) {

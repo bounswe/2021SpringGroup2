@@ -11,7 +11,6 @@ import com.bounswe.findsportevents.adapter.RecyclerAdapter
 import com.bounswe.findsportevents.databinding.FragmentViewAllEventsBinding
 import com.bounswe.findsportevents.network.ReboundAPI
 import com.bounswe.findsportevents.network.modalz.responses.AllEventsResponse
-import com.bounswe.findsportevents.network.modalz.responses.EventResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,55 +23,50 @@ class FragmentViewAllEvents : Fragment() {
     private var adapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>?=null
     private var token = ""
     var events = mutableListOf("")
-    var creators = mutableListOf("")
+    var creators = mutableListOf(0)
     var fields= mutableListOf("")
-    var players= mutableListOf(listOf(0))
+    var players= mutableListOf(0)
     var spectators= mutableListOf(0)
     var date= mutableListOf("")
     var empList : MutableList<Int> = mutableListOf(0)
-    var eventList = listOf(0)
+    var eventList = mutableListOf(2,3,4)
     private lateinit var viewAllEventsFragListener: FragmentViewAllEventsListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewAllEventsFragListener = requireActivity() as FragmentViewAllEventsListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
-        ReboundAPI.create().getEvents(token).enqueue(object : Callback<AllEventsResponse> {
-            override fun onResponse(
-                call: Call<AllEventsResponse>,
-                response: Response<AllEventsResponse>
-            ) {
-                if (response.isSuccessful) {
-                    eventList = response.body()?.ids ?: listOf()
-                }
-            }
+        token= "JWT $token"
+            ReboundAPI.create().getEvents(token).enqueue(object : Callback<AllEventsResponse> {
 
-            override fun onFailure(call: Call<AllEventsResponse>, t: Throwable) {
-//                TODO("Not yet implemented")
-            }
-        })
-        if(eventList.isNotEmpty()){
-        for(item in eventList){
-            ReboundAPI.create().getEventbyId(token,item).enqueue(object : Callback<EventResponse> {
                 override fun onResponse(
-                    call: Call<EventResponse>,
-                    response: Response<EventResponse>
+                    call: Call<AllEventsResponse>,
+                    response: Response<AllEventsResponse>
                 ) {
+                    events.add("s")
+                    creators.add(8)
+                    fields.add("ss")
+                    players.add(2)
+                    spectators.add(2)
+                    date.add("3")
                     if (response.isSuccessful) {
-                        events.add(response.body()?.Object?.eventSport ?: "")
-                        creators.add(response.body()?.actor?.name?: "")
-                        fields.add(response.body()?.Object?.location?.name?: "")
-                        players.add(response.body()?.Object?.eventPlayers?: empList)
-                        spectators.add(response.body()?.Object?.eventSpectatorCapacity?: 0)
-                        date.add(response.body()?.Object?.eventDate?:"")
+
+                        events.add(response.body().toString())
+                        creators.add(8)
+                        fields.add("ss")
+                        players.add(2)
+                        spectators.add(2)
+                        date.add("3")
                     }
                 }
 
-                override fun onFailure(call: Call<EventResponse>, t: Throwable) {
-//                TODO("Not yet implemented")
+                override fun onFailure(call: Call<AllEventsResponse>, t: Throwable) {
+                val x = ""
                 }
-            })
-        }}
+            }
+            )
+
+
 
     }
     override fun onCreateView(
@@ -114,7 +108,7 @@ class FragmentViewAllEvents : Fragment() {
         const val TAG = "view all events"
         private const val TOKEN_KEY = "token_key"
 
-        fun newInstance(token:String) = FragmentViewAllEvents().also {
+        fun newInstance(token: String) = FragmentViewAllEvents().also {
             it.arguments=Bundle().also {
                 it.putString(TOKEN_KEY,token)
             }

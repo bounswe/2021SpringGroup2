@@ -9,8 +9,8 @@ import com.bounswe.findsportevents.R
 import com.bounswe.findsportevents.main.fragments.FragmentViewAllEvents
 
 
-class RecyclerAdapter(val events : MutableList<String>,val creators : MutableList<String>
-,val fields : MutableList<String>,val players : MutableList<List<Int>>,val spectators : MutableList<Int>,
+class RecyclerAdapter(val events : MutableList<String>,val creators : MutableList<Int>
+,val fields : MutableList<String>,val players : MutableList<Int>,val spectators : MutableList<Int>,
 val date : MutableList<String>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
 
@@ -22,7 +22,7 @@ val date : MutableList<String>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolde
 
     override fun onBindViewHolder(holder: RecyclerAdapter.ViewHolder, position: Int) {
        holder.eventType.text=events[position]
-        holder.eventCreator.text=creators[position]
+        holder.eventCreator.text=creators[position].toString()
         holder.field.text=fields[position]
         holder.players.text=players[position].toString()
         holder.spectators.text=spectators[position].toString()
