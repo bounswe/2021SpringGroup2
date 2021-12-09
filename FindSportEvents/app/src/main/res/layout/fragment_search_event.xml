@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#81D4FA"
+    android:padding="40dp"
+    tools:ignore="ExtraText">
+
+    <Spinner
+        android:id="@+id/sports_spinner"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_sports"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_sports"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sports: "
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_skill_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="Skill Level: "
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_sports" />
+
+    <Spinner
+        android:id="@+id/min_age_spinner"
+        android:layout_width="150dp"
+        android:layout_marginTop="35dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/tv_min_age"
+        app:layout_constraintTop_toBottomOf="@+id/skills_spinner" />
+
+    <Spinner
+        android:id="@+id/max_age_spinner"
+        android:layout_width="150dp"
+        android:layout_marginTop="33dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/tv_max_age"
+        app:layout_constraintTop_toBottomOf="@+id/min_age_spinner" />
+
+    <TextView
+        android:id="@+id/tv_min_age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Minimum Age: "
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_skill_level" />
+
+    <TextView
+        android:id="@+id/tv_max_age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Maximum Age: "
+        android:textSize="25sp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_min_age" />
+
+    <Spinner
+        android:id="@+id/skills_spinner"
+        android:layout_width="240dp"
+        android:layout_marginTop="35dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/tv_skill_level"
+        app:layout_constraintTop_toBottomOf="@+id/sports_spinner"
+        />
+
+    <Button
+        android:id="@+id/btn_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="SELECT DATE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/min_age_spinner" />
+
+    <TextView
+        android:id="@+id/tv_selected_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SELECTED DATE"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_date" />
+
+    <Button
+        android:id="@+id/btn_start_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="25dp"
+        android:width="150dp"
+        android:text="Starting Time"
+        app:layout_constraintTop_toBottomOf="@+id/tv_selected_date" />
+
+    <Button
+        android:id="@+id/btn_end_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:width="150dp"
+        android:text="Ending Time"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="25dp"
+        app:layout_constraintStart_toEndOf="@+id/btn_start_time"
+        app:layout_constraintTop_toBottomOf="@+id/tv_selected_date" />
+
+    <TextView
+        android:id="@+id/tv_selected_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SELECTED START"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:width="150dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_start_time" />
+
+    <TextView
+        android:id="@+id/tv_selected_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:width="130dp"
+        android:text="SELECTED END"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:layout_marginStart="25dp"
+        app:layout_constraintStart_toEndOf="@+id/tv_selected_start"
+        app:layout_constraintTop_toBottomOf="@+id/btn_end_time" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
