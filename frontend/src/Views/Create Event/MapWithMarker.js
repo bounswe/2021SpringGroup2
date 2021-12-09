@@ -10,11 +10,16 @@ import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import {Autocomplete} from "@mui/lab";
 import {TextField} from "@mui/material";
 import {getLocationMatches} from "../../Controllers/GeocodingController";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import SearchIcon from '@mui/icons-material/Search';
 
-export default function MapWithMarker() {
+export default function MapWithMarker(props) {
     let DefaultIcon = L.icon({
         iconUrl: icon,
-        shadowUrl: iconShadow
+        shadowUrl: iconShadow,
+        opacity: 0
     });
     L.Marker.prototype.options.icon = DefaultIcon;
     const centerValue = {
@@ -23,15 +28,17 @@ export default function MapWithMarker() {
     }
     const [location, setLocation] = useState(null);
     const [locationText, setLocationText] = useState("");
-    const [locations, setLocations] = React.useState([{}]);
-    const [position, setPosition] = useState(centerValue);
+    const [locations, setLocations] = useState([{}]);
+    const [optionsOpen,setOptionsOpen] = useState(false);
+    const textFieldStyle = {backgroundColor: 'white', marginTop: 10, marginBottom: 10};
     const markerRef = useRef(null);
     const eventHandlers = useMemo(
         () => ({
             dragend() {
                 const marker = markerRef.current
                 if (marker != null) {
-                    setPosition(marker.getLatLng())
+                    let coords = marker.getLatLng()
+                    props.setCoordinates({lat:Number(coords.lat),lng:Number(coords.lng)})
                 }
             },
         }),
@@ -41,40 +48,51 @@ export default function MapWithMarker() {
     function SetViewOnClick({ coords }) {
         const map = useMap();
         map.setView(coords, map.getZoom());
-        console.log(position)
         return null;
     }
     const handleLocationSearch = (event,inputQuery) => {
         setLocationText(inputQuery)
-        if(inputQuery&&inputQuery.length>=3){
-            getLocationMatches(inputQuery).then(results=> {
-                    setLocations(results)
-                }
-            )
-        }
-        else{
-            setLocations([])
-        }
+    }
+    const handleSearch = () => {
+        getLocationMatches(locationText).then(results=> {
+                setLocations(results)
+            }
+        )
+        setOptionsOpen(true)
     }
     const selectLocation = (input) => {
+        setOptionsOpen(false)
         let coords = {lat:input.lat, lng:input.lng}
-        setPosition(coords)
+        props.setCoordinates(coords)
     }
     return (
         <div>
-        <Autocomplete
-            value={location}
-            inputValue={locationText}
-            options={locations}
-            getOptionLabel={d=>d.name ||""}
-            filterOptions={(x)=>x}
-            onChange={(event, value) =>value ? selectLocation(value) : selectLocation(event.target.value)}
-            onInputChange={handleLocationSearch}
-            renderInput={params => {
-                return (
-                    <TextField  {...params} id="location" fullWidth label="Event Location" placeholder="Search for city, district, street..." size="small" variant="outlined"
-                            style={{marginTop: 10, marginBottom: 10}} value={locationText|""}></TextField>
-                )}} />
+        <Grid container spacing={1}>
+            <Grid item sm={11}>
+                <Autocomplete
+                    open={optionsOpen}
+                    value={location}
+                    inputValue={locationText}
+                    options={locations}
+                    getOptionLabel={d=>d.name ||""}
+                    filterOptions={(x)=>x}
+                    onChange={(event, value) =>value ? selectLocation(value) : selectLocation(event.target.value)}
+                    onInputChange={handleLocationSearch}
+                    clearOnBlur={false}
+                    renderInput={params => {
+                        return (
+                            <TextField  {...params} id="location" fullWidth label="Event Location" placeholder="Search for city, district, street..." size="small" variant="outlined"
+                                        style={textFieldStyle} value={locationText|""}></TextField>
+                        )}} />
+            </Grid>
+            <Grid item sm={1}>
+                <IconButton style={{marginTop: "10%"}} onClick={handleSearch}>
+                    <SearchIcon style={{width:"70%", height:"70%"}}/>
+                </IconButton>
+            </Grid>
+        </Grid>
+
+
         <div id="map">
         <MapContainer style={{width: "100%", height: "70vh"}} center={centerValue} zoom={13}
                       scrollWheelZoom={false} attributionControl={false}>
@@ -83,11 +101,11 @@ export default function MapWithMarker() {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <Marker
-                position={position}
+                position={props.coordinates}
                 draggable={"true"}
                 ref={markerRef}
                 eventHandlers={eventHandlers}>
-                <SetViewOnClick coords={position}/>
+                <SetViewOnClick coords={props.coordinates}/>
             </Marker>
         </MapContainer>
     </div>

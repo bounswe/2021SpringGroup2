@@ -24,6 +24,8 @@ import {useEffect, useState} from "react";
 import {getSportsList} from "../../Controllers/SportsController";
 import {getLocationMatches} from "../../Controllers/GeocodingController";
 import MapWithMarker from "./MapWithMarker";
+import MapIcon from '@mui/icons-material/Map';
+import IconButton from "@mui/material/IconButton";
 
 const initialState = {
     title: {
@@ -62,7 +64,7 @@ const initialState = {
 
 
 export default function CreateEventPage(props){
-    const paperStyle = {padding:20, height: '76vh', width:500, margin:"20px auto", background: "#e4f2f7"};
+    const paperStyle = {padding:20, height: '87vh', width:500, margin:"20px auto", background: "#e4f2f7"};
     const textFieldStyle = {backgroundColor: 'white', marginTop: 10, marginBottom: 10}
     const inputStyle = {height:"10mm",fontSize:"5px"}
     const typographyStyle = {paddingBottom:5,color:'#4c4c4c'}
@@ -76,6 +78,15 @@ export default function CreateEventPage(props){
         {label: "Advanced"},{label: "Expert"}]
     const [inputs, setInputs] = useState(initialState)
     const [locationOpen, setLocationOpen] = React.useState(false);
+    const [latitude, setLatitude] = React.useState("");
+    const [longitude, setLongitude] = React.useState("");
+    const centerValue = {
+        lat:41.0082,
+        lng:28.9784
+    }
+    const [position, setPosition] = useState(centerValue);
+    const numberInputs = ["minAge","maxAge","playerCapacity","spectatorCapacity"]
+
     const handleClickOpen = () => {
         setLocationOpen(true);
     };
@@ -86,7 +97,6 @@ export default function CreateEventPage(props){
     const getValue = inputs => ({
         title: inputs.title.value,
         description: inputs.description.value,
-        location: inputs.location.value,
         minAge: inputs.minAge.value,
         maxAge: inputs.maxAge.value,
         playerCapacity: inputs.playerCapacity.value,
@@ -97,9 +107,10 @@ export default function CreateEventPage(props){
         const value = getValue(newInputs)
         value[e.target.id] = e.target.value
         newInputs[e.target.id] = {
-            value: e.target.value,
+            value: numberInputs.includes(e.target.id)?(checkIfNumber(e.target.value)?e.target.value:newInputs[e.target.id].value):e.target.value,
             changed: true
         }
+        console.log(newInputs)
         setInputs(newInputs)
     }
     useEffect(_=>{
@@ -107,12 +118,11 @@ export default function CreateEventPage(props){
             return a.label.localeCompare(b.label);})
         )).catch(console.log)
     }, [])
-    const getSport = (event,val) => {
-        setSport(val);
-    }
-    const getSkillInput = (event,val) =>{
-        setSkill(val);
-    }
+    useEffect(()=>{
+        setLongitude(position.lng)
+        setLatitude(position.lat)
+    },[position])
+
     const handleDateChange = (newValue) => {
         setDate(newValue);
     };
@@ -122,9 +132,32 @@ export default function CreateEventPage(props){
     const handleEndChange = (newValue) => {
         setTimeEnd(newValue);
     }
+    const checkIfNumber = (number) => {
+        return (!isNaN(parseFloat(number)) && !isNaN(number - 0))|number==""
+    }
+    const handleLatitude = (event) => {
+        if(checkIfNumber(event.target.value)){
+            setLatitude(event.target.value)
+            let current = position
+            current.lat = Number(event.target.value)
+            setTimeout(()=>{
+                setPosition(current)
+            },300)
+        }
+    }
+    const handleLongitude = (event) => {
+        if(checkIfNumber(event.target.value)){
+            setLongitude(event.target.value)
+            let current = position
+            current.lng = Number(event.target.value)
+            setTimeout(()=>{
+                setPosition(current)
+            },300)
+        }
+    }
 
     function createEvent(){
-
+        console.log(getValue(inputs),date,timeStart,timeEnd,sport,skill,position)
     }
 
     return(
@@ -141,9 +174,10 @@ export default function CreateEventPage(props){
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                             <Autocomplete
-                                value={sport}
+                                value={sport|""}
                                 options={options}
-                                onChange={(event, value) =>value ? setInput(value.label) : setInput(event.target.value)}
+                                getOptionLabel={(option) => option.label || ""}
+                                onChange={(event, value) =>value ? setSport(value.label) : setSport(event.target.value)}
                                 renderInput={params => {
                                     return (
                                     <TextField
@@ -155,23 +189,10 @@ export default function CreateEventPage(props){
                                         required
                                         style={textFieldStyle}
                                     />
-                                )}} onInputChange={getSport}/>
+                                )}}/>
 
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <Button variant="outlined" onClick={handleClickOpen}>
-                                Select location
-                            </Button>
-                            <Dialog open={locationOpen} onClose={handleClose} fullWidth maxWidth="md">
-                                <DialogTitle>Select location from map</DialogTitle>
-                                <DialogContent>
-                                <MapWithMarker/>
-                                </DialogContent>
-                            </Dialog>
-                            </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                        <Grid item xs={12} sm={4}>
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <DatePicker
                                     style = {{backgroundColor: "#ffffff"}}
@@ -184,7 +205,49 @@ export default function CreateEventPage(props){
                                 />
                             </LocalizationProvider>
                         </Grid>
-                        <Grid item xs={12} sm={4}>
+
+                    </Grid>
+
+                    <Grid container spacing={4}>
+                        <Grid item xs={12} sm={5}>
+                            <TextField
+                                label="Latitude"
+                                variant="outlined"
+                                size="small"
+                                required
+                                fullWidth
+                                onChange={handleLatitude}
+                                style={textFieldStyle}
+                                value={latitude}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={5}>
+                            <TextField
+                                label="Longitude"
+                                variant="outlined"
+                                size="small"
+                                required
+                                fullWidth
+                                onChange={handleLongitude}
+                                style={textFieldStyle}
+                                value={longitude}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={2}>
+                            <IconButton style={{marginTop:"10%"}} onClick={handleClickOpen}>
+                                <MapIcon style={{width:"80%", height:"80%"}}/>
+                            </IconButton>
+                            <Dialog open={locationOpen} onClose={handleClose} fullWidth maxWidth="md">
+                                <DialogTitle>Select location from map</DialogTitle>
+                                <DialogContent>
+                                    <MapWithMarker coordinates={position} setCoordinates={e=>setPosition(e)}/>
+                                </DialogContent>
+                            </Dialog>
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={2}>
+
+                        <Grid item xs={12} sm={6}>
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <TimePicker
                                         label="Event Start"
@@ -196,7 +259,7 @@ export default function CreateEventPage(props){
                                     />
                                 </LocalizationProvider>
                             </Grid>
-                            <Grid item xs={12} sm={4}>
+                            <Grid item xs={12} sm={6}>
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <TimePicker
                                         label="Event End"
@@ -212,8 +275,9 @@ export default function CreateEventPage(props){
                     <Grid container spacing={1}>
                         <Grid item xs={12} sm={4}>
                             <Autocomplete
-                                value={skill}
+                                value={skill|""}
                                 options={skillOptions}
+                                getOptionLabel={(option) => option.label || ""}
                                 onChange={(event, value) =>value ? setSkill(value.label) : setSkill(event.target.value)}
                                 renderInput={params => {
                                     return (
@@ -225,25 +289,25 @@ export default function CreateEventPage(props){
                                             fullWidth
                                             style={textFieldStyle}
                                         />
-                                    )}} onInputChange={getSkillInput}/>
+                                    )}} />
                         </Grid>
                         <Grid item xs={12} sm={4}>
                             <TextField id="minAge" fullWidth label="Minimum Age" size="small" variant="outlined" style={textFieldStyle}
-                                       value={inputs.minAge.value||18} onChange={handleChange}       InputProps={inputStyle}></TextField>
+                                       value={inputs.minAge.value} onChange={handleChange}       InputProps={inputStyle}></TextField>
                         </Grid>
                         <Grid item xs={12} sm={4}>
                             <TextField id="maxAge" fullWidth label="Maximum Age" size="small" variant="outlined" style={textFieldStyle}
-                                       value={inputs.maxAge.value||80} onChange={handleChange} InputProps={inputStyle}></TextField>
+                                       value={inputs.maxAge.value} onChange={handleChange} InputProps={inputStyle}></TextField>
                         </Grid>
                     </Grid>
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={6}>
-                            <TextField id="playerLimit" fullWidth label="Player Capacity" size="small" variant="outlined" style={textFieldStyle}
-                                       value={inputs.playerCapacity.value||2} onChange={handleChange}    InputProps={inputStyle}></TextField>
+                            <TextField id="playerCapacity" fullWidth label="Player Capacity" size="small" variant="outlined" style={textFieldStyle}
+                                value={inputs.playerCapacity.value} onChange={handleChange}    InputProps={inputStyle}></TextField>
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <TextField id="spectatorLimit" fullWidth label="Spectator Capacity" size="small" variant="outlined" style={textFieldStyle}
-                                       value={inputs.spectatorCapacity.value||0} onChange={handleChange}  InputProps={inputStyle}></TextField>
+                            <TextField id="spectatorCapacity" fullWidth label="Spectator Capacity" size="small" variant="outlined" style={textFieldStyle}
+                                       value={inputs.spectatorCapacity.value} onChange={handleChange}  InputProps={inputStyle}></TextField>
                         </Grid>
                     </Grid>
                     <Box textAlign='center'>
