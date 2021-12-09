@@ -1,4 +1,14 @@
-import {Box, Dialog, DialogTitle, ListItem, ListItemAvatar, ListItemText, Modal, Typography} from "@mui/material";
+import {
+    Box,
+    Dialog,
+    DialogTitle,
+    ListItem,
+    ListItemAvatar,
+    ListItemText,
+    Modal,
+    Stack,
+    Typography
+} from "@mui/material";
 import * as React from "react";
 import Button from "@mui/material/Button";
 import TextField from '@mui/material/TextField';
@@ -11,12 +21,15 @@ import {
 } from "../../Controllers/CommentAnswerController";
 import Grid from "@mui/material/Grid";
 import DialogContent from "@mui/material/DialogContent";
-import {useRef} from "react";
+import {useEffect, useRef} from "react";
 
 export default function Comments(props){
     const typoStyle = {fontSize:13,display:"flex", flexDirection: "column", justifyContent: "center"}
     const [open, setOpen] = React.useState(false);
     const [newComment, setNewComment] = React.useState("");
+    const [comments, setComments] = React.useState([]);
+    const [repliedComment, setRepliedComment] = React.useState(null);
+    const [repliedUser, setRepliedUser] = React.useState(null);
     let textInput = useRef(null);
 
     const handleOpen = () => setOpen(true);
@@ -25,47 +38,65 @@ export default function Comments(props){
         setNewComment(event.target.value);
     };
     const handlePostComment = () => {
-        if(newComment.includes("@")){
-            postAnswer();
+        if(newComment.startsWith("@"+repliedUser+" ") && repliedComment!==null){
+          const answer =  postAnswer(0,1,1,"bdoner",newComment.substring(repliedUser.length+2));
+          setTimeout(() => {
+              setComments(comments.map(d => d.comment_id===repliedComment ? {
+                  ...d, answers: d.answers.concat(answer)
+              } : d))
+            }, 400);
+
+            //setComments(getCommentsAndAnswersOfEvent(0))
+
         }
         else{
-            postComment();
+          const comment = postComment(0,1,"bdoner",newComment);
+          setTimeout(()=>{
+              setComments(comments.concat(comment))
+          },400)
+            //setComments(getCommentsAndAnswersOfEvent(0))
+
         }
+        setNewComment("")
+        setRepliedUser(null)
+        setRepliedComment(null)
     };
-    const comments = [{avatar:"https://avatars.githubusercontent.com/u/52797716?v=4}",
-        username:"bdoner", content:"It was nice playing with you.", isAnswer:false,
-        creationDate: "2014-11-31T23:00:00-08:00",
-        answers:[{avatar:"https://avatars.githubusercontent.com/u/36790615?v=4}",
-            username:"dogukanakar", content:"Indeed", isAnswer:true,
-            creationDate: "2014-11-31T23:00:00-08:00"},
-            {avatar:"https://avatars.githubusercontent.com/u/56451575?v=4}",
-                username:"sefika", content:":)", isAnswer:true}]},
-            {avatar:"https://avatars.githubusercontent.com/u/36790615?v=4}",
-                username:"dogukanakar", content:"Do you wanna play a rematch?", isAnswer:false,
-                answers:[{
-                    username:"bdoner", content:"Sure!", isAnswer:true}
-            ]}];
+    useEffect(_=>{
+        setComments(getCommentsAndAnswersOfEvent(0))
+    }, [])
     return (
         <div>
             <Button onClick={handleOpen}>View Comments</Button>
             <Dialog open={open} onClose={handleClose}   disableScrollLock={ true } fullWidth>
                 <DialogContent>
-                    <List>
-                        {comments.map(d=>
-                            <React.Fragment>
-                                <Comment content={d} newcomment={newComment} setReply={(e) => {setNewComment(e)}} ref={textInput}/>
-                            </React.Fragment>
-                        )}
-                    </List>
-                    <Grid container spacing={3} >
-                        <Grid item sm={10}>
-                            <TextField id="comment" fullWidth size="small" variant="outlined" placeholder="Add comment..."
-                                       inputRef={textInput} style={{marginLeft:"3%",marginBottom:"3%"}}    value={newComment||""} onChange={handleInput}></TextField>
+                    {comments.length>0?
+                        <List>
+                            {comments.map(d=>
+                                    <Comment content={d} newcomment={newComment}
+                                             setReply={(e) => {setNewComment(e)}}
+                                             selectComment={setRepliedComment}
+                                             selectUser={setRepliedUser} ref={textInput}/>
+                            )}
+                        </List>
+                        :
+                        <div style={{textAlign:"center",marginBottom:"5%",marginTop:"5%"}}>
+                            <Typography>There are no comments yet. Be the first one to comment!</Typography>
+                        </div>
+                    }
+                    <Stack>
+                        {repliedComment!==null&&newComment.startsWith("@"+repliedUser+" ")?
+                            <Typography style={{marginLeft:"3%",fontSize:11}} >replying to {repliedUser}</Typography>
+                            :null}
+                        <Grid container spacing={3} >
+                            <Grid item sm={10}>
+                                <TextField id="comment" fullWidth size="small" variant="outlined" placeholder="Add comment..."
+                                           inputRef={textInput} style={{marginLeft:"3%",marginBottom:"3%"}}    value={newComment||""} onChange={handleInput}></TextField>
+                            </Grid>
+                            <Grid item sm={2}>
+                                <Button onClick={handlePostComment}>Share</Button>
+                            </Grid>
                         </Grid>
-                        <Grid item sm={2}>
-                            <Button onClick={handlePostComment}>Share</Button>
-                        </Grid>
-                    </Grid>
+                    </Stack>
                 </DialogContent>
 
             </Dialog>
