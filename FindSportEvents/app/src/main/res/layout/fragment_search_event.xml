@@ -84,46 +84,25 @@
         />
 
     <Button
-        android:id="@+id/btn_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:text="SELECT DATE"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/min_age_spinner" />
-
-    <TextView
-        android:id="@+id/tv_selected_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="SELECTED DATE"
-        android:textAlignment="center"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_date" />
-
-    <Button
         android:id="@+id/btn_start_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="25dp"
         android:width="150dp"
+        android:layout_marginTop="25dp"
         android:text="Starting Time"
-        app:layout_constraintTop_toBottomOf="@+id/tv_selected_date" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_max_age" />
 
     <Button
         android:id="@+id/btn_end_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
         android:width="150dp"
         android:text="Ending Time"
         android:layout_marginTop="25dp"
-        android:layout_marginStart="25dp"
         app:layout_constraintStart_toEndOf="@+id/btn_start_time"
-        app:layout_constraintTop_toBottomOf="@+id/tv_selected_date" />
+        app:layout_constraintTop_toBottomOf="@+id/max_age_spinner" />
 
     <TextView
         android:id="@+id/tv_selected_start"
@@ -147,6 +126,17 @@
         android:layout_marginStart="25dp"
         app:layout_constraintStart_toEndOf="@+id/tv_selected_start"
         app:layout_constraintTop_toBottomOf="@+id/btn_end_time" />
+
+    <Button
+        android:id="@+id/btn_select_area"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:width="200dp"
+        android:text="SELECT AREA"
+        android:layout_marginTop="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_selected_end" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

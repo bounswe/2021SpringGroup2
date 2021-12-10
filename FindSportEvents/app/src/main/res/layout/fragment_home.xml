@@ -10,34 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="108dp"
-        tools:layout_editor_absoluteY="144dp">
-
-        <Button
-            android:id="@+id/btn_view_events"
-            android:layout_width="155dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="125dp"
-            android:layout_marginTop="300dp"
-            android:text="View All Events"
-            app:elevation="0dp" />
-
-    </LinearLayout>
+        tools:layout_editor_absoluteY="144dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="108dp"
-        tools:layout_editor_absoluteY="144dp">
-
-        <Button
-            android:id="@+id/btn_search_event"
-            android:layout_width="155dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="125dp"
-            android:layout_marginTop="200dp"
-            android:text="Search Event"
-            app:elevation="0dp" />
-
-    </LinearLayout>
+        tools:layout_editor_absoluteY="144dp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

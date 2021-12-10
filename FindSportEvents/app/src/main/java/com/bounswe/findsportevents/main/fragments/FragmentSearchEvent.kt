@@ -97,30 +97,7 @@ class FragmentSearchEvent : Fragment() {
 
 
     }
-    private fun clickDatePicker(view: View){
-        var myCalendar = Calendar.getInstance()
-        val year=myCalendar.get(Calendar.YEAR)
-        val month=myCalendar.get(Calendar.MONTH)
-        val day=myCalendar.get(Calendar.DAY_OF_MONTH)
-        val hour=myCalendar.get(Calendar.HOUR_OF_DAY)
-        context?.let {
-            DatePickerDialog(it,
-                DatePickerDialog.OnDateSetListener { _, SelectedYear, SelectedMonth, SelectedDayOfMonth ->
-                    Toast.makeText(
-                        context,
-                        "The selected date is ${SelectedDayOfMonth}/${SelectedMonth + 1}/${SelectedYear}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    val selectedDate = "$SelectedDayOfMonth/${SelectedMonth + 1}/$SelectedYear"
-                    val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
-                    val theDate = sdf.parse(selectedDate)
-                    dateTime=theDate.toString()
-                    binding.tvSelectedDate.text = theDate.toString()
 
-
-                }, year, month, day).show()
-        }
-    }
     private fun pickDateTime(button: Button) {
         val currentDateTime = Calendar.getInstance()
         val startYear = currentDateTime.get(Calendar.YEAR)
@@ -150,9 +127,7 @@ class FragmentSearchEvent : Fragment() {
     }
 
     private fun setClickListeners() {
-        binding.btnDate.setOnClickListener {view ->
-            clickDatePicker(view)
-        }
+
         binding.btnStartTime.setOnClickListener {
             pickDateTime(binding.btnStartTime)
         }

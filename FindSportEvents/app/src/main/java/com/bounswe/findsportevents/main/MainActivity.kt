@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener,Frag
 
         if (savedInstanceState == null && supportFragmentManager.findFragmentById(binding.containerMain.id) == null) {
             supportFragmentManager.beginTransaction()
-                .add(binding.containerMain.id, FragmentHome.newInstance(token), FragmentHome.TAG).commit()
+                .add(binding.containerMain.id, FragmentViewAllEvents.newInstance(token), FragmentViewAllEvents.TAG).commit()
         }
 
         binding.bottomNav.apply {

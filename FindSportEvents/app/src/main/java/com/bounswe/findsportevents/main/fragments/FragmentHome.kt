@@ -49,20 +49,7 @@ class FragmentHome : Fragment() {
     }
 
     private fun setClickListeners() {
-        binding.btnViewEvents.setOnClickListener{
-            val viewAllEventsFragment= FragmentViewAllEvents()
-            val transaction:FragmentTransaction=parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.home_container,FragmentViewAllEvents.newInstance(token),)
-
-            transaction.commit()
-    }
-        binding.btnSearchEvent.setOnClickListener {
-            val searchEventFragment=FragmentSearchEvent()
-            val transaction:FragmentTransaction=parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.home_container,FragmentSearchEvent.newInstance(token),FragmentSearchEvent.TAG)
-
-            transaction.commit()
-        }
+        //TODO: will be implemented later
     }
 
     interface FragmentHomeListener {
