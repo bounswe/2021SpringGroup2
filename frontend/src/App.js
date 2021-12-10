@@ -12,6 +12,7 @@ import Signup from './Views/Signup/Index'
 import ResetPasswordPage from "./Views/Login/ForgotPassword";
 import SearchEvents from "./Views/SearchEvents/Index";
 
+import NotFound from "./Views/Not Found/NotFound";
 
 
 
@@ -28,7 +29,7 @@ const App = () => {
                     <Route path="home" element={<Home />} />
                     <Route path="resetpassword" element={<ResetPasswordPage/>}/>
                     <Route path="search" element={<SearchEvents/>}/>
-                    <Route path="*" element={<Home />} />
+                    <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>
         </React.Fragment>

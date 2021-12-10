@@ -1,7 +1,8 @@
 from django.urls import path
 from . import views
 
-urlpatterns = [
-    path('<str:username>/', views.ProfileView.as_view(), name="ProfileGet"),
-    path('<str:username>/update', views.ProfileUpdateView.as_view(), name="ProfileUpdate")
-]
+from rest_framework.routers import SimpleRouter
+
+router = SimpleRouter()
+router.register(r'users', views.ProfileViewSet)
+urlpatterns = router.urls
