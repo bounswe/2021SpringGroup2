@@ -103,7 +103,7 @@ DATABASES = {
 
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', None),
 
-        'HOST': 'localhost' if DEBUG else 'database',
+        'HOST': 'database',
 
         'PORT': '5432',
 
