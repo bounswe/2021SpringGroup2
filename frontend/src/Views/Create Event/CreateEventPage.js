@@ -157,7 +157,11 @@ export default function CreateEventPage(props){
     }
 
     function createEvent(){
-        console.log(getValue(inputs),date,timeStart,timeEnd,sport,skill,position)
+        if(!date||!timeStart|!timeEnd||!latitude||!longitude||!inputs.title||!sport||!skill){
+            return;
+        }
+
+
     }
 
     return(
