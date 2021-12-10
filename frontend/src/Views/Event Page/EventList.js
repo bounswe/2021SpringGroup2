@@ -1,5 +1,4 @@
-
-import * as React from "react";
+import React, {useState, useEffect} from 'react'
 import Container from "@mui/material/Container";
 import {useParams} from "react-router-dom";
 import Grid from "@mui/material/Grid";
@@ -22,7 +21,6 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import DatePicker from '@mui/lab/DatePicker'
 import {Autocomplete} from "@mui/lab";
-import {useEffect, useState} from "react";
 import {getSportsList} from "../../Controllers/SportsController";
 
 
@@ -32,16 +30,20 @@ import eventData from './data/eventData.json'
 
 
 
-export default function EventList (props){
+export default function EventList (){
     const [events, setEvents] = useState([]);
     useEffect(() => {
+        //fetch()
         setEvents(eventData);
     }, []);
     return(
-        <div className='EventList'>
+        <div className='text-4xl'>
             <h1>Hellooo</h1>
-            {
-                <BoardComponent/>
+            {events.length === 0 ? (
+                <p>Fetching...</p>
+                ) : (
+                    events.map((event) => <BoardComponent event={event}/>)
+                )
             }
         </div>
 

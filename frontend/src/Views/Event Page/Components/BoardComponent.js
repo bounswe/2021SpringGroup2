@@ -1,17 +1,16 @@
 import React from 'react'
-import eventData from '../data/eventData.json'
 
-const BoardComponent = () => (
-    <div className='flex bg-white shadow-lg my-4 p-4'>
-        <div>
-            <img src={eventData.type}/>
-        </div>
+const BoardComponent = (props) => (
+    <div className='flex bg-blue shadow-lg my-4 p-4'>
+        {/*<div>*/}
+        {/*    <img src={eventData.object.type}/>*/}
+        {/*</div>*/}
         <div>
 
-            <h3>{eventData.actor.name}</h3>
-            <h2>{eventData.object.name}</h2>
+            <h3>Event Owner: {props.event.name}</h3>
+            <h2>{props.event.object.name}</h2>
             <p>
-                {eventData.object.creationDate} * {eventData.object.eventDate} * {eventData.object.title}
+                {props.event.object.creationDate} * {props.event.object.eventDate} * {props.event.object.title}
             </p>
         </div>
 
