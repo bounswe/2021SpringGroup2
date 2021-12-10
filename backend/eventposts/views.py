@@ -5,9 +5,16 @@ from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
 
+
+class EventPostsPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
 
 class EventViewSet(viewsets.ModelViewSet):
+    pagination_class = EventPostsPagination
     queryset = EventPost.objects.all()
     serializer_class = EventSerializer
     JWTauth = JWTAuthentication()
