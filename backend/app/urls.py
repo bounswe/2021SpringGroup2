@@ -21,4 +21,5 @@ urlpatterns = [
     path('api/', include('authentication.urls')),
     path('api/', include('eventposts.urls')),
     path('api/', include('profiles.urls')),
+    path('', include('frontend.urls'))
 ]

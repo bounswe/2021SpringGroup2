@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'eventposts',
     'profiles',
     'corsheaders',
-    'actstream',
+    'frontend',
 ]
 
 SITE_ID = 1
