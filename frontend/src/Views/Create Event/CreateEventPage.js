@@ -38,6 +38,11 @@ const initialState = {
         changed: false,
         error: undefined
     },
+    location: {
+        value: "",
+        changed: false,
+        error: undefined
+    },
     minAge: {
         value: 18,
         changed: false,
@@ -97,6 +102,7 @@ export default function CreateEventPage(props){
     const getValue = inputs => ({
         title: inputs.title.value,
         description: inputs.description.value,
+        location: inputs.location.value,
         minAge: inputs.minAge.value,
         maxAge: inputs.maxAge.value,
         playerCapacity: inputs.playerCapacity.value,
@@ -110,7 +116,6 @@ export default function CreateEventPage(props){
             value: numberInputs.includes(e.target.id)?(checkIfNumber(e.target.value)?e.target.value:newInputs[e.target.id].value):e.target.value,
             changed: true
         }
-        console.log(newInputs)
         setInputs(newInputs)
     }
     useEffect(_=>{
@@ -196,17 +201,9 @@ export default function CreateEventPage(props){
 
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                <DatePicker
-                                    style = {{backgroundColor: "#ffffff"}}
-                                    label="Event Date"
-                                    inputFormat="dd/MM/yyyy"
-                                    value={date}
-                                    minDate={new Date()}
-                                    onChange={handleDateChange}
-                                    renderInput={(params) => <TextField  style={textFieldStyle} size="small" variant="outlined" fullWidth required {...params} />}
-                                />
-                            </LocalizationProvider>
+                            <TextField id="location" fullWidth label="Location Name" size="small" variant="outlined"style={textFieldStyle}
+                                       value={inputs.location.value||""} onChange={handleChange} ></TextField>
+
                         </Grid>
 
                     </Grid>
@@ -249,8 +246,20 @@ export default function CreateEventPage(props){
                         </Grid>
                     </Grid>
                     <Grid container spacing={2}>
-
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12} sm={4}>
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <DatePicker
+                                    style = {{backgroundColor: "#ffffff"}}
+                                    label="Event Date"
+                                    inputFormat="dd/MM/yyyy"
+                                    value={date}
+                                    minDate={new Date()}
+                                    onChange={handleDateChange}
+                                    renderInput={(params) => <TextField  style={textFieldStyle} size="small" variant="outlined" fullWidth required {...params} />}
+                                />
+                            </LocalizationProvider>
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <TimePicker
                                         label="Event Start"
@@ -262,7 +271,7 @@ export default function CreateEventPage(props){
                                     />
                                 </LocalizationProvider>
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={4}>
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <TimePicker
                                         label="Event End"
