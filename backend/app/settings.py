@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'profiles',
     'corsheaders',
     'frontend',
+    'actstream',
 ]
 
 SITE_ID = 1
