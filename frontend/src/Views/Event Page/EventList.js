@@ -132,17 +132,16 @@ const events = {
 
 export default function EventList (){
 
-
-    loading: true
-    events: []
-
+    const [loading, setLoading] = useState(true)
+    const [events, setEvents] = useState(events)
     
-    const url = "";
+    const url = "http://34.68.66.109/api/posts/";
     const response = fetch(url);
     const data = response.json();
     this.setState({events: data.results, loading: false})
 
-
+    const classes = useStyles()
+    const params = useParams()
 
     if(this.state.loading){
         return <div>Loading...</div>
