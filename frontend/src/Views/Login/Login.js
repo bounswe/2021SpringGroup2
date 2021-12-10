@@ -1,12 +1,11 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
-import {Grid, Paper, TextField, Typography, Box, SvgIcon} from "@mui/material";
+import {Grid, Paper, TextField, Typography, Box} from "@mui/material";
 import {Link, useNavigate} from 'react-router-dom'
-import {Icon} from '@mui/material';
-import Joi from 'joi'
 import {obtainToken} from "../../Controllers/LoginController";
 import {useState} from "react";
 import {Alert} from "@mui/lab";
+import {setHeaders, getToken} from "../../Controllers/AuthInfo";
 
 const initialState = {
     username: {
@@ -51,6 +50,7 @@ export default function LoginPage(props){
                      setState(newState)
                  }
                  else{
+                     setHeaders(r.refresh, r.access)
                      navigate("/")
                  }
              })

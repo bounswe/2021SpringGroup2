@@ -1,67 +1,59 @@
-from rest_framework.response import Response
+from .models import EventPost, Post
+from .serializers import EventSerializer
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from django.http import JsonResponse
 from rest_framework import status
-from .models import EventPost
-from .serializers import EventPostSerializer
-from rest_framework.views import APIView
-from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
+from rest_framework import viewsets
 
 
-class EventPostsPagination(PageNumberPagination):
-    page_size = 10
-    page_size_query_param = 'page_size'
-    max_page_size = 1000
+class EventViewSet(viewsets.ModelViewSet):
+    queryset = EventPost.objects.all()
+    serializer_class = EventSerializer
+    JWTauth = JWTAuthentication()
+    lookup_field = "id"
 
+    def wrap(self, request, data):
+        response = \
+            {"@context": "https://www.w3.org/ns/activitystreams", "summary": str(request.user) + " created an event",
+             "type": "Create",
+             "actor": {"type": "Person", "name": str(request.user)}, "object": {"type": "Event",
+                                                                                "name": "A Simple Event",
+                                                                                "postId": data["id"],
+                                                                                "ownerId": data["owner"],
+                                                                                "content": data["content"],
+                                                                                "title": data["title"],
+                                                                                "creationDate": data["creation_date"],
+                                                                                "numberOfClicks": 0,
+                                                                                "location": {
+                                                                                    "name": data["location"],
+                                                                                    "type": "Place",
+                                                                                    "longitude": data["longitude"],
+                                                                                    "latitude": data["latitude"],
+                                                                                    "units": "m"
+                                                                                }}, "eventDate": data["date"],
+             "eventSport": data["sport"], "eventMinAge": data["min_age"], "eventMaxAge": data["max_age"],
+             "eventMinSkillLevel": data["min_skill_level"], "eventMaxSkillLevel": data["max_skill_level"],
+             "eventPlayerCapacity": data["player_capacity"], "eventSpectatorCapacity": data["spec_capacity"],
+             "eventApplicants": data["applicants"], "eventPlayers": data["players"]}
 
-class EventPostView(APIView):
-    
-    def get(self, request, id):                
-        try:           
-            eventpost = EventPost.objects.get(id=id)
-        except Exception as e:
-            return Response(status=status.HTTP_204_NO_CONTENT)     
-        return Response(EventPostSerializer(eventpost).data)
+        return response
 
+    def authenticate(self):
+        user, _ = self.JWTauth.authenticate(self.request)
+        return user.id == self.request.data["owner"]
 
-class EventPostViewAll(APIView):
-    
-    def get(self, request):                
-        try:          
-            posts = EventPost.objects.all()
-        except:     
-            return Response(status=status.HTTP_204_NO_CONTENT)
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(self.wrap(request, serializer.data))
 
-        serializer=EventPostSerializer(posts, many=True)
-
-        return Response(serializer.data)
-
-
-class EventPostPostView(APIView, EventPostsPagination):
-
-    def get(self, request):
-        try:
-            posts = EventPost.objects.all()
-            results = self.paginate_queryset(posts, request, view=self)
-        except Exception as e:
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-        serializer = EventPostSerializer(results, many=True)
-
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = EventPostSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-       
-         
-     
-
-    
-    
-
-
-
-
-
+    def create(self, request, *args, **kwargs):
+        if self.authenticate():
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(self.wrap(request, serializer.data), status=status.HTTP_201_CREATED, headers=headers)
+        else:
+            return JsonResponse(status=401, data={'detail': 'Unauthorized.'})
