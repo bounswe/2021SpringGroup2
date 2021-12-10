@@ -43,18 +43,10 @@ INSTALLED_APPS = [
     'eventposts',
     'profiles',
     'corsheaders',
-    'frontend',
+    'frontend'
 ]
 
 SITE_ID = 1
-
-ACTSTREAM_SETTINGS = {
-    'MANAGER': 'actstream.managers.ActionManager',
-    'FETCH_RELATIONS': True,
-    'USE_PREFETCH': True,
-    'USE_JSONFIELD': False,
-    'GFK_FETCH_DEPTH': 0,
-}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -102,7 +94,7 @@ DATABASES = {
 
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', None),
 
-        'HOST': 'localhost' if DEBUG else 'database',
+        'HOST': 'database',
 
         'PORT': '5432',
 
