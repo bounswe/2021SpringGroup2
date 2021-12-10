@@ -174,9 +174,8 @@ export default function CreateEventPage(props){
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                             <Autocomplete
-                                value={sport|""}
+                                value={sport}
                                 options={options}
-                                getOptionLabel={(option) => option.label || ""}
                                 onChange={(event, value) =>value ? setSport(value.label) : setSport(event.target.value)}
                                 renderInput={params => {
                                     return (
@@ -275,9 +274,8 @@ export default function CreateEventPage(props){
                     <Grid container spacing={1}>
                         <Grid item xs={12} sm={4}>
                             <Autocomplete
-                                value={skill|""}
+                                value={skill}
                                 options={skillOptions}
-                                getOptionLabel={(option) => option.label || ""}
                                 onChange={(event, value) =>value ? setSkill(value.label) : setSkill(event.target.value)}
                                 renderInput={params => {
                                     return (
@@ -312,7 +310,8 @@ export default function CreateEventPage(props){
                     </Grid>
                     <Box textAlign='center'>
                         <Button type="submit" variant="contained" align="center" onClick={createEvent}
-                                style={{margin:"8px 0",backgroundColor:"#41e5ff"}}>Create Event</Button>
+                                style={{margin:"8px 0",backgroundColor:"#41e5ff"}}>Create Event
+                        </Button>
                     </Box>
                 </form>
             </Paper>
