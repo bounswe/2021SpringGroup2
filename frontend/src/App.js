@@ -2,7 +2,6 @@ import React from 'react';
 import {
     Route,
     Routes,
-    useHistory
 } from "react-router-dom";
 
 import Home from './Views/Home/Index'
@@ -11,6 +10,7 @@ import Layout from './Views/Shared/Layout'
 import CreateEventPage from "./Views/Create Event/CreateEventPage";
 import Signup from './Views/Signup/Index'
 import ResetPasswordPage from "./Views/Login/ForgotPassword";
+import SearchEvents from "./Views/SearchEvents/Index";
 
 
 
@@ -26,8 +26,9 @@ const App = () => {
                     <Route path='signup' element={<Signup/>}/>
                     <Route path="createevent" element={<CreateEventPage/>}/>
                     <Route path="home" element={<Home />} />
-                    <Route path="*" element={<Home />} />
                     <Route path="resetpassword" element={<ResetPasswordPage/>}/>
+                    <Route path="search" element={<SearchEvents/>}/>
+                    <Route path="*" element={<Home />} />
                 </Route>
             </Routes>
         </React.Fragment>
