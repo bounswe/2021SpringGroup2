@@ -1,5 +1,9 @@
 from django.db import models
 from authentication.models import User
+from django.contrib.postgres.fields import ArrayField
+
+def empty_list():
+    return list([])
 
 class Post(models.Model):
 
@@ -17,17 +21,20 @@ class Post(models.Model):
 
 class EventPost(Post):
     date = models.DateTimeField(auto_now_add=True)
-    duration = models.TimeField(auto_now_add=True)
+    duration = models.IntegerField(default=60)
 
     sport = models.CharField(max_length=30)
-    age_group = models.IntegerField(default=-1)
+    min_age = models.IntegerField(default=18)
+    max_age = models.IntegerField(default=75)
 
-    player_capacity = models.IntegerField(default=-1)
-    spec_capacity = models.IntegerField(default=-1)
-    players = models.IntegerField(default=-1)
-    spectators = models.IntegerField(default=-1)
+    player_capacity = models.IntegerField(default=10)
+    spec_capacity = models.IntegerField(default=0)
+    players = ArrayField(models.IntegerField(), default=empty_list)
+    applicants = ArrayField(models.IntegerField(), default=empty_list)
+    spectators = ArrayField(models.IntegerField(), default=empty_list)
 
-    skill_level = models.TextChoices('skill_level', 'Beginner Preintermediate Intermediate Advanced Expert')
+    min_skill_level = models.IntegerField(default=0)
+    max_skill_level = models.IntegerField(default=0)
 
-    latitude = models.FloatField(default=-1.0)
-    longitude = models.FloatField(default=-1.0)
+    latitude = models.FloatField(default=1.0)
+    longitude = models.FloatField(default=1.0)
