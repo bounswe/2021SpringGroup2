@@ -45,8 +45,15 @@ export default function MapWithRectangle(props) {
             {lat:(props.bottomLeft.lat+props.topRight.lat)/2,
                 lng:(props.bottomLeft.lng+props.topRight.lng)/2}
         )
+        updateRectangle(props.bottomLeft.lat,props.bottomLeft.lng,props.topRight.lat,props.topRight.lng)
     },[props.bottomLeft,props.topRight])
 
+    const updateRectangle = (lat1,lng1,lat2,lng2) => {
+        setBounds([
+            [lat1,lng1],
+            [lat2,lng2]
+        ])
+    }
 
     const eventHandlersBottomLeft = useMemo(
         () => ({
