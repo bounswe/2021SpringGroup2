@@ -86,7 +86,11 @@ export default function MapWithRectangle(props) {
         setOptionsOpen(true)
     }
     const selectLocation = (input) => {
-
+        setOptionsOpen(false)
+        let bottomLeft = {lat:input.bottomLeft.lat, lng:input.bottomLeft.lng}
+        let topRight = {lat:input.topRight.lat, lng:input.topRight.lng}
+        props.setBottomLeft(bottomLeft)
+        props.setTopRight(topRight)
     }
     return (
         <div>
