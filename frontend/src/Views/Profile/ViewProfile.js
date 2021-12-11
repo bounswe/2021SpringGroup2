@@ -45,13 +45,13 @@ const useStyles = makeStyles(theme => createStyles({
 }));
 
 const initialProfile = {
-    firstName: {
+    first_name: {
         value: "Doğukan",
         changed: false,
         error: undefined
     },
 
-    lastName: {
+    last_name: {
         value: "Akar",
         changed: false,
         error: undefined
@@ -97,7 +97,7 @@ const Index = _ =>{
     const classes = useStyles()
     const params = useParams()
     const userid = params.userid
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [profile, setProfile] = useState(initialProfile)
     useEffect(function(){
         if(loading){
@@ -108,6 +108,7 @@ const Index = _ =>{
                     for(let i in p){
                         newProfile[i].value = p[i]
                     }
+                    newProfile.username.value = userid
                     setProfile(newProfile)
                 })
                 .catch(console.log)
@@ -123,7 +124,7 @@ const Index = _ =>{
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={12}>
                     <Typography variant="h4" component="div" align={"center"}>
-                        {profile.firstName.value} {profile.lastName.value}
+                        {profile.first_name.value} {profile.last_name.value}
                     </Typography>
                     <Typography variant="subtitle1" component="div" align={"center"}>
                         @{profile.username.value}
