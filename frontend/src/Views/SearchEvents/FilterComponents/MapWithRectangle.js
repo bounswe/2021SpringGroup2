@@ -93,10 +93,17 @@ export default function MapWithRectangle(props) {
         })
     }
     const _onEdited = e => {
-        console.log(e)
+        for(let key in e.layers._layers){
+            let drawing = e.layers._layers[key]
+            props.setBottomLeft(
+                {lat:drawing._bounds._southWest.lat,lng:drawing._bounds._southWest.lng})
+            props.setTopRight(
+                {lat:drawing._bounds._northEast.lat,lng:drawing._bounds._northEast.lng})
+        }
     }
     const _onDelete = (e) => {
-        console.log(e)
+        props.setTopRight(null)
+        props.setBottomLeft(null)
         setDrawOptions({
             marker: false,
             circle: false,
