@@ -49,7 +49,11 @@ export default function MapWithRectangle(props) {
                 lng:(props.bottomLeft.lng+props.topRight.lng)/2}
         )
     },[props.bottomLeft,props.topRight])
-
+    useEffect(()=>{
+        if(props.center===null&&(props.bottomLeft===null||props.topRight===null)){
+            props.setCenter(centerValue)
+        }
+    })
     function SetViewOnClick({ coords }) {
         const map = useMap()
         map.setView(coords, map.getZoom());
