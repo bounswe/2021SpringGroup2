@@ -12,6 +12,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import Paper from "@mui/material/Paper";
 import MinSkillLevel from "./FilterComponents/MinSkillLevel";
 import MinCreationDate from "./FilterComponents/MinCreationDate";
+import MinDate from "./FilterComponents/MinDate"
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -92,6 +93,11 @@ export default function SearchEvents() {
                             <MinCreationDate
                                 {...filters}
                                 id={"minCreationDate"}
+                                setValue={setValue}
+                            />
+                            <MinDate
+                                {...filters}
+                                id={"minDate"}
                                 setValue={setValue}
                             />
                         </Paper>
