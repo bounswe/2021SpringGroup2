@@ -12,6 +12,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import Paper from "@mui/material/Paper";
 import MinSkillLevel from "./FilterComponents/MinSkillLevel";
 import MaxSkillLevel from "./FilterComponents/MaxSkillLevel";
+import AgeGroups from "./FilterComponents/AgeGroups";
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -45,7 +46,7 @@ const initialFilters = {
     maxDate: new Date(),
     sport: "",
     minAgeGroup: 0,
-    maxAgeGroup: 100,
+    maxAgeGroup: 150,
     minPlayerCapacity: 0,
     maxPlayerCapacity: 100,
     minSpectatorCapacity: 0,
@@ -73,6 +74,12 @@ export default function SearchEvents() {
         newFilters[id] = value
         setFilters(newFilters)
     }
+    const setValues = ids => values => {
+        const newFilters = {...filters}
+        for(let id in ids)
+            newFilters[ids[id]] = values[id]
+        setFilters(newFilters)
+    }
     return (
         <React.Fragment>
             <Container component="main" maxWidth={"lg"}>
@@ -93,6 +100,11 @@ export default function SearchEvents() {
                                 {...filters}
                                 id={"maxSkillLevel"}
                                 setValue={setValue}
+                            />
+                            <AgeGroups
+                                {...filters}
+                                ids={["minAgeGroup","maxAgeGroup"]}
+                                setValue={setValues}
                             />
                         </Paper>
                     </Grid>
