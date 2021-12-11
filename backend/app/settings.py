@@ -43,8 +43,10 @@ INSTALLED_APPS = [
     'eventposts',
     'profiles',
     'corsheaders',
-    'frontend',
+    'frontend'
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -92,7 +94,7 @@ DATABASES = {
 
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', None),
 
-        'HOST': 'localhost' if DEBUG else 'database',
+        'HOST': 'database',
 
         'PORT': '5432',
 
