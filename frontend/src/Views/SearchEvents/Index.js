@@ -11,6 +11,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import Paper from "@mui/material/Paper";
 import MinSkillLevel from "./FilterComponents/MinSkillLevel";
+import MinCreationDate from "./FilterComponents/MinCreationDate";
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -38,10 +39,10 @@ const initialFilters = {
     query: "",
     minSkillLevel: 0,
     maxSkillLevel: 100,
-    minCreationDate: new Date(),
-    maxCreationDate: new Date(),
-    minDate: new Date(),
-    maxDate: new Date(),
+    minCreationDate: new Date().toGMTString(),
+    maxCreationDate: new Date().toGMTString(),
+    minDate: new Date().toGMTString(),
+    maxDate: new Date().toGMTString(),
     sport: "",
     minAgeGroup: 0,
     maxAgeGroup: 100,
@@ -86,6 +87,11 @@ export default function SearchEvents() {
                             <MinSkillLevel
                                 {...filters}
                                 id={"minSkillLevel"}
+                                setValue={setValue}
+                            />
+                            <MinCreationDate
+                                {...filters}
+                                id={"minCreationDate"}
                                 setValue={setValue}
                             />
                         </Paper>
