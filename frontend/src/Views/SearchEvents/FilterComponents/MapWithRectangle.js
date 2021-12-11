@@ -36,7 +36,12 @@ export default function MapWithRectangle(props) {
 
 
 
-
+    useEffect(()=>{
+        props.setCenter(
+            {lat:(props.bottomLeft.lat+props.topRight.lat)/2,
+                lng:(props.bottomLeft.lng+props.topRight.lng)/2}
+        )
+    },[props.bottomLeft,props.topRight])
 
 
     const eventHandlersBottomLeft = useMemo(
