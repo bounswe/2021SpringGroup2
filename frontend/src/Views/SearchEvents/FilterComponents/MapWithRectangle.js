@@ -44,10 +44,12 @@ export default function MapWithRectangle(props) {
     })
 
     useEffect(()=>{
-        props.setCenter(
-            {lat:(props.bottomLeft.lat+props.topRight.lat)/2,
-                lng:(props.bottomLeft.lng+props.topRight.lng)/2}
-        )
+        if(props.bottomLeft!==null&&props.topRight!==null){
+            props.setCenter(
+                {lat:(props.bottomLeft.lat+props.topRight.lat)/2,
+                    lng:(props.bottomLeft.lng+props.topRight.lng)/2}
+            )
+        }
     },[props.bottomLeft,props.topRight])
     useEffect(()=>{
         if(props.center===null&&(props.bottomLeft===null||props.topRight===null)){
