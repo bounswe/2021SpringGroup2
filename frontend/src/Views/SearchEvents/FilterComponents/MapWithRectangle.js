@@ -35,6 +35,10 @@ export default function MapWithRectangle(props) {
     const markerTopRight = useRef(null);
 
 
+    const [bounds, setBounds] = useState([
+        [props.bottomLeft.lat,props.bottomLeft.lng],
+        [props.topRight.lat,props.topRight.lng]
+    ])
 
     useEffect(()=>{
         props.setCenter(
@@ -141,6 +145,7 @@ export default function MapWithRectangle(props) {
                         eventHandlers={eventHandlersTopRight}>
                         <SetViewOnClick coords={props.center}/>
                     </Marker>
+                    <Rectangle bounds={bounds} pathOptions={{ color: 'black' }} />
 
 
                 </MapContainer>
