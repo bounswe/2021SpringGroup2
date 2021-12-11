@@ -1,6 +1,5 @@
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css'
-import {MapContainer, TileLayer, Marker, CircleMarker, useMap, Rectangle} from 'react-leaflet';
 import {MapContainer, TileLayer, Marker, CircleMarker, useMap, Rectangle, FeatureGroup} from 'react-leaflet';
 import {EditControl} from 'react-leaflet-draw'
 import * as React from "react";
@@ -34,6 +33,15 @@ export default function MapWithRectangle(props) {
     const [locations, setLocations] = useState([{}]);
     const [optionsOpen,setOptionsOpen] = useState(false);
     const textFieldStyle = {backgroundColor: 'white', marginTop: 10, marginBottom: 10};
+
+    const [drawOptions, setDrawOptions] = useState({
+        marker: false,
+        circle: false,
+        rectangle: true,
+        polygon: false,
+        polyline: false,
+        circlemarker: false
+    })
 
     useEffect(()=>{
         props.setCenter(
@@ -69,10 +77,28 @@ export default function MapWithRectangle(props) {
             {lat:e.layer._bounds._southWest.lat,lng:e.layer._bounds._southWest.lng})
         props.setTopRight(
             {lat:e.layer._bounds._northEast.lat,lng:e.layer._bounds._northEast.lng})
+        setDrawOptions({
+            marker: false,
+            circle: false,
+            rectangle: false,
+            polygon: false,
+            polyline: false,
+            circlemarker: false
+        })
     }
     const _onEdited = e => {
-        props.setBottomLeft(e.layer._bounds._southWest)
-        props.setTopRight(e.layer._bounds._northEast)
+        console.log(e)
+    }
+    const _onDelete = (e) => {
+        console.log(e)
+        setDrawOptions({
+            marker: false,
+            circle: false,
+            rectangle: true,
+            polygon: false,
+            polyline: false,
+            circlemarker: false
+        })
     }
     return (
         <div>
@@ -114,6 +140,7 @@ export default function MapWithRectangle(props) {
                             position="topright"
                             onEdited={_onEdited}
                             onCreated={_onCreated}
+                            onDeleted={_onDelete}
                             draw={drawOptions}
                         />
                         <SetViewOnClick coords={props.center}/>
