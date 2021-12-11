@@ -13,6 +13,7 @@ import Paper from "@mui/material/Paper";
 import MinSkillLevel from "./FilterComponents/MinSkillLevel";
 import MaxSkillLevel from "./FilterComponents/MaxSkillLevel";
 import AgeGroups from "./FilterComponents/AgeGroups";
+import Players from "./FilterComponents/Players";
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -104,6 +105,11 @@ export default function SearchEvents() {
                             <AgeGroups
                                 {...filters}
                                 ids={["minAgeGroup","maxAgeGroup"]}
+                                setValue={setValues}
+                            />
+                            <Players
+                                {...filters}
+                                ids={["minPlayers","maxPlayers"]}
                                 setValue={setValues}
                             />
                         </Paper>
