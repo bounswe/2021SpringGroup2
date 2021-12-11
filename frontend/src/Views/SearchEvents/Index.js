@@ -11,6 +11,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import Paper from "@mui/material/Paper";
 import MinSkillLevel from "./FilterComponents/MinSkillLevel";
+import MaxSkillLevel from "./FilterComponents/MaxSkillLevel";
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -86,6 +87,11 @@ export default function SearchEvents() {
                             <MinSkillLevel
                                 {...filters}
                                 id={"minSkillLevel"}
+                                setValue={setValue}
+                            />
+                            <MaxSkillLevel
+                                {...filters}
+                                id={"maxSkillLevel"}
                                 setValue={setValue}
                             />
                         </Paper>
