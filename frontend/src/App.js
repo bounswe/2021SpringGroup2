@@ -30,8 +30,10 @@ const App = () => {
                     <Route path="home" element={<Home />} />
                     <Route path="*" element={<Home />} />
                     <Route path="resetpassword" element={<ResetPasswordPage/>}/>
+                    {/*<Route path="event/:eventid" element={<Event/>}/>*/}
                     <Route path="event" element={<Event/>}/>
                     <Route path="eventlist" element={<EventList/>}/>
+
                 </Route>
             </Routes>
         </React.Fragment>

@@ -9,30 +9,13 @@ import {getEvent} from "../../Controllers/GetEventController";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import {ListItemText, TextField} from "@mui/material";
-import EventInfoCard from "../Home/EventCard";
-import IconButton from "@mui/material/IconButton";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import {getSports} from '../../Controllers/SportsController';
+import {getSampleEvents} from "../../Controllers/SampleEventController";
 import SportsInfoCard from "../Home/SportsInfoCard";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import Button from "@mui/material/Button";
-import {Link} from 'react-router-dom'
-import Joi, {options} from 'joi'
-import TimePicker from '@mui/lab/TimePicker';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import DatePicker from '@mui/lab/DatePicker'
-import {Autocomplete} from "@mui/lab";
-import {getSportsList} from "../../Controllers/SportsController";
+import {Card, CardActionArea, CardMedia} from "@mui/material";
 
 
-import BoardComponent from '../Event Page/Components/BoardComponent'
 
-const Item = styled(Paper)(({ theme }) => ({
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-}));
 const useStyles = makeStyles(theme => createStyles({
     "@global": {
         body: {
@@ -61,9 +44,31 @@ const useStyles = makeStyles(theme => createStyles({
         color: theme.palette.secondary.light,
         fontsize: 20,
     },
+    hero: {
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://penaltyfile.com/wp-content/uploads/2020/06/different-types-of-sports-June32020-1-min.jpg')`,
+        height: "250px",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        position: "relative",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        color: "#fff",
+        fontSize: "4rem",
+        [theme.breakpoints.down("sm")]: {
+            height: 300,
+            fontSize: "3em"
+        }
+    },
+
+    media: {
+        height: 350
+    },
+
 }));
 
-const event = {
+const initialEvent = {
     "@context": "https://www.w3.org/ns/activitystreams",
     "summary": "Sally created an event",
     "type": "Create",
@@ -102,31 +107,25 @@ const event = {
     }
 }
 
-
-
-
 export default function Event (){
     const classes = useStyles()
     const params = useParams()
-    const id = params.id
-    //const [event, setEvent] = useState(event)
-
-
+    //
+    const eventid = params.eventid
+    const [event, setEvent] = useState(initialEvent)
+    const [sports, setSports] = useState([{}])
+    const [sportIndex, setSportIndex] = useState((0))
 
     // useEffect(() => {
-    //     //fetch()
-    //
-    //     getEvent(id)
-    //         .then(p=>{
-    //             const newEvent = {...event}
-    //             for(let i in p){
-    //                 newEvent[i].value = p[i]
-    //             }
-    //             setEvent(newEvent)
-    //         })
-    //         .catch(console.log)
-    //
+    //     fetch("http://34.68.66.109/api/posts/"+eventid)
+    //         .then(r=>r.json())
+    //         .then(r=>setEvent(r))
     // }, []);
+
+    useEffect(_=>{
+        getSports().then(r=>setSports(r))
+            .catch(console.log)
+    }, [])
 
 
     return(
@@ -140,6 +139,21 @@ export default function Event (){
 
 
         <div className={classes.paper}>
+            <Container>
+                <Grid>
+                    <Card>
+                        <CardActionArea>
+                            <CardMedia
+                                className= {classes.media}
+                                image = "https://d.pusulahaber.com.tr/news/64433.jpg"
+                                title = "Event Image"/>
+
+                        </CardActionArea>
+                    </Card>
+                </Grid>
+
+            </Container>
+
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={12}>
                     <Typography className={classes.infotext} variant="h4" component="div" align={"center"}>
@@ -186,6 +200,13 @@ export default function Event (){
                     </Grid>
                 </Grid>
 
+            </Grid>
+            <Grid container spacing={2} alignItems="stretch">
+                {sports.slice(sportIndex,40).map(s=>(
+                    <Grid item  style={{display: 'flex'}}>
+                        <SportsInfoCard {...s}/>
+                    </Grid>)
+                )}
             </Grid>
 
         </div>
