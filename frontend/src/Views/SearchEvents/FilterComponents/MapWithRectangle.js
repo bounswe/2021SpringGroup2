@@ -1,5 +1,8 @@
 import 'leaflet/dist/leaflet.css';
+import 'leaflet-draw/dist/leaflet.draw.css'
 import {MapContainer, TileLayer, Marker, CircleMarker, useMap, Rectangle} from 'react-leaflet';
+import {MapContainer, TileLayer, Marker, CircleMarker, useMap, Rectangle, FeatureGroup} from 'react-leaflet';
+import {EditControl} from 'react-leaflet-draw'
 import * as React from "react";
 import {useEffect, useMemo, useRef, useState} from "react";
 import "leaflet/dist/images/marker-shadow.png";
@@ -103,6 +106,13 @@ export default function MapWithRectangle(props) {
         props.setBottomLeft(bottomLeft)
         props.setTopRight(topRight)
     }
+    const _onCreated = e =>{
+        props.setBottomLeft(e.layer._bounds._southWest)
+        props.setTopRight(e.layer._bounds._northEast)
+    }
+    const _onEdited = e => {
+        console.log(e)
+    }
     return (
         <div>
             <Grid container spacing={1}>
@@ -138,22 +148,19 @@ export default function MapWithRectangle(props) {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    <Marker
-                        position={props.bottomLeft}
-                        draggable={"true"}
-                        ref={markerBottomLeft}
-                        eventHandlers={eventHandlersBottomLeft}>
+                    <FeatureGroup ref={(featureGroupRef) => {
+                        onFeatureGroupReady(featureGroupRef);
+                    }}>
+                        >
+                        <EditControl
+                            position="topright"
+                            onEdited={_onEdited}
+                            onCreated={_onCreated}
+                            draw={drawOptions}
+                        />
                         <SetViewOnClick coords={props.center}/>
-                    </Marker>
-                    <Marker
-                        position={props.topRight}
-                        draggable={"true"}
-                        ref={markerTopRight}
-                        eventHandlers={eventHandlersTopRight}>
-                        <SetViewOnClick coords={props.center}/>
-                    </Marker>
-                    <Rectangle bounds={bounds} pathOptions={{ color: 'black' }} />
 
+                    </FeatureGroup>
 
                 </MapContainer>
             </div>
