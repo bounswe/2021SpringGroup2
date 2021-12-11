@@ -7,7 +7,7 @@ const SignUpFunction = values =>{
         headers: { 'Accept': 'application/json','Content-Type': 'application/json'},
         body: JSON.stringify(values)
     }
-    return fetch("http://34.68.66.109/api/user/create/",options)
+    return fetch("/api/user/create/",options)
         .then(response=>response.json())
             .then(r=>{console.log(r); return r})
 }

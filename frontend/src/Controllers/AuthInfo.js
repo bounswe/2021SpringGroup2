@@ -14,7 +14,7 @@ export const getToken = async _=>{
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({refresh:headers.refresh})
     }
-    return fetch("http://34.68.66.109/api/token/refresh/",options)
+    return fetch("/api/token/refresh/",options)
         .then(response=>response.json())
         .then(r=>{console.log(r); return r})
         .then(r=>r.access)
