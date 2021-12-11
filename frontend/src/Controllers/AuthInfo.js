@@ -16,6 +16,9 @@ export const getToken = async _=>{
     }
     return fetch("/api/token/refresh/",options)
         .then(response=>response.json())
-        .then(r=>{console.log(r); return r})
+        .then(r=>{
+            console.log(r);
+            setHeaders(r.access, r.refresh)
+            return r})
         .then(r=>r.access)
 }
