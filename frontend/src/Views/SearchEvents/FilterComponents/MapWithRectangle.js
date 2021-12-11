@@ -34,55 +34,13 @@ export default function MapWithRectangle(props) {
     const [locations, setLocations] = useState([{}]);
     const [optionsOpen,setOptionsOpen] = useState(false);
     const textFieldStyle = {backgroundColor: 'white', marginTop: 10, marginBottom: 10};
-    const markerBottomLeft = useRef(null);
-    const markerTopRight = useRef(null);
-
-
-    const [bounds, setBounds] = useState([
-        [props.bottomLeft.lat,props.bottomLeft.lng],
-        [props.topRight.lat,props.topRight.lng]
-    ])
 
     useEffect(()=>{
         props.setCenter(
             {lat:(props.bottomLeft.lat+props.topRight.lat)/2,
                 lng:(props.bottomLeft.lng+props.topRight.lng)/2}
         )
-        updateRectangle(props.bottomLeft.lat,props.bottomLeft.lng,props.topRight.lat,props.topRight.lng)
     },[props.bottomLeft,props.topRight])
-
-    const updateRectangle = (lat1,lng1,lat2,lng2) => {
-        setBounds([
-            [lat1,lng1],
-            [lat2,lng2]
-        ])
-    }
-
-    const eventHandlersBottomLeft = useMemo(
-        () => ({
-            dragend() {
-                const marker = markerBottomLeft.current
-                if (marker != null) {
-                    let coords = marker.getLatLng()
-                    props.setBottomLeft({lat:coords.lat,lng:coords.lng})
-                }
-            },
-        }),
-        [],
-    )
-    const eventHandlersTopRight = useMemo(
-        () => ({
-            dragend() {
-                const marker = markerTopRight.current
-                if (marker != null) {
-                    let coords = marker.getLatLng()
-                    props.setTopRight({lat:coords.lat,lng:coords.lng})
-                }
-            },
-        }),
-        [],
-    )
-
 
     function SetViewOnClick({ coords }) {
         const map = useMap()
@@ -107,11 +65,14 @@ export default function MapWithRectangle(props) {
         props.setTopRight(topRight)
     }
     const _onCreated = e =>{
-        props.setBottomLeft(e.layer._bounds._southWest)
-        props.setTopRight(e.layer._bounds._northEast)
+        props.setBottomLeft(
+            {lat:e.layer._bounds._southWest.lat,lng:e.layer._bounds._southWest.lng})
+        props.setTopRight(
+            {lat:e.layer._bounds._northEast.lat,lng:e.layer._bounds._northEast.lng})
     }
     const _onEdited = e => {
-        console.log(e)
+        props.setBottomLeft(e.layer._bounds._southWest)
+        props.setTopRight(e.layer._bounds._northEast)
     }
     return (
         <div>
@@ -148,10 +109,7 @@ export default function MapWithRectangle(props) {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    <FeatureGroup ref={(featureGroupRef) => {
-                        onFeatureGroupReady(featureGroupRef);
-                    }}>
-                        >
+                    <FeatureGroup>
                         <EditControl
                             position="topright"
                             onEdited={_onEdited}
