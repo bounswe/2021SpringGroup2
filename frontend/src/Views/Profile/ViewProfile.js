@@ -76,8 +76,18 @@ const initialProfile = {
         changed: false,
         error: undefined
     },
-    favSports: {
-        value: ["tenis", "basketbol", "futbol"],
+    fav_sport_1: {
+        value: "",
+        changed: false,
+        error: undefined
+    },
+    fav_sport_2: {
+        value: "",
+        changed: false,
+        error: undefined
+    },
+    fav_sport_3: {
+        value: "",
         changed: false,
         error: undefined
     },
@@ -87,7 +97,7 @@ const Index = _ =>{
     const classes = useStyles()
     const params = useParams()
     const userid = params.userid
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [profile, setProfile] = useState(initialProfile)
     useEffect(function(){
         if(loading){
@@ -133,11 +143,9 @@ const Index = _ =>{
                 </Grid>
                 <Grid item xs={12} sm={12}>
                     <Stack spacing={2} direction={"row"} justifyContent={"space-around"}>
-                        {
-                            profile.favSports.value.map((f, i)=>(
-                                <Item key={i}>{f}</Item>
-                            ))
-                        }
+                        <Item>{profile.fav_sport_1.value}</Item>
+                        <Item>{profile.fav_sport_2.value}</Item>
+                        <Item>{profile.fav_sport_3.value}</Item>
                     </Stack>
                 </Grid>
                 <Grid item xs={12} sm={12}>

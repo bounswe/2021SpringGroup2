@@ -43,17 +43,23 @@ const schema = Joi.object({
         .max(30)
         .required(),
 
-    firstName: Joi.string()
+    first_name: Joi.string()
         .alphanum()
         .min(3)
         .max(30)
         .required(),
 
-    lastName: Joi.string()
+    last_name: Joi.string()
         .alphanum()
         .min(3)
         .max(30)
         .required(),
+
+    bio: Joi.string()
+        .alphanum()
+        .optional()
+        .allow('')
+        .max(150),
 
     password: Joi.string()
         .pattern(new RegExp('^[a-zA-Z0-9]{8,30}$')),
@@ -68,19 +74,17 @@ const schema = Joi.object({
 
 const initialState = {
 
-    firstName: {
+    first_name: {
         value: "",
         changed: false,
         error: undefined
     },
 
-    lastName: {
+    last_name: {
         value: "",
         changed: false,
         error: undefined
     },
-
-
     bio: {
         value: "",
         changed: false,
@@ -96,7 +100,17 @@ const initialState = {
         changed: false,
         error: undefined
     },
-    favSports: {
+    fav_sport_1: {
+        value: "",
+        changed: false,
+        error: undefined
+    },
+    fav_sport_2: {
+        value: "",
+        changed: false,
+        error: undefined
+    },
+    fav_sport_3: {
         value: "",
         changed: false,
         error: undefined
@@ -110,14 +124,16 @@ export default function SignUp() {
 
     const getValue = state => ({
 
-        firstName: state.firstName.value,
+        first_name: state.firstame.value,
 
-        lastName: state.lastName.value,
+        last_name: state.last_name.value,
 
         bio: state.bio.value,
         age: state.age.value,
         location: state.location.value,
-        favSports: state.favSports.value,
+        fav_sport_1: state.fav_sport_1.value,
+        fav_sport_2: state.fav_sport_2.value,
+        fav_sport_3: state.fav_sport_3.value,
     })
     const handleChange = e=>{
         const newState = {...state}
@@ -149,22 +165,22 @@ export default function SignUp() {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 autoComplete="fname"
-                                name="firstName"
+                                name="first_name"
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="firstName"
+                                id="first_name"
                                 label="First Name"
                                 autoFocus
-                                value={state.firstName.value||""}
+                                value={state.first_name.value||""}
                                 onChange={handleChange}
                             />
                             {
-                                state.firstName.error?
+                                state.first_name.error?
                                     <Alert
                                         style={{marginTop:5}}
                                         severity="error">
-                                        {state.firstName.error}
+                                        {state.first_name.error}
                                     </Alert>:null
                             }
                         </Grid>
@@ -173,19 +189,19 @@ export default function SignUp() {
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="lastName"
+                                id="last_name"
                                 label="Last Name"
-                                name="lastName"
+                                name="last_name"
                                 autoComplete="lname"
-                                value={state.lastName.value||""}
+                                value={state.last_name.value||""}
                                 onChange={handleChange}
                             />
                             {
-                                state.lastName.error?
+                                state.last_name.error?
                                     <Alert
                                         style={{marginTop:5}}
                                         severity="error">
-                                        {state.lastName.error}
+                                        {state.last_name.error}
                                     </Alert>:null
                             }
                         </Grid>
@@ -257,19 +273,61 @@ export default function SignUp() {
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="favSports"
+                                id="fav_sport_1"
                                 label="Your Favourite Sports"
-                                name="favSports"
-                                autoComplete="favSports"
-                                value={state.favSports.value||""}
+                                name="fav_sport_1"
+                                autoComplete="fav_sport_1"
+                                value={state.fav_sport_1.value||""}
                                 onChange={handleChange}
                             />
                             {
-                                state.favSports.error?
+                                state.fav_sport_1.error?
                                     <Alert
                                         style={{marginTop:5}}
                                         severity="error">
-                                        {state.favSports.error}
+                                        {state.fav_sport_1.error}
+                                    </Alert>:null
+                            }
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="fav_sport_2"
+                                label="Your Favourite Sports"
+                                name="fav_sport_2"
+                                autoComplete="fav_sport_2"
+                                value={state.fav_sport_2.value||""}
+                                onChange={handleChange}
+                            />
+                            {
+                                state.fav_sport_2.error?
+                                    <Alert
+                                        style={{marginTop:5}}
+                                        severity="error">
+                                        {state.fav_sport_2.error}
+                                    </Alert>:null
+                            }
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="fav_sport_3"
+                                label="Your Favourite Sports"
+                                name="fav_sport_3"
+                                autoComplete="fav_sport_3"
+                                value={state.fav_sport_3.value||""}
+                                onChange={handleChange}
+                            />
+                            {
+                                state.fav_sport_3.error?
+                                    <Alert
+                                        style={{marginTop:5}}
+                                        severity="error">
+                                        {state.fav_sport_3.error}
                                     </Alert>:null
                             }
                         </Grid>
