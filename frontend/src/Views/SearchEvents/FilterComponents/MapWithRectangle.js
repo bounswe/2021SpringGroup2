@@ -75,8 +75,10 @@ export default function MapWithRectangle(props) {
         setOptionsOpen(false)
         let bottomLeft = {lat:input.bottomLeft.lat, lng:input.bottomLeft.lng}
         let topRight = {lat:input.topRight.lat, lng:input.topRight.lng}
-        props.setBottomLeft(bottomLeft)
-        props.setTopRight(topRight)
+        props.setCenter(
+                {lat:(bottomLeft.lat+topRight.lat)/2,
+                    lng:(bottomLeft.lng+topRight.lng)/2}
+            )
     }
     const _onCreated = e =>{
         props.setBottomLeft(
