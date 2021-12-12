@@ -130,3 +130,16 @@ describe("Check if the correct comments and answers are fetched given the reques
         expect(spy1).toHaveBeenCalledTimes(2)
     })
 })
+
+test('Check if correct post request is sent when creating comment', async () => {
+    global.fetch = jest.fn().mockImplementation(() =>
+            Promise.resolve({ json: () => Promise.resolve([]) })
+    )
+    const json = await CommentAnswerController.postComment(0,0,"berkaydoner","Hello")
+    expect(json.user).toEqual({ username: 'berkaydoner' })
+    expect(json.content).toBe("Hello")
+    expect(json.isAnswer).toBe(false)
+    expect(json.answers).toEqual([])
+    global.fetch.mockClear()
+})
+
