@@ -154,4 +154,9 @@ test('Check if correct post request is sent when creating answer', async () => {
     global.fetch.mockClear()
 })
 
-
+test("Check if the date formatter method works correctly", ()=>{
+    expect(formatDate("2014-11-30T23:00:00-08:00")).toBe("Dec 1 2014, 09:00")
+    expect(formatDate("2021-01-12T13:42:00+03:00")).toBe("Jan 12 2021, 13:42")
+    expect(formatDate("Sat Nov 13 10:45:00 2021")).toBe("Nov 13 2021, 10:45")
+    expect(formatDate("12/17/1997 07:37:16.00 PST")).toBe("Dec 17 1997, 17:37")
+})
