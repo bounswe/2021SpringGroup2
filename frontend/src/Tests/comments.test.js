@@ -89,3 +89,44 @@ describe("Check if the comment is in correct format and it fetches answers", () 
         spy.mockClear()
     })
 })
+describe("Check if the correct comments and answers are fetched given the request", () =>{
+    let originalFetch;
+    beforeEach(() => {
+        originalFetch = global.fetch;
+        global.fetch = jest.fn(() => Promise.resolve({
+            json: () => Promise.resolve({
+                "@context": "https://www.w3.org/ns/activitystreams",
+                "summary": "Object history",
+                "type": "Collection",
+                "totalItems": 2,
+                "items": [
+                    {
+                        "type": "Create",
+                        "actor": {
+                            "type": "Person",
+                            "name": "Sally"
+                        },
+                        "object": "/api/posts/13/comments/12"
+                    },
+                    {
+                        "type": "Create",
+                        "actor": {
+                            "type": "Person",
+                            "name": "Sally"
+                        },
+                        "object": "/api/posts/13/comments/11"
+                    }
+                ]
+            })}));})
+    afterEach(() => {
+        global.fetch = originalFetch;
+    });
+    it("Check if function calls are correct",async () => {
+        const spy1 = jest.spyOn(CommentAnswerController,"getCommentByID")
+        const spy2 = jest.spyOn(CommentAnswerController,"getAnswersOfComment")
+        await CommentAnswerController.getCommentsAndAnswersOfEvent(13)
+        expect(spy1).toHaveBeenCalledWith(13,12)
+        expect(spy1).toHaveBeenCalledWith(13,11)
+        expect(spy1).toHaveBeenCalledTimes(2)
+    })
+})
