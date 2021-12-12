@@ -40,7 +40,7 @@ jobs:
         pip install -r requirements.txt
         pip install pytest-django
     - name: Set env for pytest
-      run: echo "DJANGO_SETTINGS_MODULE='test.settings pytest'" >> $GITHUB_ENV
+      run: echo "DJANGO_SETTINGS_MODULE=test.settings pytest" >> $GITHUB_ENV
     - name: Run migrations
       run: |
         python manage.py makemigrations authentication
