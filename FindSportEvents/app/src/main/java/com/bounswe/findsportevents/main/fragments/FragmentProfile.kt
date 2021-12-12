@@ -36,6 +36,7 @@ class FragmentProfile : Fragment(), DialogManager {
         super.onCreate(savedInstanceState)
         profileFragListener = requireActivity() as FragmentProfileListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
+        token="JWT $token"
         username = requireArguments().getString(USERNAME_KEY) ?: ""
 
         context?.run {
