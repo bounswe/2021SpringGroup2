@@ -10,7 +10,7 @@ import {
     Container,
     Divider,
     Dialog,
-    DialogContent, DialogTitle
+    DialogContent, DialogTitle, Stack
 } from "@mui/material";
 import {makeStyles, createStyles} from '@mui/styles'
 import {Link} from 'react-router-dom'
@@ -19,13 +19,12 @@ import TimePicker from '@mui/lab/TimePicker';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import DatePicker from '@mui/lab/DatePicker'
-import {Autocomplete} from "@mui/lab";
+import {Alert, Autocomplete, DateTimePicker} from "@mui/lab";
 import {useEffect, useState} from "react";
 import {getSportsList} from "../../Controllers/SportsController";
-import {getLocationMatches} from "../../Controllers/GeocodingController";
-import MapWithMarker from "./MapWithMarker";
 import MapIcon from '@mui/icons-material/Map';
 import IconButton from "@mui/material/IconButton";
+import MapWithMarker from "./MapWithMarker";
 
 const initialState = {
     title: {
@@ -66,16 +65,22 @@ const initialState = {
 
 }
 
-
-
+export function checkIfDateIsLater(start,end){
+    let date_start = new Date(start)
+    let date_end = new Date(end)
+    return date_start<=date_end
+}
+export function checkIfNumber(number){
+    return (!isNaN(parseFloat(number)) && !isNaN(number - 0))|number==""
+}
 export default function CreateEventPage(props){
     const paperStyle = {padding:20, height: '87vh', width:500, margin:"20px auto", background: "#e4f2f7"};
     const textFieldStyle = {backgroundColor: 'white', marginTop: 10, marginBottom: 10}
     const inputStyle = {height:"10mm",fontSize:"5px"}
     const typographyStyle = {paddingBottom:5,color:'#4c4c4c'}
-    const [date, setDate] = React.useState(null);
-    const [timeStart, setTimeStart] = React.useState(null );
-    const [timeEnd, setTimeEnd] = React.useState( null );
+    const [dateStart, setDateStart] = React.useState(null);
+    const [dateEnd, setDateEnd] = React.useState(null);
+
     const [ sport, setSport ] = React.useState("");
     const [options, setOptions] = React.useState([{}]);
     const [skill, setSkill] = React.useState(null);
@@ -89,7 +94,9 @@ export default function CreateEventPage(props){
         lat:41.0082,
         lng:28.9784
     }
+
     const [position, setPosition] = useState(centerValue);
+    const [dateError, setDateError] = useState(null);
     const numberInputs = ["minAge","maxAge","playerCapacity","spectatorCapacity"]
 
     const handleClickOpen = () => {
@@ -127,19 +134,24 @@ export default function CreateEventPage(props){
         setLongitude(position.lng)
         setLatitude(position.lat)
     },[position])
+    useEffect(()=>{
+        if(dateStart&&!checkIfDateIsLater(new Date().toLocaleString(),dateStart)){
+            setDateError("You cannot create an event in the past")
+        }
+        else if(dateStart&&dateEnd&&!checkIfDateIsLater(dateStart,dateEnd)){
+            setDateError("Starting date must be earlier than the finish date")
+        }
+        else{
+            setDateError(null)
+        }
+    },[dateStart,dateEnd])
 
-    const handleDateChange = (newValue) => {
-        setDate(newValue);
+    const handleDateStartChange = (newValue) => {
+        setDateStart(newValue);
     };
-    const handleStartChange = (newValue) => {
-        setTimeStart(newValue);
+    const handleDateEndChange = (newValue) => {
+        setDateEnd(newValue);
     };
-    const handleEndChange = (newValue) => {
-        setTimeEnd(newValue);
-    }
-    const checkIfNumber = (number) => {
-        return (!isNaN(parseFloat(number)) && !isNaN(number - 0))|number==""
-    }
     const handleLatitude = (event) => {
         if(checkIfNumber(event.target.value)){
             setLatitude(event.target.value)
@@ -162,11 +174,17 @@ export default function CreateEventPage(props){
     }
 
     function createEvent(){
-        if(!date||!timeStart|!timeEnd||!latitude||!longitude||!inputs.title||!sport||!skill){
+        if(dateStart&&!checkIfDateIsLater(new Date().toISOString(),dateStart)){
+            setDateError("You cannot create an event in the past")
+            return
+        }
+        else if(dateStart&&dateEnd&&!checkIfDateIsLater(dateStart,dateEnd)){
+            setDateError("Starting date must be earlier than the finish date")
+            return
+        }
+        if(!dateStart||!dateEnd||!latitude||!longitude||!inputs.title||!sport||!skill){
             return;
         }
-
-
     }
 
     return(
@@ -246,44 +264,36 @@ export default function CreateEventPage(props){
                         </Grid>
                     </Grid>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} sm={4}>
+                        <Grid item xs={12} sm={6}>
+                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                    <DateTimePicker
+                                        style = {{backgroundColor: "#ffffff"}}
+                                        label="Event Date Start"
+                                        inputFormat="dd/MM/yyyy HH:mm"
+                                        value={dateStart}
+                                        minDate={new Date()}
+                                        ampm={false}
+                                        onChange={handleDateStartChange}
+                                        renderInput={(params) => <TextField  style={textFieldStyle} size="small" variant="outlined" fullWidth required {...params} />}
+                                    />
+                                </LocalizationProvider>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                <DatePicker
+                                <DateTimePicker
                                     style = {{backgroundColor: "#ffffff"}}
-                                    label="Event Date"
-                                    inputFormat="dd/MM/yyyy"
-                                    value={date}
+                                    label="Event Date End"
+                                    inputFormat="dd/MM/yyyy HH:mm"
+                                    value={dateEnd}
                                     minDate={new Date()}
-                                    onChange={handleDateChange}
+                                    ampm={false}
+                                    onChange={handleDateEndChange}
                                     renderInput={(params) => <TextField  style={textFieldStyle} size="small" variant="outlined" fullWidth required {...params} />}
                                 />
                             </LocalizationProvider>
                         </Grid>
-                        <Grid item xs={12} sm={4}>
-                                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                    <TimePicker
-                                        label="Event Start"
-                                        value={timeStart}
-                                        ampm={false}
-                                        minDate={new Date()}
-                                        onChange={handleStartChange}
-                                        renderInput={(params) => <TextField  style={textFieldStyle} size="small" variant="outlined" fullWidth required {...params} />}
-                                    />
-                                </LocalizationProvider>
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                    <TimePicker
-                                        label="Event End"
-                                        value={timeEnd}
-                                        ampm={false}
-                                        minDate={new Date()}
-                                        onChange={handleEndChange}
-                                        renderInput={(params) => <TextField  style={textFieldStyle} size="small" variant="outlined" fullWidth required {...params} />}
-                                    />
-                                </LocalizationProvider>
-                            </Grid>
                     </Grid>
+                    {dateError!==null?<Alert severity="error">{dateError}</Alert>:null}
                     <Grid container spacing={1}>
                         <Grid item xs={12} sm={4}>
                             <Autocomplete
@@ -322,9 +332,9 @@ export default function CreateEventPage(props){
                         </Grid>
                     </Grid>
                     <Box textAlign='center'>
-                        <Button type="submit" variant="contained" align="center" onClick={createEvent}
-                                style={{margin:"8px 0",backgroundColor:"#41e5ff"}}>Create Event
-                        </Button>
+                            <Button type="submit" variant="contained" align="center" onClick={createEvent}
+                                    style={{margin:"8px 0",backgroundColor:"#41e5ff"}}>Create Event
+                            </Button>
                     </Box>
                 </form>
             </Paper>
