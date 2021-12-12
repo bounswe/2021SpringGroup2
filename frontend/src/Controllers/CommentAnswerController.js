@@ -1,11 +1,11 @@
-export function getAnswersOfComment(post_id,comment_id){
+import * as CommentAnswerController from "./CommentAnswerController"
+
+export async function getAnswersOfComment(post_id,comment_id){
     const options = {
         method: 'GET',
         headers: { 'Accept': 'application/json','Content-Type': 'application/json'},
     }
-
-    //let response = fetch("/api/posts/"+String(post_id)+"/comments/"+String(comment_id),options)
-    let response = fetch("http://localhost:3000/answers/",options)
+    let response = await fetch("/api/posts/"+String(post_id)+"/comments/"+String(comment_id)+"/",options)
         .then(response=>response.json())
         .then((result)=> {
             return result.items?result.items.map(d=>
@@ -18,46 +18,43 @@ export function getAnswersOfComment(post_id,comment_id){
 
 }
 
-export function getCommentByID(post_id,comment_id){
+export async function getCommentByID(post_id, comment_id) {
 
     const options = {
         method: 'GET',
-        headers: { 'Accept': 'application/json','Content-Type': 'application/json'},
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
     }
 
     let comment = {}
-    //let response = fetch("/api/posts/"+String(post_id)+"/comments/"+String(comment_id),options)
-    fetch("http://localhost:3000/comments/"+comment_id,options)
-        .then(response=>response.json())
-        .then((result)=>
-        {
-            comment.user = {username:result.actor.name};
-            comment.content = result.object.content;
-            comment.creationDate = result.object.creationDate;
-            comment.isAnswer = false;
-            comment.comment_id = comment_id;
-        }
-    )
-    getAnswersOfComment(post_id,comment_id).then(answerList=>
-        comment.answers=answerList
+    await fetch("/api/posts/"+String(post_id)+"/comments/"+String(comment_id)+"/",options)
+        .then(response => response.json())
+        .then((result) => {
+                comment.user = {username: result.actor.name};
+                comment.content = result.object.content;
+                comment.creationDate = result.object.creationDate;
+                comment.isAnswer = false;
+                comment.comment_id = comment_id;
+            }
+        )
+    CommentAnswerController.getAnswersOfComment(post_id, comment_id).then(answerList =>
+        comment.answers = answerList
     )
     console.log(comment)
     return comment
 }
 
-export function getCommentsAndAnswersOfEvent(post_id){
+export async function getCommentsAndAnswersOfEvent(post_id){
 
     const options = {
         method: 'GET',
         headers: { 'Accept': 'application/json','Content-Type': 'application/json'},
     }
-    //let response = fetch("/api/posts/"+String(post_id)+"/comments",options)
     let comments = []
-    fetch("http://localhost:3000/commentsList/",options)
+    await fetch("/api/posts/"+String(post_id)+"/comments/",options)
         .then(response=>response.json())
         .then(r=>{console.log(r);return r;})
         .then(response=>response.items.forEach(d=>
-            comments.push(getCommentByID(d.object.split("/")[3],d.object.split("/")[5]))
+            comments.push(CommentAnswerController.getCommentByID(Number(d.object.split("/")[3]),Number(d.object.split("/")[5])))
         ))
     return comments
 }
@@ -83,16 +80,15 @@ export function postComment(post_id,owner_id,username,content){
             }
         })
     }
-    //fetch("/api/posts/"+String(post_id)+"/comments",options)
     let comment = {}
-    fetch("http://localhost:3000/comments/",options)
+    comment.user={username:username};
+    comment.content=content;
+    comment.creationDate=date;
+    comment.isAnswer=false;
+    comment.answers=[];
+    fetch("/api/posts/"+String(post_id)+"/comments/",options)
         .then(response=>response.json())
         .then(d=> {
-            comment.user={username:username};
-            comment.content=content;
-            comment.creationDate=date;
-            comment.isAnswer=false;
-            comment.answers=[];
             });
     console.log("comment",comment)
     return comment
@@ -118,16 +114,16 @@ export function postAnswer(post_id,comment_id,owner_id,username,content){
         })
     }
     console.log(JSON.stringify(options.body))
-    //fetch("/api/posts/"+String(post_id)+"/comments/"+String(comment_id)/answers,options)
     let answer = {}
-    fetch("http://localhost:3000/comments/",options)
+    answer.user={username:username};
+    answer.content=content;
+    answer.creationDate=date;
+    answer.isAnswer=true;
+    fetch("/api/posts/"+String(post_id)+"/comments/"+String(comment_id)+"/answers/",options)
         .then(response=>response.json())
         .then(d=> {
-            answer.user={username:username};
-            answer.content=content;
-            answer.creationDate=date;
-            answer.isAnswer=true;}
-        );
+
+        });
     console.log("answer",answer)
     return answer
 }

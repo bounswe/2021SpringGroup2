@@ -38,22 +38,29 @@ export default function Comments(props){
         setNewComment(event.target.value);
     };
     const handlePostComment = () => {
-        if(newComment.startsWith("@"+repliedUser+" ") && repliedComment!==null){
-          const answer =  postAnswer(0,1,1,"bdoner",newComment.substring(repliedUser.length+2));
-          setTimeout(() => {
-              setComments(comments.map(d => d.comment_id===repliedComment ? {
-                  ...d, answers: d.answers.concat(answer)
-              } : d))
+        if (newComment.startsWith("@" + repliedUser + " ") && repliedComment !== null) {
+            const answer = postAnswer(0, 1, 1, "bdoner", newComment.substring(repliedUser.length + 2));
+            let foundComment = false
+            const handle_return = (d) => {
+                if(d.comment_id === repliedComment && !foundComment){
+                    foundComment = true
+                    return {...d, answers: d.answers.concat(answer)}
+                }
+                else{
+                    return d
+                }
+            }
+            setTimeout(() => {
+                setComments(comments.map(handle_return))
             }, 400);
 
             //setComments(getCommentsAndAnswersOfEvent(0))
 
-        }
-        else{
-          const comment = postComment(0,1,"bdoner",newComment);
-          setTimeout(()=>{
-              setComments(comments.concat(comment))
-          },400)
+        } else {
+            const comment = postComment(0, 1, "bdoner", newComment);
+            setTimeout(() => {
+                setComments(comments.concat(comment))
+            }, 400)
             //setComments(getCommentsAndAnswersOfEvent(0))
 
         }
@@ -62,7 +69,9 @@ export default function Comments(props){
         setRepliedComment(null)
     };
     useEffect(_=>{
-        setComments(getCommentsAndAnswersOfEvent(0))
+        getCommentsAndAnswersOfEvent(0).then(d=>{
+            setComments(d)
+        })
     }, [])
     return (
         <div>
