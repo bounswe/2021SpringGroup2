@@ -142,4 +142,16 @@ test('Check if correct post request is sent when creating comment', async () => 
     expect(json.answers).toEqual([])
     global.fetch.mockClear()
 })
+test('Check if correct post request is sent when creating answer', async () => {
+    global.fetch = jest.fn().mockImplementation(() =>
+        Promise.resolve({ json: () => Promise.resolve([]) })
+    )
+    const json = await CommentAnswerController.postAnswer(0,0,0,"berkaydoner","Hello")
+    expect(json.user).toEqual({ username: 'berkaydoner' })
+    expect(json.content).toBe("Hello")
+    expect(json.isAnswer).toBe(true)
+    expect(json.answers).toBe(undefined)
+    global.fetch.mockClear()
+})
+
 
