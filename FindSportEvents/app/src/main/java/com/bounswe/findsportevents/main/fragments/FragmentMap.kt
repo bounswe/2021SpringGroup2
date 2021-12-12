@@ -75,11 +75,11 @@ class FragmentMap : Fragment() {
                 if (p != null) {
                     tapCount++
                     items.add(OverlayItem("Title", "Description", GeoPoint(p)))
-                    if(tapCount==1){
+                    if(tapCount%2==1){
                         firstMarker.position = p
                         map.overlays.add(firstMarker)
                         map.invalidate()}
-                    if(tapCount==2)
+                    if(tapCount%2==0)
                     {
                         secondMarker.position=p
                         map.overlays.add(firstMarker)
@@ -97,7 +97,7 @@ class FragmentMap : Fragment() {
             }
 
             override fun longPressHelper(p: GeoPoint?): Boolean {
-                TODO("Not yet implemented")
+                return false
             }
 
 
