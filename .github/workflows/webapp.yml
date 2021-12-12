@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - gh-test
+      - development
 
 jobs:
   build:
