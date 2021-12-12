@@ -10,8 +10,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    env:
-      DJANGO_SETTINGS_MODULE: 'test.settings pytest'
     defaults:
       run:
         working-directory: ./backend
@@ -41,6 +39,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install pytest-django
+    - name: Set env for pytest
+      run: echo "DJANGO_SETTINGS_MODULE='test.settings pytest'" >> $GITHUB_ENV
     - name: Run migrations
       run: |
         python manage.py makemigrations authentication
