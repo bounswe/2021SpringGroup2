@@ -13,7 +13,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_marginTop="0dp"
-            android:text="OK" />
+            android:text="OK"
+            android:enabled="false"/>
 
 
 </LinearLayout>

@@ -38,6 +38,7 @@ class FragmentMap : Fragment() {
     private var endTime=""
     private var marker1=GeoPoint(0,0)
     private var marker2=GeoPoint(0,0)
+    var tapCount=0
     private lateinit var map : MapView;
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
@@ -54,7 +55,7 @@ class FragmentMap : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
-        var tapCount=0
+
         Configuration.getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context));
 
         map = binding.map
@@ -93,6 +94,7 @@ class FragmentMap : Fragment() {
                     }
                     Toast.makeText(context,p.toString(),Toast.LENGTH_SHORT).show()
                 }
+                checkFields()
                 return false
             }
 
@@ -126,6 +128,10 @@ class FragmentMap : Fragment() {
     binding.btnOk.setOnClickListener {
         requireActivity().supportFragmentManager.popBackStack()
     }
+
+    }
+    private fun checkFields(){
+        binding.btnOk.isEnabled=tapCount>=2
     }
     override fun onResume() {
         super.onResume();
