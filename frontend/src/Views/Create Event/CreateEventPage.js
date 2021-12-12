@@ -25,6 +25,7 @@ import {getSportsList} from "../../Controllers/SportsController";
 import MapIcon from '@mui/icons-material/Map';
 import IconButton from "@mui/material/IconButton";
 import MapWithMarker from "./MapWithMarker";
+import {postEvent} from "../../Controllers/EventController";
 
 const initialState = {
     title: {
@@ -217,7 +218,24 @@ export default function CreateEventPage(props){
         if(!dateStart||!dateEnd||!latitude||!longitude||!inputs.title||!sport||!inputs.location){
             return;
         }
-
+        let duration = Math.floor(((dateEnd-dateStart)/1000)/60)
+        const params={
+            content: inputs.description.value,
+            title: inputs.title.value,
+            location: inputs.location.value,
+            date: dateStart.toISOString(),
+            duration: duration,
+            sport: sport,
+            min_age: inputs.minAge.value,
+            max_age: inputs.maxAge.value,
+            player_capacity: inputs.playerCapacity.value,
+            spec_capacity: inputs.spectatorCapacity.value,
+            min_skill_level: minSkill?skillsToIntegers[minSkill]:null,
+            max_skill_level: maxSkill?skillsToIntegers[maxSkill]:null,
+            latitude: latitude,
+            longitude: longitude
+        }
+        postEvent(params)
     }
 
     return(
