@@ -74,29 +74,46 @@ export function checkIfNumber(number){
     return (!isNaN(parseFloat(number)) && !isNaN(number - 0))|number==""
 }
 export default function CreateEventPage(props){
-    const paperStyle = {padding:20, height: '87vh', width:500, margin:"20px auto", background: "#e4f2f7"};
+    const paperStyle = {padding:20, height: '97vh', width:500, margin:"20px auto", background: "#e4f2f7"};
     const textFieldStyle = {backgroundColor: 'white', marginTop: 10, marginBottom: 10}
     const inputStyle = {height:"10mm",fontSize:"5px"}
     const typographyStyle = {paddingBottom:5,color:'#4c4c4c'}
+
     const [dateStart, setDateStart] = React.useState(null);
     const [dateEnd, setDateEnd] = React.useState(null);
+    const [dateError, setDateError] = useState(null);
 
     const [ sport, setSport ] = React.useState("");
     const [options, setOptions] = React.useState([{}]);
-    const [skill, setSkill] = React.useState(null);
-    const skillOptions = [{label: "Beginner"},{label: "Preintermediate"},{label: "Intermediate"},
-        {label: "Advanced"},{label: "Expert"}]
+
+    const [minSkill, setMinSkill] = React.useState(null);
+    const [maxSkill, setMaxSkill] = React.useState(null);
+    const [skillError, setSkillError] = React.useState(null);
+    const skillOptions = [{label: "Beginner"},
+        {label: "Preintermediate"},
+        {label: "Intermediate"},
+        {label: "Advanced"},
+        {label: "Expert"}]
+
+    const skillsToIntegers = {
+        "Beginner":0,
+        "Preintermediate":1,
+        "Intermediate":2,
+        "Advanced":3,
+        "Expert":4
+    }
     const [inputs, setInputs] = useState(initialState)
+
     const [locationOpen, setLocationOpen] = React.useState(false);
     const [latitude, setLatitude] = React.useState("");
     const [longitude, setLongitude] = React.useState("");
+
     const centerValue = {
         lat:41.0082,
         lng:28.9784
     }
-
     const [position, setPosition] = useState(centerValue);
-    const [dateError, setDateError] = useState(null);
+
     const numberInputs = ["minAge","maxAge","playerCapacity","spectatorCapacity"]
 
     const handleClickOpen = () => {
@@ -130,10 +147,12 @@ export default function CreateEventPage(props){
             return a.label.localeCompare(b.label);})
         )).catch(console.log)
     }, [])
+
     useEffect(()=>{
         setLongitude(position.lng)
         setLatitude(position.lat)
     },[position])
+
     useEffect(()=>{
         if(dateStart&&!checkIfDateIsLater(new Date().toLocaleString(),dateStart)){
             setDateError("You cannot create an event in the past")
@@ -145,6 +164,15 @@ export default function CreateEventPage(props){
             setDateError(null)
         }
     },[dateStart,dateEnd])
+
+    useEffect(()=>{
+        if(skillsToIntegers[maxSkill]<skillsToIntegers[minSkill]){
+            setSkillError("Maximum skill level must be higher than the minimum skill level")
+        }
+        else{
+            setSkillError(null)
+        }
+    },[minSkill,maxSkill])
 
     const handleDateStartChange = (newValue) => {
         setDateStart(newValue);
@@ -182,9 +210,14 @@ export default function CreateEventPage(props){
             setDateError("Starting date must be earlier than the finish date")
             return
         }
-        if(!dateStart||!dateEnd||!latitude||!longitude||!inputs.title||!sport||!skill){
+        if(skillsToIntegers[maxSkill]<skillsToIntegers[minSkill]){
+            setSkillError("Maximum skill level must be higher than the minimum skill level")
+            return
+        }
+        if(!dateStart||!dateEnd||!latitude||!longitude||!inputs.title||!sport||!inputs.location){
             return;
         }
+
     }
 
     return(
@@ -220,7 +253,7 @@ export default function CreateEventPage(props){
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField id="location" fullWidth label="Location Name" size="small" variant="outlined"style={textFieldStyle}
-                                       value={inputs.location.value||""} onChange={handleChange} ></TextField>
+                               required value={inputs.location.value||""} onChange={handleChange} ></TextField>
 
                         </Grid>
 
@@ -294,17 +327,17 @@ export default function CreateEventPage(props){
                         </Grid>
                     </Grid>
                     {dateError!==null?<Alert severity="error">{dateError}</Alert>:null}
-                    <Grid container spacing={1}>
-                        <Grid item xs={12} sm={4}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
                             <Autocomplete
-                                value={skill}
+                                value={minSkill}
                                 options={skillOptions}
-                                onChange={(event, value) =>value ? setSkill(value.label) : setSkill(event.target.value)}
+                                onChange={(event, value) =>value ? setMinSkill(value.label) : setMinSkill(event.target.value)}
                                 renderInput={params => {
                                     return (
                                         <TextField
                                             {...params}
-                                            label="Skill Level"
+                                            label="Minimum Skill Level"
                                             variant="outlined"
                                             size="small"
                                             fullWidth
@@ -312,16 +345,36 @@ export default function CreateEventPage(props){
                                         />
                                     )}} />
                         </Grid>
-                        <Grid item xs={12} sm={4}>
+                        <Grid item xs={12} sm={6}>
+                            <Autocomplete
+                                value={maxSkill}
+                                options={skillOptions}
+                                onChange={(event, value) =>value ? setMaxSkill(value.label) : setMaxSkill(event.target.value)}
+                                renderInput={params => {
+                                    return (
+                                        <TextField
+                                            {...params}
+                                            label="Maximum Skill Level"
+                                            variant="outlined"
+                                            size="small"
+                                            fullWidth
+                                            style={textFieldStyle}
+                                        />
+                                    )}} />
+                        </Grid>
+                    </Grid>
+                    {skillError!==null?<Alert severity="error">{skillError}</Alert>:null}
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
                             <TextField id="minAge" fullWidth label="Minimum Age" size="small" variant="outlined" style={textFieldStyle}
                                        value={inputs.minAge.value} onChange={handleChange}       InputProps={inputStyle}></TextField>
                         </Grid>
-                        <Grid item xs={12} sm={4}>
+                        <Grid item xs={12} sm={6}>
                             <TextField id="maxAge" fullWidth label="Maximum Age" size="small" variant="outlined" style={textFieldStyle}
                                        value={inputs.maxAge.value} onChange={handleChange} InputProps={inputStyle}></TextField>
                         </Grid>
                     </Grid>
-                    <Grid container spacing={3}>
+                    <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                             <TextField id="playerCapacity" fullWidth label="Player Capacity" size="small" variant="outlined" style={textFieldStyle}
                                 value={inputs.playerCapacity.value} onChange={handleChange}    InputProps={inputStyle}></TextField>
