@@ -86,8 +86,10 @@ class FragmentMap : Fragment() {
                         map.overlays.add(secondMarker)
                         marker1=firstMarker.position
                         marker2=secondMarker.position
-
                         map.invalidate()//updating map
+                    }
+                    else{
+
                     }
                     Toast.makeText(context,p.toString(),Toast.LENGTH_SHORT).show()
                 }
