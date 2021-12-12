@@ -6,6 +6,8 @@ on:
     branches:
       - gh-test
       - development
+  pull_request:
+      - development
 
 jobs:
   build:
