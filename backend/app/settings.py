@@ -37,12 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'authentication',
     'django_rest_passwordreset',
     'eventposts',
     'profiles',
-    'corsheaders',
     'frontend'
 ]
 
@@ -88,13 +88,13 @@ DATABASES = {
 
         'ENGINE': 'django.db.backends.postgresql',
 
-        'NAME': os.environ.get('POSTGRES_DB', None),
+        'NAME': 'cmpe451', #os.environ.get('POSTGRES_DB', None),
 
-        'USER': os.environ.get('POSTGRES_USER', None),
+        'USER': 'postgres', #os.environ.get('POSTGRES_USER', None),
 
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', None),
+        'PASSWORD': '1234', #os.environ.get('POSTGRES_PASSWORD', None),
 
-        'HOST': 'database',
+        'HOST': 'localhost', #'database',
 
         'PORT': '5432',
 

@@ -6,11 +6,13 @@ from authentication.models import User
 from .serializers import ProfileSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.http import JsonResponse
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    authentication_classes = [JWTAuthentication]
     queryset = User.objects.all()
     serializer_class = ProfileSerializer
     lookup_field = 'username'
