@@ -3,14 +3,16 @@ package com.bounswe.findsportevents.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bounswe.findsportevents.R
+import com.bounswe.findsportevents.adapter.RecyclerAdapter
 import com.bounswe.findsportevents.databinding.ActivityMainBinding
 import com.bounswe.findsportevents.extensions.startActivity
 import com.bounswe.findsportevents.login.LoginActivity
-import com.bounswe.findsportevents.main.fragments.FragmentHome
-import com.bounswe.findsportevents.main.fragments.FragmentProfile
+import com.bounswe.findsportevents.main.fragments.*
 
-class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener, FragmentProfile.FragmentProfileListener {
+class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener,FragmentMap.FragmentMapListener,FragmentSearchEvent.FragmentSearchEventListener, FragmentProfile.FragmentProfileListener,FragmentViewAllEvents.FragmentViewAllEventsListener {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -23,6 +25,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener, Fra
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         if (intent.extras != null) {
             login = intent.extras!!.getBoolean(LOGIN_KEY)
             token = intent.extras!!.getString(TOKEN_KEY) ?: ""
@@ -31,18 +34,26 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener, Fra
 
         if (savedInstanceState == null && supportFragmentManager.findFragmentById(binding.containerMain.id) == null) {
             supportFragmentManager.beginTransaction()
-                .add(binding.containerMain.id, FragmentHome(), FragmentHome.TAG).commit()
+                .add(binding.containerMain.id, FragmentViewAllEvents.newInstance(token), FragmentViewAllEvents.TAG).commit()
         }
 
         binding.bottomNav.apply {
             setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.bottom_home -> {
-                        displayHomeFragment()
+                        displayHomeFragment(token)
                         false
                     }
                     R.id.bottom_profile -> {
-                        displayProfileFragment(token, username)
+                        displayProfileFragment(token,username)
+                        false
+                    }
+                    R.id.bottom_event -> {
+                        displayViewAllEventsFragment(token)
+                        false
+                    }
+                    R.id.bottom_search -> {
+                        displaySearchEventFragment(token)
                         false
                     }
                     else -> false
@@ -50,13 +61,17 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener, Fra
 
             }
         }
-
+        initListeners()
         setObservers()
     }
-
-
-    private fun displayHomeFragment() {
-        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentHome(), FragmentHome.TAG).commit()
+    private fun displaySearchEventFragment(token: String){
+        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentSearchEvent.newInstance(token), FragmentSearchEvent.TAG).commit()
+    }
+    private fun displayViewAllEventsFragment(token: String){
+        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentViewAllEvents.newInstance(token), FragmentViewAllEvents.TAG).commit()
+    }
+    private fun displayHomeFragment(token: String) {
+        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentHome.newInstance(token), FragmentHome.TAG).commit()
     }
 
     private fun displayProfileFragment(token: String, username: String) {
@@ -71,6 +86,9 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener, Fra
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             }
         }
+    }
+    private fun initListeners(){
+       //
     }
 
     companion object {

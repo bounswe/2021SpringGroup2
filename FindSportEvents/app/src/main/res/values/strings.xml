@@ -31,4 +31,23 @@
     <string name="token">Token</string>
     <string name="reset_password_desc">Check your email and enter the token to confirm resetting the password.</string>
     <string name="new_password">New Password</string>
+    <string name="events">Events</string>
+    <string name="search">Search</string>
+    <string-array name="sports_array">
+        <item>Football</item>
+        <item>Basketball</item>
+        <item>Tennis</item>
+    </string-array>
+    <string-array name="skills_array">
+        <item>Beginner</item>
+        <item>Pre-Intermediate</item>
+        <item>Intermediate</item>
+        <item>Expert</item>
+    </string-array>
+    <string-array name="age_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
 </resources>
