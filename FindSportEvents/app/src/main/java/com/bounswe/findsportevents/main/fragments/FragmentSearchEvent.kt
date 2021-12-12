@@ -14,13 +14,20 @@ import java.util.*
 import android.app.TimePickerDialog
 import android.app.TimePickerDialog.OnTimeSetListener
 import android.widget.*
+import androidx.fragment.app.FragmentTransaction
 
 
-class FragmentSearchEvent : Fragment() {
+class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener{
 
     private var token = ""
     private var sports = mutableListOf(0)
-    private var dateTime=""
+    private var sport =""
+    private var minAge = 0
+    private var maxAge = 0
+    private var minSkillLevel = ""
+    private var maxSkillLevel = ""
+    private var startTime=""
+    private var endTime = ""
     private var _binding: FragmentSearchEventBinding? = null
     private val binding get() = _binding!!
     private lateinit var searchEventFragListener : FragmentSearchEventListener
@@ -42,6 +49,7 @@ class FragmentSearchEvent : Fragment() {
 
         _binding = FragmentSearchEventBinding.inflate(inflater, container, false)
         val spinner1: Spinner = binding.sportsSpinner
+        spinner1.onItemSelectedListener=this
         context?.let {
             ArrayAdapter.createFromResource(
                 it,
@@ -54,7 +62,8 @@ class FragmentSearchEvent : Fragment() {
 
         }
 
-        val spinner2: Spinner = binding.skillsSpinner
+        val spinner2: Spinner = binding.minSkillsSpinner
+        spinner2.onItemSelectedListener=this
         context?.let {
 
             ArrayAdapter.createFromResource(
@@ -68,14 +77,17 @@ class FragmentSearchEvent : Fragment() {
 
         }
         val spinner3 : Spinner =binding.minAgeSpinner
+        spinner3.onItemSelectedListener=this
         val adapter2: ArrayAdapter<Int>? =
             context?.let { ArrayAdapter<Int>(it, android.R.layout.simple_spinner_item, items).also {
                     adapter2 ->
                 adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 spinner3.adapter = adapter2
+
             }
             }
         val spinner4 : Spinner =binding.maxAgeSpinner
+        spinner4.onItemSelectedListener=this
         val adapter1: ArrayAdapter<Int>? =
             context?.let { ArrayAdapter<Int>(it, android.R.layout.simple_spinner_item, items).also {
                     adapter1 ->
@@ -83,12 +95,33 @@ class FragmentSearchEvent : Fragment() {
                 spinner4.adapter = adapter1
             }
             }
+        val spinner5: Spinner = binding.maxSkillsSpinner
+        spinner5.onItemSelectedListener=this
+        context?.let {
+
+            ArrayAdapter.createFromResource(
+                it,
+                R.array.skills_array,
+                android.R.layout.simple_spinner_item
+            ).also{adapter->
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinner5.adapter = adapter
+            }
+
+        }
 
 
 
 
 
         return binding.root
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState!!)
+
+        //Save the fragment's state here
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -134,6 +167,13 @@ class FragmentSearchEvent : Fragment() {
         binding.btnEndTime.setOnClickListener {
             pickDateTime(binding.btnEndTime)
         }
+        binding.btnSelectArea.setOnClickListener {
+            val mapFragment= FragmentMap()
+            val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.container_main,FragmentMap.newInstance(token,sport,minSkillLevel,maxSkillLevel,minAge,maxAge,startTime,endTime)).addToBackStack("map")
+            transaction.commit()
+        }
+
     }
     override fun onDestroyView() {
         super.onDestroyView()
@@ -154,5 +194,33 @@ class FragmentSearchEvent : Fragment() {
                 putString(TOKEN_KEY,token)
             }
         }
+    }
+
+    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+        var newItem= p0?.selectedItem
+        if (p0 != null) {
+            if (p0.id==binding.sportsSpinner.id){
+                sport= newItem as String
+            }
+            if (p0.id==binding.minSkillsSpinner.id){
+                minSkillLevel= newItem as String
+            }
+            if (p0.id==binding.maxSkillsSpinner.id){
+                maxSkillLevel= newItem as String
+            }
+            if (p0.id==binding.minAgeSpinner.id){
+                minAge= newItem as Int
+            }
+            if (p0.id==binding.maxAgeSpinner.id){
+                maxAge= newItem as Int
+            }
+
+               // Toast.makeText(context,"$sport $skillLevel $minAge - $maxAge",Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    override fun onNothingSelected(p0: AdapterView<*>?) {
+     //   TODO("Not yet implemented")
     }
 }

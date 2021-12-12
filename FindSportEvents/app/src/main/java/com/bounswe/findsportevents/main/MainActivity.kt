@@ -10,12 +10,9 @@ import com.bounswe.findsportevents.adapter.RecyclerAdapter
 import com.bounswe.findsportevents.databinding.ActivityMainBinding
 import com.bounswe.findsportevents.extensions.startActivity
 import com.bounswe.findsportevents.login.LoginActivity
-import com.bounswe.findsportevents.main.fragments.FragmentHome
-import com.bounswe.findsportevents.main.fragments.FragmentProfile
-import com.bounswe.findsportevents.main.fragments.FragmentSearchEvent
-import com.bounswe.findsportevents.main.fragments.FragmentViewAllEvents
+import com.bounswe.findsportevents.main.fragments.*
 
-class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener,FragmentSearchEvent.FragmentSearchEventListener, FragmentProfile.FragmentProfileListener,FragmentViewAllEvents.FragmentViewAllEventsListener {
+class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener,FragmentMap.FragmentMapListener,FragmentSearchEvent.FragmentSearchEventListener, FragmentProfile.FragmentProfileListener,FragmentViewAllEvents.FragmentViewAllEventsListener {
 
     private lateinit var binding: ActivityMainBinding
 

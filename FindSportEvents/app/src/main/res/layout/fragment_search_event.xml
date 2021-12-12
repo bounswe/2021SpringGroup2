@@ -29,11 +29,21 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_skill_level"
+        android:id="@+id/tv_max_skill_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Max Skill Level: "
+        android:textSize="25sp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_min_skill_level" />
+
+    <TextView
+        android:id="@+id/tv_min_skill_level"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:text="Skill Level: "
+        android:text="Min Skill Level: "
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_sports" />
@@ -44,7 +54,7 @@
         android:layout_marginTop="35dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@+id/tv_min_age"
-        app:layout_constraintTop_toBottomOf="@+id/skills_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/max_skills_spinner" />
 
     <Spinner
         android:id="@+id/max_age_spinner"
@@ -62,7 +72,7 @@
         android:text="Minimum Age: "
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_skill_level" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_max_skill_level" />
 
     <TextView
         android:id="@+id/tv_max_age"
@@ -75,13 +85,21 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_min_age" />
 
     <Spinner
-        android:id="@+id/skills_spinner"
-        android:layout_width="240dp"
-        android:layout_marginTop="35dp"
+        android:id="@+id/max_skills_spinner"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/tv_skill_level"
-        app:layout_constraintTop_toBottomOf="@+id/sports_spinner"
-        />
+        android:layout_marginTop="33dp"
+        app:layout_constraintStart_toEndOf="@+id/tv_max_skill_level"
+        app:layout_constraintTop_toBottomOf="@+id/min_skills_spinner" />
+
+    <Spinner
+        android:id="@+id/min_skills_spinner"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+
+        app:layout_constraintStart_toEndOf="@+id/tv_max_skill_level"
+        app:layout_constraintTop_toBottomOf="@+id/sports_spinner" />
 
     <Button
         android:id="@+id/btn_start_time"
@@ -137,6 +155,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_selected_end" />
+
+    <TextView
+        android:id="@+id/tv_coordinates1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:text="Coordinates1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_select_area" />
+
+    <TextView
+        android:id="@+id/tv_coordinates2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="64dp"
+        android:text="Coordinates2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_select_area" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
