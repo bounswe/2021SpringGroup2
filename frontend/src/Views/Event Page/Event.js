@@ -15,7 +15,7 @@ import SportsInfoCard from "../Home/SportsInfoCard";
 import EventInfoCard from "../Home/EventInfoCard";
 import {Card, CardActionArea, CardMedia, CardContent} from "@mui/material";
 import Box from '@mui/material/Box';
-import Capture from '../images/sports.jpg'
+import Capture from '../images/output.png'
 import { palette } from '@mui/system';
 import { borders } from '@mui/system';
 
@@ -171,6 +171,7 @@ export default function Event (){
             {/*    </Grid>*/}
 
             {/*</Container>*/}
+
             <Grid item xs={12} sm={12} container spacing={3} alignItems="stretch"  className={classes.paper}>
                 {sports.slice(eventIndex, 1).map(s=>(
                     <Grid item  style={{display: 'flex'}} align={"center"}>
@@ -180,19 +181,19 @@ export default function Event (){
                 )}
             </Grid>
 
-            <Grid container spacing={2}>
+            <Grid container spacing={2} xs={12} sm={12}>
 
                 <Grid item xs={12} sm={12} >
-                    <Typography className={classes.infotext} variant="h4" component="div" align={"center"} borderColor={"#00bcd4"} style={{backgroundColor:"black", borderColor:"black"}}>
+                    <Typography className={classes.infotext} variant="h4" component="div" align={"center"} style={{alignContent: 'center',backgroundColor:"black"}}>
                         {event.object.title}
                     </Typography>
-                    <Typography variant="subtitle1" component="div" align={"center"}>
+                    <Typography variant="subtitle1" component="div" align={"center"} style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain"}}>
                         Type of Sport: {event.object.eventSport}
                     </Typography>
-                    <Typography variant="subtitle1" component="div" align={"center"}>
+                    <Typography variant="subtitle1" component="div" align={"center"} style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain"}}>
                         Location: {event.object.location.type}
                     </Typography>
-                    <Typography gutterBottom variant="body1" align={"center"}>
+                    <Typography gutterBottom variant="body1" align={"center"} style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain"}}>
                         Date: {event.object.eventDate}
                     </Typography>
                 </Grid>
@@ -221,7 +222,7 @@ export default function Event (){
                             <ListItemText primary="Players" secondary={event.object.eventPlayers} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <ListItemText style={{textAlign:"right"}} primary="Event Owner" secondary={event.actor.name} />
+                            <ListItemText className={classes.fav} style={{textAlign:"right"}} primary="Event Owner" secondary={event.actor.name} />
                         </Grid>
                     </Grid>
                 </Grid>
