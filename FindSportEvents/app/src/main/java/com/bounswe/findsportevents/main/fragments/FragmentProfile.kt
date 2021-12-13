@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import com.bounswe.findsportevents.databinding.FragmentProfileBinding
 import com.bounswe.findsportevents.main.MainActivity
 import com.bounswe.findsportevents.network.ReboundAPI
+import com.bounswe.findsportevents.network.modalz.requests.UpdateProfileRequest
+import com.bounswe.findsportevents.network.modalz.responses.UpdateProfileResponse
 import com.bounswe.findsportevents.network.modalz.responses.UserResponse
 import com.bounswe.findsportevents.util.DialogManager
 import com.bounswe.findsportevents.util.LoadingDialog
@@ -88,7 +90,36 @@ class FragmentProfile : Fragment(), DialogManager {
     }
 
     private fun setClickListeners() {
-//        binding.btnDatePicker.setOnClickListener{View -> clickDatePicker(View)}
+        binding.buttonUpdateProfile.setOnClickListener {
+            val request = UpdateProfileRequest(
+                binding.etFirstName.text.toString(),
+                binding.etLastName.text.toString(),
+                binding.etBio.text.toString(),
+                binding.etFavSport1.text.toString(),
+                binding.etFavSport2.text.toString(),
+                binding.etFavSport3.text.toString(),
+                binding.etLocation.text.toString(),
+                "https://upload.wikimedia.org/wikipedia/commons/1/18/Lewis_Hamilton_2016_Malaysia_2.jpg", // TODO CHANGE IT LATER
+                false // TODO CHANGE IT LATER
+            )
+            ReboundAPI.create().updateUser(token, username, request).enqueue(object: Callback<UpdateProfileResponse> {
+                override fun onResponse(
+                    call: Call<UpdateProfileResponse>,
+                    response: Response<UpdateProfileResponse>
+                ) {
+                    if(response.isSuccessful){
+                        Toast.makeText(requireContext(), "PROFILE UPDATE SUCCESSFULLY DONE!", Toast.LENGTH_SHORT).show()
+                    }else {
+                        Toast.makeText(requireContext(), "AN ERROR OCCURRED, PLEASE TRY AGAIN", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<UpdateProfileResponse>, t: Throwable) {
+                    Toast.makeText(requireContext(), "AN ERROR OCCURRED, PLEASE TRY AGAIN", Toast.LENGTH_SHORT).show()
+                }
+
+            })
+        }
     }
 
     interface FragmentProfileListener {
