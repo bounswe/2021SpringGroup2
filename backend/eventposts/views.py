@@ -1,11 +1,13 @@
 from eventposts.models import EventPost, Post
 from authentication.models import User
 from eventposts.serializers import EventSerializer
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import viewsets
+from rest_framework import permissions
 from rest_framework.pagination import PageNumberPagination
 from django.db.models import Q, F, Func, IntegerField
 
@@ -15,7 +17,10 @@ class EventPostsPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
+
 class EventViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    authentication_classes = [JWTAuthentication]
     pagination_class = EventPostsPagination
     queryset = EventPost.objects.all()
     serializer_class = EventSerializer
