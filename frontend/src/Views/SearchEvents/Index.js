@@ -129,6 +129,7 @@ export default function SearchEvents() {
                                 ids={["min_spectators","max_spectators"]}
                                 setValue={setValues}
                             />
+                            <div>  {space}  </div>
                             <Players
                                 text={"Player Capacity Range"}
                                 {...filters}
