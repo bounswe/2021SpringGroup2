@@ -72,7 +72,7 @@ export function checkIfDateIsLater(start,end){
     return date_start<=date_end
 }
 export function checkIfNumber(number){
-    return (!isNaN(parseFloat(number)) && !isNaN(number - 0))|number==""
+    return (!isNaN(parseFloat(number)) && !isNaN(number - 0))||number==""
 }
 export default function CreateEventPage(props){
     const paperStyle = {padding:20, height: '97vh', width:500, margin:"20px auto", background: "#e4f2f7"};
