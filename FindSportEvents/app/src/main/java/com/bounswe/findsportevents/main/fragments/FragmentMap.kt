@@ -14,7 +14,6 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.FragmentResultOwner
 import androidx.lifecycle.LifecycleOwner
 import com.bounswe.findsportevents.R
-import com.bounswe.findsportevents.databinding.FragmentHomeBinding
 import com.bounswe.findsportevents.databinding.FragmentMapBinding
 import com.bounswe.findsportevents.databinding.FragmentSearchEventBinding
 import org.osmdroid.config.Configuration
