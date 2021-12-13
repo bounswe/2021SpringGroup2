@@ -37,12 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'authentication',
     'django_rest_passwordreset',
     'eventposts',
     'profiles',
-    'corsheaders',
     'frontend'
 ]
 
