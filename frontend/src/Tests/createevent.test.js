@@ -17,3 +17,28 @@ test("Check if dates are compared correctly. First argument must be before the s
     expect(checkIfDateIsLater("2021-01-12T13:42:00+03:00","2020-01-12T13:42:00+03:00")).toBe(false)
 })
 
+test("Check if integer strings are identified correctly",()=>{
+    expect(checkIfNumber(1)).toBe(true)
+    expect(checkIfNumber(12)).toBe(true)
+    expect(checkIfNumber(100)).toBe(true)
+    expect(checkIfNumber(1.0)).toBe(true)
+    expect(checkIfNumber(1.00001)).toBe(true)
+    expect(checkIfNumber(0.900000)).toBe(true)
+
+    expect(checkIfNumber("1")).toBe(true)
+    expect(checkIfNumber("10")).toBe(true)
+    expect(checkIfNumber("110")).toBe(true)
+    expect(checkIfNumber("0.9")).toBe(true)
+    expect(checkIfNumber("1.0")).toBe(true)
+    expect(checkIfNumber("1.0000001")).toBe(true)
+    expect(checkIfNumber("12.0 ")).toBe(true)
+
+
+    expect(checkIfNumber("11a")).toBe(false)
+    expect(checkIfNumber("berkay123")).toBe(false)
+    expect(checkIfNumber("a12.3")).toBe(false)
+    expect(checkIfNumber("12.3a")).toBe(false)
+    expect(checkIfNumber("12 3")).toBe(false)
+    expect(checkIfNumber("11. 34")).toBe(false)
+    expect(checkIfNumber("a12")).toBe(false)
+})
