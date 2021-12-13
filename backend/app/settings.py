@@ -37,12 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'authentication',
     'django_rest_passwordreset',
     'eventposts',
     'profiles',
-    'corsheaders',
     'frontend'
 ]
 
@@ -98,8 +98,24 @@ DATABASES = {
 
         'PORT': '5432',
 
+        'TEST': {
+            'NAME': 'mytestdatabase'
+        }
+
     }
 }
+
+if os.environ.get('GITHUB_WORKFLOW'):
+    DATABASES = {
+        'default': {
+           'ENGINE': 'django.db.backends.postgresql',
+           'NAME': 'github_actions',
+           'USER': 'postgres',
+           'PASSWORD': 'postgres',
+           'HOST': '127.0.0.1',
+           'PORT': '5432',
+        }
+    }
 
 
 # Password validation

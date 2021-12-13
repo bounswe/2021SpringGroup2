@@ -6,14 +6,17 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
-//import {useNavigate} from 'react-router-dom'
-//import {useSnackbar} from "notistack";
 import SearchIcon from "@mui/icons-material/Search";
 import Paper from "@mui/material/Paper";
 import MinSkillLevel from "./FilterComponents/MinSkillLevel";
 import MaxSkillLevel from "./FilterComponents/MaxSkillLevel";
 import AgeGroups from "./FilterComponents/AgeGroups";
 import Players from "./FilterComponents/Players";
+import MinCreationDate from "./FilterComponents/MinCreationDate";
+import MaxCreationDate from "./FilterComponents/MaxCreationDate";
+import MinDate from "./FilterComponents/MinDate"
+import MaxDate from "./FilterComponents/MaxDate"
+import { Fragment } from "react";
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -39,12 +42,13 @@ const useStyles = makeStyles(theme => createStyles({
 
 const initialFilters = {
     query: "",
+    search_filters
     min_skill_level: 0,
     max_skill_level: 100,
-    min_creation_date: new Date(),
-    max_creation_date: new Date(),
-    min_date: new Date(),
-    max_date: new Date(),
+    min_creation_date: new Date().toGMTString(),
+    max_creation_date: new Date().toGMTString(),
+    min_date: new Date().toGMTString(),
+    max_date: new Date().toGMTString(),
     sport: "",
     min_age: 0,
     max_age: 150,
@@ -81,38 +85,45 @@ export default function SearchEvents() {
             newFilters[ids[id]] = values[id]
         setFilters(newFilters)
     }
+    var space = <Fragment>&nbsp;&nbsp;&nbsp;&nbsp;</Fragment>
     return (
         <React.Fragment>
             <Container component="main" maxWidth={"lg"}>
                 <CssBaseline />
                 <Grid container spacing={5}>
-                    <Grid item md={3}>
+                    <Grid item md={4}>
                         <Paper
                             className={classes.paper}>
                             <Typography component="h1" variant="h5">
                                 Filters
                             </Typography>
+
+                            <div>  {space}  </div>
                             <MinSkillLevel
                                 {...filters}
                                 id={"min_skill_level"}
                                 setValue={setValue}
                             />
+                            <div>  {space}  </div>
                             <MaxSkillLevel
                                 {...filters}
                                 id={"max_skill_level"}
                                 setValue={setValue}
                             />
+                            <div>  {space}  </div>
                             <AgeGroups
                                 {...filters}
                                 ids={["min_age","max_age"]}
                                 setValue={setValues}
                             />
+                            <div>  {space}  </div>
                             <Players
                                 text={"Players Range"}
                                 {...filters}
                                 ids={["min_players","max_players"]}
                                 setValue={setValues}
                             />
+                            <div>  {space}  </div>
                             <Players
                                 text={"Spectators Range"}
                                 {...filters}
@@ -125,11 +136,35 @@ export default function SearchEvents() {
                                 ids={["min_player_capacity","max_player_capacity"]}
                                 setValue={setValues}
                             />
+                            <div>  {space}  </div>
                             <Players
                                 text={"Spectator Capacity Range"}
                                 {...filters}
                                 ids={["min_spectator_capacity","max_spectator_capacity"]}
                                 setValue={setValues}
+                            <div>  {space}  </div>
+                            <MinCreationDate
+                                {...filters}
+                                id={"minCreationDate"}
+                                setValue={setValue}
+                            />
+                            <div>  {space}  </div>
+                            <MaxCreationDate
+                                {...filters}
+                                id={"maxCreationDate"}
+                                setValue={setValue}
+                            />
+                            <div>  {space}  </div>
+                            <MinDate
+                                {...filters}
+                                id={"minDate"}
+                                setValue={setValue}
+                            />
+                            <div>  {space}  </div>
+                            <MaxDate
+                                {...filters}
+                                id={"maxDate"}
+                                setValue={setValue}
                             />
                         </Paper>
                     </Grid>
@@ -151,9 +186,6 @@ export default function SearchEvents() {
                             value={filters.query}
                             onChange={e=>setValue("query")(e.target.value)}
                         />
-                    </Grid>
-                    <Grid item md={1}>
-
                     </Grid>
                 </Grid>
             </Container>
