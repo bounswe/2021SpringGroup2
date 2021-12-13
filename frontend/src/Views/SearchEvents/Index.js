@@ -39,29 +39,29 @@ const useStyles = makeStyles(theme => createStyles({
 
 const initialFilters = {
     query: "",
-    minSkillLevel: 0,
-    maxSkillLevel: 100,
-    minCreationDate: new Date(),
-    maxCreationDate: new Date(),
-    minDate: new Date(),
-    maxDate: new Date(),
+    min_skill_level: 0,
+    max_skill_level: 100,
+    min_creation_date: new Date(),
+    max_creation_date: new Date(),
+    min_date: new Date(),
+    max_date: new Date(),
     sport: "",
-    minAgeGroup: 0,
-    maxAgeGroup: 150,
-    minPlayerCapacity: 0,
-    maxPlayerCapacity: 100,
-    minSpectatorCapacity: 0,
-    maxSpectatorCapacity: 1000,
-    minPlayers: 0,
-    maxPlayers: 100,
-    minSpectator: 0,
-    maxSpectator: 1000,
-    minLatitude: 0.0,
-    maxLatitude: 0.0,
-    minLongitude: 0.0,
-    maxLongitude: 0.0,
-    minDuration: 0.0,
-    maxDuration: 0.0,
+    min_age: 0,
+    max_age: 150,
+    min_player_capacity: 0,
+    max_player_capacity: 100,
+    min_spectator_capacity: 0,
+    max_spectator_capacity: 1000,
+    min_players: 0,
+    max_players: 100,
+    min_spectators: 0,
+    max_spectators: 1000,
+    min_latitude: 0.0,
+    max_latitude: 0.0,
+    min_longitude: 0.0,
+    max_longitude: 0.0,
+    min_duration: 0.0,
+    max_duration: 0.0,
 }
 
 export default function SearchEvents() {
@@ -94,41 +94,41 @@ export default function SearchEvents() {
                             </Typography>
                             <MinSkillLevel
                                 {...filters}
-                                id={"minSkillLevel"}
+                                id={"min_skill_level"}
                                 setValue={setValue}
                             />
                             <MaxSkillLevel
                                 {...filters}
-                                id={"maxSkillLevel"}
+                                id={"max_skill_level"}
                                 setValue={setValue}
                             />
                             <AgeGroups
                                 {...filters}
-                                ids={["minAgeGroup","maxAgeGroup"]}
+                                ids={["min_age","max_age"]}
                                 setValue={setValues}
                             />
                             <Players
                                 text={"Players Range"}
                                 {...filters}
-                                ids={["minPlayers","maxPlayers"]}
+                                ids={["min_players","max_players"]}
                                 setValue={setValues}
                             />
                             <Players
                                 text={"Spectators Range"}
                                 {...filters}
-                                ids={["minSpectators","maxSpectators"]}
+                                ids={["min_spectators","max_spectators"]}
                                 setValue={setValues}
                             />
                             <Players
                                 text={"Player Capacity Range"}
                                 {...filters}
-                                ids={["minPlayerCapacity","maxPlayerCapacity"]}
+                                ids={["min_player_capacity","max_player_capacity"]}
                                 setValue={setValues}
                             />
                             <Players
                                 text={"Spectator Capacity Range"}
                                 {...filters}
-                                ids={["minSpectatorCapacity","maxSpectatorCapacity"]}
+                                ids={["min_spectator_capacity","max_spectator_capacity"]}
                                 setValue={setValues}
                             />
                         </Paper>
