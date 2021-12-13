@@ -12,7 +12,10 @@ import SearchIcon from "@mui/icons-material/Search";
 import Paper from "@mui/material/Paper";
 import MinSkillLevel from "./FilterComponents/MinSkillLevel";
 import MinCreationDate from "./FilterComponents/MinCreationDate";
+import MaxCreationDate from "./FilterComponents/MaxCreationDate";
 import MinDate from "./FilterComponents/MinDate"
+import MaxDate from "./FilterComponents/MaxDate"
+import { Fragment } from "react";
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -74,6 +77,7 @@ export default function SearchEvents() {
         newFilters[id] = value
         setFilters(newFilters)
     }
+    var space = <Fragment>&nbsp;&nbsp;&nbsp;&nbsp;</Fragment>;
     return (
         <React.Fragment>
             <Container component="main" maxWidth={"lg"}>
@@ -90,14 +94,28 @@ export default function SearchEvents() {
                                 id={"minSkillLevel"}
                                 setValue={setValue}
                             />
+                            <div>  {space}  </div>
                             <MinCreationDate
                                 {...filters}
                                 id={"minCreationDate"}
                                 setValue={setValue}
                             />
+                            <div>  {space}  </div>
+                            <MaxCreationDate
+                                {...filters}
+                                id={"maxCreationDate"}
+                                setValue={setValue}
+                            />
+                            <div>  {space}  </div>
                             <MinDate
                                 {...filters}
                                 id={"minDate"}
+                                setValue={setValue}
+                            />
+                            <div>  {space}  </div>
+                            <MaxDate
+                                {...filters}
+                                id={"maxDate"}
                                 setValue={setValue}
                             />
                         </Paper>

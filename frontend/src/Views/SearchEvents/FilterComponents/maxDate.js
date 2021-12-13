@@ -3,14 +3,14 @@ import Typography from "@mui/material/Typography";
 import {DatePicker} from "@mui/lab";
 import {TextField} from "@mui/material";
 
-export default function MinCreationDate(props){
+export default function MaxCreationDate(props){
     return(
         <React.Fragment>
             <Typography variant="body1">
-                Date Range (Start)
+                Date Range (End)
             </Typography>
             <DatePicker
-                label="minDate"
+                label="maxDate"
                 value={new Date(props[props.id])}
                 onChange={(newValue) => {
                     console.log(newValue.getTime())
