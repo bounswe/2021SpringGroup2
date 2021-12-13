@@ -1,6 +1,7 @@
 from django.db import models
 from authentication.models import User
 from django.contrib.postgres.fields import ArrayField
+from datetime import datetime
 
 def empty_list():
     return list([])
@@ -12,7 +13,7 @@ class Post(models.Model):
     content = models.TextField(default="")
     title = models.TextField(default="")
 
-    creation_date = models.DateTimeField(auto_now_add=True)
+    creation_date = models.DateTimeField(default=datetime.now())
     location = models.TextField(default="")
 
     class Meta:
@@ -20,7 +21,7 @@ class Post(models.Model):
 
 
 class EventPost(Post):
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=datetime.now())
     duration = models.IntegerField(default=60)
 
     sport = models.CharField(max_length=30)

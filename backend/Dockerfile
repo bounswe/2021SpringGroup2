@@ -7,6 +7,9 @@ RUN pip install -r requirements.txt
 ADD . /
 WORKDIR /
 
-CMD python manage.py makemigrations authentication && python manage.py makemigrations eventposts && python manage.py migrate && python manage.py runserver 0.0.0.0:9000
+## POSTGRES WAIT SCRIPT FROM https://github.com/ufoscout/docker-compose-wait
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait /wait
+RUN chmod +x /wait
+CMD /wait && python manage.py makemigrations authentication && python manage.py makemigrations eventposts && python manage.py migrate && python manage.py test eventposts && python manage.py runserver 0.0.0.0:9000
 
 EXPOSE 9000
