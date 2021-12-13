@@ -128,8 +128,8 @@ export default function Event (){
     const [event, setEvent] = useState(initialEvent)
     const [sports, setSports] = useState([{}])
     const [eventTitle, setEventTitle] = useState(initialEvent.object.eventSport)
-
     const [eventIndex, setEventIndex] = useState((0))
+
     // useEffect(() => {
     //     fetch("http://34.68.66.109/api/posts/"+eventid)
     //         .then(r=>r.json())
@@ -169,9 +169,9 @@ export default function Event (){
 
             {/*</Container>*/}
 
-            <Grid item xs={12} sm={12} container spacing={3} alignItems="stretch"  >
+            <Grid item xs={12} sm={12} container spacing={3} alignItems="stretch"  className={classes.paper}>
                 {sports.slice(eventIndex, 1).map(s=>(
-                    <Grid item  style={{display: 'flex'}} >
+                    <Grid item  style={{display: 'flex'}} align={"center"}>
                         <EventInfoCard {...s}/>
 
                     </Grid>)
