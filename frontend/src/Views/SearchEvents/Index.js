@@ -6,11 +6,12 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
-//import {useNavigate} from 'react-router-dom'
-//import {useSnackbar} from "notistack";
 import SearchIcon from "@mui/icons-material/Search";
 import Paper from "@mui/material/Paper";
 import MinSkillLevel from "./FilterComponents/MinSkillLevel";
+import MaxSkillLevel from "./FilterComponents/MaxSkillLevel";
+import AgeGroups from "./FilterComponents/AgeGroups";
+import Players from "./FilterComponents/Players";
 import MinCreationDate from "./FilterComponents/MinCreationDate";
 import MaxCreationDate from "./FilterComponents/MaxCreationDate";
 import MinDate from "./FilterComponents/MinDate"
@@ -41,29 +42,30 @@ const useStyles = makeStyles(theme => createStyles({
 
 const initialFilters = {
     query: "",
-    minSkillLevel: 0,
-    maxSkillLevel: 100,
-    minCreationDate: new Date().toGMTString(),
-    maxCreationDate: new Date().toGMTString(),
-    minDate: new Date().toGMTString(),
-    maxDate: new Date().toGMTString(),
+    search_filters
+    min_skill_level: 0,
+    max_skill_level: 100,
+    min_creation_date: new Date().toGMTString(),
+    max_creation_date: new Date().toGMTString(),
+    min_date: new Date().toGMTString(),
+    max_date: new Date().toGMTString(),
     sport: "",
-    minAgeGroup: 0,
-    maxAgeGroup: 100,
-    minPlayerCapacity: 0,
-    maxPlayerCapacity: 100,
-    minSpectatorCapacity: 0,
-    maxSpectatorCapacity: 1000,
-    minPlayers: 0,
-    maxPlayers: 100,
-    minSpectator: 0,
-    maxSpectator: 1000,
-    minLatitude: 0.0,
-    maxLatitude: 0.0,
-    minLongitude: 0.0,
-    maxLongitude: 0.0,
-    minDuration: 0.0,
-    maxDuration: 0.0,
+    min_age: 0,
+    max_age: 150,
+    min_player_capacity: 0,
+    max_player_capacity: 100,
+    min_spectator_capacity: 0,
+    max_spectator_capacity: 1000,
+    min_players: 0,
+    max_players: 100,
+    min_spectators: 0,
+    max_spectators: 1000,
+    min_latitude: 0.0,
+    max_latitude: 0.0,
+    min_longitude: 0.0,
+    max_longitude: 0.0,
+    min_duration: 0.0,
+    max_duration: 0.0,
 }
 
 export default function SearchEvents() {
@@ -77,7 +79,13 @@ export default function SearchEvents() {
         newFilters[id] = value
         setFilters(newFilters)
     }
-    var space = <Fragment>&nbsp;&nbsp;&nbsp;&nbsp;</Fragment>;
+    const setValues = ids => values => {
+        const newFilters = {...filters}
+        for(let id in ids)
+            newFilters[ids[id]] = values[id]
+        setFilters(newFilters)
+    }
+    var space = <Fragment>&nbsp;&nbsp;&nbsp;&nbsp;</Fragment>
     return (
         <React.Fragment>
             <Container component="main" maxWidth={"lg"}>
@@ -89,11 +97,51 @@ export default function SearchEvents() {
                             <Typography component="h1" variant="h5">
                                 Filters
                             </Typography>
+
+                            <div>  {space}  </div>
                             <MinSkillLevel
                                 {...filters}
-                                id={"minSkillLevel"}
+                                id={"min_skill_level"}
                                 setValue={setValue}
                             />
+                            <div>  {space}  </div>
+                            <MaxSkillLevel
+                                {...filters}
+                                id={"max_skill_level"}
+                                setValue={setValue}
+                            />
+                            <div>  {space}  </div>
+                            <AgeGroups
+                                {...filters}
+                                ids={["min_age","max_age"]}
+                                setValue={setValues}
+                            />
+                            <div>  {space}  </div>
+                            <Players
+                                text={"Players Range"}
+                                {...filters}
+                                ids={["min_players","max_players"]}
+                                setValue={setValues}
+                            />
+                            <div>  {space}  </div>
+                            <Players
+                                text={"Spectators Range"}
+                                {...filters}
+                                ids={["min_spectators","max_spectators"]}
+                                setValue={setValues}
+                            />
+                            <Players
+                                text={"Player Capacity Range"}
+                                {...filters}
+                                ids={["min_player_capacity","max_player_capacity"]}
+                                setValue={setValues}
+                            />
+                            <div>  {space}  </div>
+                            <Players
+                                text={"Spectator Capacity Range"}
+                                {...filters}
+                                ids={["min_spectator_capacity","max_spectator_capacity"]}
+                                setValue={setValues}
                             <div>  {space}  </div>
                             <MinCreationDate
                                 {...filters}
