@@ -11,6 +11,11 @@ import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import Paper from "@mui/material/Paper";
 import MinSkillLevel from "./FilterComponents/MinSkillLevel";
+import MinCreationDate from "./FilterComponents/MinCreationDate";
+import MaxCreationDate from "./FilterComponents/MaxCreationDate";
+import MinDate from "./FilterComponents/MinDate"
+import MaxDate from "./FilterComponents/MaxDate"
+import { Fragment } from "react";
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -38,10 +43,10 @@ const initialFilters = {
     query: "",
     minSkillLevel: 0,
     maxSkillLevel: 100,
-    minCreationDate: new Date(),
-    maxCreationDate: new Date(),
-    minDate: new Date(),
-    maxDate: new Date(),
+    minCreationDate: new Date().toGMTString(),
+    maxCreationDate: new Date().toGMTString(),
+    minDate: new Date().toGMTString(),
+    maxDate: new Date().toGMTString(),
     sport: "",
     minAgeGroup: 0,
     maxAgeGroup: 100,
@@ -72,12 +77,13 @@ export default function SearchEvents() {
         newFilters[id] = value
         setFilters(newFilters)
     }
+    var space = <Fragment>&nbsp;&nbsp;&nbsp;&nbsp;</Fragment>;
     return (
         <React.Fragment>
             <Container component="main" maxWidth={"lg"}>
                 <CssBaseline />
                 <Grid container spacing={5}>
-                    <Grid item md={3}>
+                    <Grid item md={4}>
                         <Paper
                             className={classes.paper}>
                             <Typography component="h1" variant="h5">
@@ -86,6 +92,30 @@ export default function SearchEvents() {
                             <MinSkillLevel
                                 {...filters}
                                 id={"minSkillLevel"}
+                                setValue={setValue}
+                            />
+                            <div>  {space}  </div>
+                            <MinCreationDate
+                                {...filters}
+                                id={"minCreationDate"}
+                                setValue={setValue}
+                            />
+                            <div>  {space}  </div>
+                            <MaxCreationDate
+                                {...filters}
+                                id={"maxCreationDate"}
+                                setValue={setValue}
+                            />
+                            <div>  {space}  </div>
+                            <MinDate
+                                {...filters}
+                                id={"minDate"}
+                                setValue={setValue}
+                            />
+                            <div>  {space}  </div>
+                            <MaxDate
+                                {...filters}
+                                id={"maxDate"}
                                 setValue={setValue}
                             />
                         </Paper>
@@ -108,9 +138,6 @@ export default function SearchEvents() {
                             value={filters.query}
                             onChange={e=>setValue("query")(e.target.value)}
                         />
-                    </Grid>
-                    <Grid item md={1}>
-
                     </Grid>
                 </Grid>
             </Container>
