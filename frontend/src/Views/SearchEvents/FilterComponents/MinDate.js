@@ -10,7 +10,6 @@ export default function MinCreationDate(props){
                 Date Range (Start)
             </Typography>
             <DatePicker
-                label="minDate"
                 value={new Date(props[props.id])}
                 onChange={(newValue) => {
                     console.log(newValue.getTime())

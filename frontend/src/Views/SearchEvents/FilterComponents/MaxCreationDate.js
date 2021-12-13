@@ -10,7 +10,6 @@ export default function MiaxCreationDate(props){
                 Maximum Creation Date
             </Typography>
             <DatePicker
-                label="maxCreationDate"
                 value={new Date(props[props.id])}
                 onChange={(newValue) => {
                     console.log(newValue.getTime())

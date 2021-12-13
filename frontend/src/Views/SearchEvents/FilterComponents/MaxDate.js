@@ -10,7 +10,6 @@ export default function MaxCreationDate(props){
                 Date Range (End)
             </Typography>
             <DatePicker
-                label="maxDate"
                 value={new Date(props[props.id])}
                 onChange={(newValue) => {
                     console.log(newValue.getTime())
