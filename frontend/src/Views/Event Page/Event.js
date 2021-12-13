@@ -12,9 +12,9 @@ import {ListItemText, TextField} from "@mui/material";
 import {getSports} from '../../Controllers/SportsController';
 import {getSampleEvents} from "../../Controllers/SampleEventController";
 import SportsInfoCard from "../Home/SportsInfoCard";
-import {Card, CardActionArea, CardMedia} from "@mui/material";
-
-
+import EventInfoCard from "../Home/EventInfoCard";
+import {Card, CardActionArea, CardMedia, CardContent} from "@mui/material";
+import Box from '@mui/material/Box';
 
 const useStyles = makeStyles(theme => createStyles({
     "@global": {
@@ -23,6 +23,7 @@ const useStyles = makeStyles(theme => createStyles({
         }
     },
     paper: {
+        color: theme.palette.secondary.light,
         marginTop: theme.spacing(8),
         display: "flex",
         flexDirection: "column",
@@ -42,6 +43,18 @@ const useStyles = makeStyles(theme => createStyles({
     },
     infotext: {
         color: theme.palette.secondary.light,
+        fontsize: 20,
+    },
+    others: {
+        color: theme.palette.warning.light,
+        fontsize: 20,
+    },
+    infos: {
+        color: theme.palette.common.light,
+        fontsize: 20,
+    },
+    infotexts: {
+        color: theme.palette.background.light,
         fontsize: 20,
     },
     hero: {
@@ -114,8 +127,9 @@ export default function Event (){
     const eventid = params.eventid
     const [event, setEvent] = useState(initialEvent)
     const [sports, setSports] = useState([{}])
-    const [sportIndex, setSportIndex] = useState((0))
+    const [eventTitle, setEventTitle] = useState(initialEvent.object.eventSport)
 
+    const [eventIndex, setEventIndex] = useState((0))
     // useEffect(() => {
     //     fetch("http://34.68.66.109/api/posts/"+eventid)
     //         .then(r=>r.json())
@@ -126,7 +140,7 @@ export default function Event (){
         getSports().then(r=>setSports(r))
             .catch(console.log)
     }, [])
-
+    if(eventTitle)
 
     return(
         // <div className={classes.paper}>
@@ -138,25 +152,36 @@ export default function Event (){
         // </div>
 
 
-        <div className={classes.paper}>
-            <Container>
-                <Grid>
-                    <Card>
-                        <CardActionArea>
-                            <CardMedia
-                                className= {classes.media}
-                                image = "https://d.pusulahaber.com.tr/news/64433.jpg"
-                                title = "Event Image"/>
+        <div >
+            {/*<Container>*/}
+            {/*    <Grid>*/}
+            {/*        <Card>*/}
+            {/*            <CardActionArea>*/}
+            {/*                <CardMedia*/}
+            {/*                    className= {classes.media}*/}
 
-                        </CardActionArea>
-                    </Card>
-                </Grid>
+            {/*                    //image = "https://d.pusulahaber.com.tr/news/64433.jpg"*/}
+            {/*                    title = "Event Image"/>*/}
 
-            </Container>
+            {/*            </CardActionArea>*/}
+            {/*        </Card>*/}
+            {/*    </Grid>*/}
+
+            {/*</Container>*/}
+
+            <Grid item xs={12} sm={12} container spacing={3} alignItems="stretch"  >
+                {sports.slice(eventIndex, 1).map(s=>(
+                    <Grid item  style={{display: 'flex'}} >
+                        <EventInfoCard {...s}/>
+
+                    </Grid>)
+                )}
+            </Grid>
 
             <Grid container spacing={2}>
+
                 <Grid item xs={12} sm={12}>
-                    <Typography className={classes.infotext} variant="h4" component="div" align={"center"}>
+                    <Typography className={classes.infotext} variant="h4" component="div" align={"center"}  className={classes.paper}>
                         {event.object.title}
                     </Typography>
                     <Typography variant="subtitle1" component="div" align={"center"}>
@@ -165,16 +190,15 @@ export default function Event (){
                     <Typography variant="subtitle1" component="div" align={"center"}>
                         Location: {event.object.location.type}
                     </Typography>
-                </Grid>
-                <Grid item xs={12} sm={12}>
                     <Typography gutterBottom variant="body1" align={"center"}>
                         Date: {event.object.eventDate}
                     </Typography>
                 </Grid>
+
                 <Grid item xs={12} sm={12}>
                 </Grid>
-                <Grid item xs={12} sm={12}>
-                    <Typography className={classes.fav} variant="body1" >
+                <Grid item >
+                    <Typography variant="body1" className={classes.fav}>
                         Requirements (to apply)
                     </Typography>
                 </Grid>
@@ -201,13 +225,7 @@ export default function Event (){
                 </Grid>
 
             </Grid>
-            <Grid container spacing={2} alignItems="stretch">
-                {sports.slice(sportIndex,40).map(s=>(
-                    <Grid item  style={{display: 'flex'}}>
-                        <SportsInfoCard {...s}/>
-                    </Grid>)
-                )}
-            </Grid>
+
 
         </div>
 

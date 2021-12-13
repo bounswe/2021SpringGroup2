@@ -15,7 +15,6 @@ function Homepage() {
     const [sports, setSports] = useState([{}])
     const [events, setEvents] = useState([{}])
     const [sportIndex, setSportIndex] = useState((0))
-    const [eventIndex, setEventIndex] = useState((0))
     useEffect(_=>{
         getSports().then(r=>setSports(r))
             .catch(console.log)
