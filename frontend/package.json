@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "webpack --mode development --entry ./src/index.js --output-path ./static/frontend",
     "build": "webpack --mode production --entry ./src/index.js --output-path ../backend/frontend/static/frontend",
-    "start": "webpack serve --config ./webpack.config.js --mode development --open"
+    "start": "webpack serve --config ./webpack.config.js --mode development --open",
+    "test": "jest ./src/Tests/"
   },
   "keywords": [],
   "author": "",
@@ -18,6 +19,7 @@
     "@babel/runtime": "^7.16.0",
     "babel-loader": "^8.2.3",
     "html-webpack-plugin": "^5.5.0",
+    "jest": "^27.4.4",
     "webpack": "^5.62.1",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.4.0"
