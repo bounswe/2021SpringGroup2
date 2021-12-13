@@ -2,10 +2,7 @@ package com.bounswe.findsportevents.network
 
 
 import com.bounswe.findsportevents.BuildConfig
-import com.bounswe.findsportevents.network.modalz.requests.ConfirmResetPasswordRequest
-import com.bounswe.findsportevents.network.modalz.requests.ObtainTokenRequest
-import com.bounswe.findsportevents.network.modalz.requests.ResetPasswordRequest
-import com.bounswe.findsportevents.network.modalz.requests.SignupRequest
+import com.bounswe.findsportevents.network.modalz.requests.*
 import com.bounswe.findsportevents.network.modalz.responses.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -43,10 +40,19 @@ interface ReboundAPI {
         @Header("Authorization") token: String,
         @Path("username") username: String
     ): Call<UserResponse>
+
+    @PUT("api/users/{username}/")
+    fun updateUser(
+        @Header("Authorization") token: String,
+        @Path("username") username: String,
+        @Body request: UpdateProfileRequest
+    ): Call<UpdateProfileResponse>
+
     @GET("api/posts/")
     fun getEvents(
         @Header("Authorization") token: String,
     ): Call<AllEventsResponse>
+
     @GET("api/posts/{eventId}")
     fun getEventbyId(
         @Header("Authorization") token : String,
