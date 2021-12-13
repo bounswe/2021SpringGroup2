@@ -15,6 +15,9 @@ import SportsInfoCard from "../Home/SportsInfoCard";
 import EventInfoCard from "../Home/EventInfoCard";
 import {Card, CardActionArea, CardMedia, CardContent} from "@mui/material";
 import Box from '@mui/material/Box';
+import Capture from '../images/sports.jpg'
+import { palette } from '@mui/system';
+import { borders } from '@mui/system';
 
 const useStyles = makeStyles(theme => createStyles({
     "@global": {
@@ -79,6 +82,7 @@ const useStyles = makeStyles(theme => createStyles({
         height: 350
     },
 
+
 }));
 
 const initialEvent = {
@@ -140,7 +144,7 @@ export default function Event (){
         getSports().then(r=>setSports(r))
             .catch(console.log)
     }, [])
-    if(eventTitle)
+
 
     return(
         // <div className={classes.paper}>
@@ -151,8 +155,7 @@ export default function Event (){
         //
         // </div>
 
-
-        <div >
+        <div style={{background: `url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}>
             {/*<Container>*/}
             {/*    <Grid>*/}
             {/*        <Card>*/}
@@ -168,7 +171,6 @@ export default function Event (){
             {/*    </Grid>*/}
 
             {/*</Container>*/}
-
             <Grid item xs={12} sm={12} container spacing={3} alignItems="stretch"  className={classes.paper}>
                 {sports.slice(eventIndex, 1).map(s=>(
                     <Grid item  style={{display: 'flex'}} align={"center"}>
@@ -180,8 +182,8 @@ export default function Event (){
 
             <Grid container spacing={2}>
 
-                <Grid item xs={12} sm={12}>
-                    <Typography className={classes.infotext} variant="h4" component="div" align={"center"}  className={classes.paper}>
+                <Grid item xs={12} sm={12} >
+                    <Typography className={classes.infotext} variant="h4" component="div" align={"center"} borderColor={"#00bcd4"} style={{backgroundColor:"black", borderColor:"black"}}>
                         {event.object.title}
                     </Typography>
                     <Typography variant="subtitle1" component="div" align={"center"}>
