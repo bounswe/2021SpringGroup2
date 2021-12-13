@@ -8,12 +8,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bounswe.findsportevents.R
 import com.bounswe.findsportevents.databinding.FragmentCreateEventBinding
+import com.bounswe.findsportevents.network.ReboundAPI
+import com.bounswe.findsportevents.network.modalz.requests.CreateEventRequest
+import com.bounswe.findsportevents.network.modalz.responses.CreateEventResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
 class FragmentCreateEvent : Fragment() {
@@ -194,6 +199,43 @@ class FragmentCreateEvent : Fragment() {
         binding.ivEventDateEnd.setOnClickListener {
             isStart = false
             setDatePickers(isStart)
+        }
+
+        binding.buttonCreateEvent.setOnClickListener {
+
+            val request = CreateEventRequest(
+                binding.etEventTitle.text.toString(),
+                binding.etEventDescription.text.toString(),
+                binding.spSport.selectedItem.toString(),
+                binding.etLocationName.text.toString(),
+                binding.etLatitude.text.toString().toFloat(),
+                binding.etLongitude.text.toString().toFloat(),
+                60, //TODO CHANGE
+                binding.spMinSkill.selectedItem.toString().toInt(),
+                binding.spMaxSkill.selectedItem.toString().toInt(),
+                binding.etMinAge.text.toString().toInt(),
+                binding.etMaxAge.text.toString().toInt(),
+                binding.etPlayerCapacity.text.toString().toInt(),
+                binding.etSpectatorCapacity.text.toString().toInt(),
+                3, //TODO CHANGE
+                binding.etEventDateStart.text.toString()
+            )
+
+            ReboundAPI.create().createEvent(token, request).enqueue(object: Callback<CreateEventResponse> {
+                override fun onResponse(
+                    call: Call<CreateEventResponse>,
+                    response: Response<CreateEventResponse>
+                ) {
+                    if(response.isSuccessful){
+                        Toast.makeText(requireContext(),"EVENT CREATION SUCCESSFULLY DONE!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<CreateEventResponse>, t: Throwable) {
+                    Toast.makeText(requireContext(),"AN ERROR OCCURRED, PLEASE TRY AGAIN LATER", Toast.LENGTH_SHORT).show()
+                }
+
+            })
         }
     }
 
