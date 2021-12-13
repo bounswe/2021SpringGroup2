@@ -83,7 +83,7 @@ export default function SearchEvents() {
             <Container component="main" maxWidth={"lg"}>
                 <CssBaseline />
                 <Grid container spacing={5}>
-                    <Grid item md={3}>
+                    <Grid item md={4}>
                         <Paper
                             className={classes.paper}>
                             <Typography component="h1" variant="h5">
@@ -138,9 +138,6 @@ export default function SearchEvents() {
                             value={filters.query}
                             onChange={e=>setValue("query")(e.target.value)}
                         />
-                    </Grid>
-                    <Grid item md={1}>
-
                     </Grid>
                 </Grid>
             </Container>
