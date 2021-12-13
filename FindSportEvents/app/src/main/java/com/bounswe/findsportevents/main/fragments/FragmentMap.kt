@@ -31,7 +31,7 @@ import java.util.ArrayList
 
 
 
-class FragmentMap : Fragment() , FragmentResultOwner {
+class FragmentMap : Fragment()  {
     private var token=""
     private var sport=""
     private var minskillLevel=""
@@ -130,7 +130,6 @@ class FragmentMap : Fragment() , FragmentResultOwner {
     private fun setClickListeners() {
     binding.btnOk.setOnClickListener {
         val result = marker1
-        val resultToBeSent = "result"
         parentFragmentManager.setFragmentResult(REQUEST_KEY, bundleOf(BUNDLE_KEY to result.toString()))
         requireActivity().supportFragmentManager.popBackStack()
     }
@@ -188,25 +187,6 @@ class FragmentMap : Fragment() , FragmentResultOwner {
         }
     }
 
-    override fun setFragmentResult(requestKey: String, result: Bundle) {
-        TODO("Not yet implemented")
-    }
 
-
-    override fun clearFragmentResult(requestKey: String) {
-  //      TODO("Not yet implemented")
-    }
-
-    override fun setFragmentResultListener(
-        requestKey: String,
-        lifecycleOwner: LifecycleOwner,
-        listener: FragmentResultListener
-    ) {
-     //   TODO("Not yet implemented")
-    }
-
-    override fun clearFragmentResultListener(requestKey: String) {
-      //  TODO("Not yet implemented")
-    }
 }
 
