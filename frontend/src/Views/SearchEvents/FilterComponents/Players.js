@@ -12,10 +12,10 @@ export default function Players(props){
     return(
         <React.Fragment>
             <Typography variant="body1">
-                Player Range
+                {props.text}
             </Typography>
             <Slider
-                getAriaLabel={() => 'Player Range'}
+                getAriaLabel={() => props.text}
                 value={[props[props.ids[0]], props[props.ids[1]]]}
                 onChange={handleChange}
                 valueLabelDisplay="auto"

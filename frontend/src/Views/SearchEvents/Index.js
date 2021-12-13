@@ -108,8 +108,27 @@ export default function SearchEvents() {
                                 setValue={setValues}
                             />
                             <Players
+                                text={"Players Range"}
                                 {...filters}
                                 ids={["minPlayers","maxPlayers"]}
+                                setValue={setValues}
+                            />
+                            <Players
+                                text={"Spectators Range"}
+                                {...filters}
+                                ids={["minSpectators","maxSpectators"]}
+                                setValue={setValues}
+                            />
+                            <Players
+                                text={"Player Capacity Range"}
+                                {...filters}
+                                ids={["minPlayerCapacity","maxPlayerCapacity"]}
+                                setValue={setValues}
+                            />
+                            <Players
+                                text={"Spectator Capacity Range"}
+                                {...filters}
+                                ids={["minSpectatorCapacity","maxSpectatorCapacity"]}
                                 setValue={setValues}
                             />
                         </Paper>
