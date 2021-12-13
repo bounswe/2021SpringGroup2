@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 
 
 export default function EventInfoCard(props){
+    console.log(props)
     return (
         <Card sx={{ maxWidth: 500 }}  style={{ background: '#dbf0f9',justifyContent: 'center',  flexDirection: 'column'}} align={"center"}>
             <CardActionArea align={"center"}>

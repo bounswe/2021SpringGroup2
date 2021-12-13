@@ -130,21 +130,20 @@ export default function Event (){
     //
     const eventid = params.eventid
     const [event, setEvent] = useState(initialEvent)
-    const [sports, setSports] = useState([{}])
+    const [sport, setSport] = useState([{}])
     const [eventTitle, setEventTitle] = useState(initialEvent.object.eventSport)
     const [eventIndex, setEventIndex] = useState((0))
 
-    // useEffect(() => {
-    //     fetch("http://34.68.66.109/api/posts/"+eventid)
-    //         .then(r=>r.json())
-    //         .then(r=>setEvent(r))
-    // }, []);
+    const getSportInfo = sport => console.log(sport) || getSports()
+        .then(sports=>sports.find(s=>s.title===sport))
 
-    useEffect(_=>{
-        getSports().then(r=>setSports(r))
-            .catch(console.log)
-    }, [])
-
+    useEffect(() => {
+        fetch("http://34.68.66.109/api/posts/"+eventid)
+            .then(r=>r.json())
+            .then(r=>setEvent(r)||r)
+            .then(r=>getSportInfo(r.event.object.eventSport))
+            .then(setSport)
+    }, []);
 
     return(
         // <div className={classes.paper}>
@@ -155,7 +154,7 @@ export default function Event (){
         //
         // </div>
 
-        <div style={{background: `url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}>
+        <div style={{background:`url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}>
             {/*<Container>*/}
             {/*    <Grid>*/}
             {/*        <Card>*/}
@@ -173,12 +172,10 @@ export default function Event (){
             {/*</Container>*/}
 
             <Grid item xs={12} sm={12} container spacing={3} alignItems="stretch"  className={classes.paper}>
-                {sports.slice(eventIndex, 1).map(s=>(
                     <Grid item  style={{display: 'flex'}} align={"center"}>
-                        <EventInfoCard {...s}/>
+                        <EventInfoCard {...sport}/>
 
-                    </Grid>)
-                )}
+                    </Grid>
             </Grid>
 
             <Grid container spacing={2} xs={12} sm={12}>
@@ -191,10 +188,10 @@ export default function Event (){
                         Type of Sport: {event.object.eventSport}
                     </Typography>
                     <Typography variant="subtitle1" component="div" align={"center"} style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain"}}>
-                        Location: {event.object.location.type}
+                        Location: {event.object.location.type} {event.object.location.longitude} {event.object.location.altitude} {event.object.location.latitude}
                     </Typography>
                     <Typography gutterBottom variant="body1" align={"center"} style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain"}}>
-                        Date: {event.object.eventDate}
+                        Event Date: {event.object.eventDate}
                     </Typography>
                 </Grid>
 
@@ -219,10 +216,16 @@ export default function Event (){
                 <Grid item xs={12} sm={12}>
                     <Grid container spacing={2} justifyContent={"space-between"}>
                         <Grid item xs={12} sm={6}>
-                            <ListItemText primary="Players" secondary={event.object.eventPlayers} />
+                            <ListItemText className={classes.fav} primary="Players" secondary={event.object.eventPlayers} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <ListItemText className={classes.fav} style={{textAlign:"right"}} primary="Event Owner" secondary={event.actor.name} />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <ListItemText className={classes.fav} primary="Creation Date: " secondary={event.object.creationDate} />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <ListItemText className={classes.fav} style={{textAlign:"right"}} primary=" Player Capacity:" secondary={event.object.eventPlayerCapacity} />
                         </Grid>
                     </Grid>
                 </Grid>
