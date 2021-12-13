@@ -97,11 +97,11 @@ export default function CreateEventPage(props){
         {label: "Expert"}]
 
     const skillsToIntegers = {
-        "Beginner":0,
-        "Preintermediate":1,
-        "Intermediate":2,
-        "Advanced":3,
-        "Expert":4
+        "Beginner":1,
+        "Preintermediate":2,
+        "Intermediate":3,
+        "Advanced":4,
+        "Expert":5
     }
     const [inputs, setInputs] = useState(initialState)
 
