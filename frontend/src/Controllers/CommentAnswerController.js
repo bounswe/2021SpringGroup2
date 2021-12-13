@@ -5,14 +5,20 @@ export async function getAnswersOfComment(post_id,comment_id){
         method: 'GET',
         headers: { 'Accept': 'application/json','Content-Type': 'application/json'},
     }
-    let response = await fetch("/api/posts/"+String(post_id)+"/comments/"+String(comment_id)+"/",options)
-        .then(response=>response.json())
-        .then((result)=> {
-            return result.items?result.items.map(d=>
-                ({user:{username:d.actor.name},content:d.object.answer,
-                    creationDate:d.object.creationDate, isAnswer:true}))
-            :[]}
-        )
+    let response
+    try{
+        response = await fetch("/api/posts/"+String(post_id)+"/comments/"+String(comment_id)+"/",options)
+            .then(response=>response.json())
+            .then((result)=> {
+                return result.items?result.items.map(d=>
+                        ({user:{username:d.actor.name},content:d.object.answer,
+                            creationDate:d.object.creationDate, isAnswer:true}))
+                    :[]}
+            )
+    } catch (err) {
+        console.log(err);
+    }
+
     return response
 
 
@@ -26,16 +32,21 @@ export async function getCommentByID(post_id, comment_id) {
     }
 
     let comment = {}
-    await fetch("/api/posts/"+String(post_id)+"/comments/"+String(comment_id)+"/",options)
-        .then(response => response.json())
-        .then((result) => {
-                comment.user = {username: result.actor.name};
-                comment.content = result.object.content;
-                comment.creationDate = result.object.creationDate;
-                comment.isAnswer = false;
-                comment.comment_id = comment_id;
-            }
-        )
+    try{
+        await fetch("/api/posts/"+String(post_id)+"/comments/"+String(comment_id)+"/",options)
+            .then(response => response.json())
+            .then((result) => {
+                    comment.user = {username: result.actor.name};
+                    comment.content = result.object.content;
+                    comment.creationDate = result.object.creationDate;
+                    comment.isAnswer = false;
+                    comment.comment_id = comment_id;
+                }
+            )
+    } catch (err) {
+        console.log(err);
+    }
+
     CommentAnswerController.getAnswersOfComment(post_id, comment_id).then(answerList =>
         comment.answers = answerList
     )
@@ -50,12 +61,16 @@ export async function getCommentsAndAnswersOfEvent(post_id){
         headers: { 'Accept': 'application/json','Content-Type': 'application/json'},
     }
     let comments = []
-    await fetch("/api/posts/"+String(post_id)+"/comments/",options)
-        .then(response=>response.json())
-        .then(r=>{console.log(r);return r;})
-        .then(response=>response.items.forEach(d=>
-            comments.push(CommentAnswerController.getCommentByID(Number(d.object.split("/")[3]),Number(d.object.split("/")[5])))
-        ))
+    try{
+        await fetch("/api/posts/"+String(post_id)+"/comments/",options)
+            .then(response=>response.json())
+            .then(r=>{console.log(r);return r;})
+            .then(response=>response.items.forEach(d=>
+                comments.push(CommentAnswerController.getCommentByID(Number(d.object.split("/")[3]),Number(d.object.split("/")[5])))
+            ))
+    } catch(err){
+        console.log(err)
+    }
     return comments
 }
 export function postComment(post_id,owner_id,username,content){
