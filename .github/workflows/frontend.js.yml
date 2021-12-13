@@ -27,7 +27,7 @@ jobs:
     - name: Set Timezone
       uses: szenius/set-timezone@v1.0
       with:
-        timezoneLinux: "Istanbul/Turkey"
+        timezoneLinux: "GMT+3"
     - name: Run tests
       working-directory: frontend
       run: |
