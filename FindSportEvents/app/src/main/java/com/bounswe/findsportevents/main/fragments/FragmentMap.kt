@@ -8,7 +8,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentResultListener
+import androidx.fragment.app.FragmentResultOwner
+import androidx.lifecycle.LifecycleOwner
 import com.bounswe.findsportevents.R
 import com.bounswe.findsportevents.databinding.FragmentHomeBinding
 import com.bounswe.findsportevents.databinding.FragmentMapBinding
@@ -27,7 +31,7 @@ import java.util.ArrayList
 
 
 
-class FragmentMap : Fragment() {
+class FragmentMap : Fragment() , FragmentResultOwner {
     private var token=""
     private var sport=""
     private var minskillLevel=""
@@ -36,10 +40,10 @@ class FragmentMap : Fragment() {
     private var maxAge=""
     private var startTime=""
     private var endTime=""
-    private var marker1=GeoPoint(0,0)
-    private var marker2=GeoPoint(0,0)
     var tapCount=0
     private lateinit var map : MapView;
+    private var marker1=GeoPoint(0,0)
+    private var marker2=GeoPoint(0,0)
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
     private lateinit var mapFragListener : FragmentMapListener
@@ -89,10 +93,8 @@ class FragmentMap : Fragment() {
                         marker2=secondMarker.position
                         map.invalidate()//updating map
                     }
-                    else{
 
-                    }
-                    Toast.makeText(context,p.toString(),Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(context,p.toString(),Toast.LENGTH_SHORT).show()
                 }
                 checkFields()
                 return false
@@ -104,6 +106,7 @@ class FragmentMap : Fragment() {
 
 
         }
+
         var overlayEvents = MapEventsOverlay(context,receiver)
         map.overlays.add(overlayEvents)
 
@@ -126,10 +129,14 @@ class FragmentMap : Fragment() {
 
     private fun setClickListeners() {
     binding.btnOk.setOnClickListener {
+        val result = marker1
+        val resultToBeSent = "result"
+        parentFragmentManager.setFragmentResult(REQUEST_KEY, bundleOf(BUNDLE_KEY to result.toString()))
         requireActivity().supportFragmentManager.popBackStack()
     }
 
     }
+
     private fun checkFields(){
         binding.btnOk.isEnabled=tapCount>=2
     }
@@ -165,6 +172,8 @@ class FragmentMap : Fragment() {
         private const val MAX_AGE_KEY = "max_age_key"
         private const val START_TIME_KEY = "start_time_key"
         private const val END_TIME_KEY = "end_time_key"
+        private const val REQUEST_KEY ="request_key"
+        private const val BUNDLE_KEY ="bundle_key"
         fun newInstance(token : String,sport: String, minSkill:String,maxSkill:String, min_age:Int, max_age:Int,start_time:String,end_time:String) = FragmentMap().apply {
             arguments = Bundle().apply {
                 putString(TOKEN_KEY, token)
@@ -177,6 +186,27 @@ class FragmentMap : Fragment() {
                 putString(END_TIME_KEY, end_time)
             }
         }
+    }
+
+    override fun setFragmentResult(requestKey: String, result: Bundle) {
+        TODO("Not yet implemented")
+    }
+
+
+    override fun clearFragmentResult(requestKey: String) {
+  //      TODO("Not yet implemented")
+    }
+
+    override fun setFragmentResultListener(
+        requestKey: String,
+        lifecycleOwner: LifecycleOwner,
+        listener: FragmentResultListener
+    ) {
+     //   TODO("Not yet implemented")
+    }
+
+    override fun clearFragmentResultListener(requestKey: String) {
+      //  TODO("Not yet implemented")
     }
 }
 
