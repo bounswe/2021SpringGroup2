@@ -35,14 +35,13 @@ const useStyles = makeStyles(theme => createStyles({
         flexDirection: "column",
         alignItems: "center",
         //border: "1px solid black",
-        position: "fixed",
+        //position: "fixed",
         //height: "80%",
     },
 }));
 
 const initialFilters = {
     query: "",
-    search_filters
     min_skill_level: 0,
     max_skill_level: 100,
     min_creation_date: new Date().toGMTString(),
@@ -141,29 +140,29 @@ export default function SearchEvents() {
                                 text={"Spectator Capacity Range"}
                                 {...filters}
                                 ids={["min_spectator_capacity","max_spectator_capacity"]}
-                                setValue={setValues}
+                                setValue={setValues}/>
                             <div>  {space}  </div>
                             <MinCreationDate
                                 {...filters}
-                                id={"minCreationDate"}
+                                id={"min_creation_date"}
                                 setValue={setValue}
                             />
                             <div>  {space}  </div>
                             <MaxCreationDate
                                 {...filters}
-                                id={"maxCreationDate"}
+                                id={"max_creation_date"}
                                 setValue={setValue}
                             />
                             <div>  {space}  </div>
                             <MinDate
                                 {...filters}
-                                id={"minDate"}
+                                id={"min_date"}
                                 setValue={setValue}
                             />
                             <div>  {space}  </div>
                             <MaxDate
                                 {...filters}
-                                id={"maxDate"}
+                                id={"max_date"}
                                 setValue={setValue}
                             />
                         </Paper>
