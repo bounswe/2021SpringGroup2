@@ -10,6 +10,8 @@ import Container from "@mui/material/Container";
 import Joi from 'joi'
 import {useNavigate} from 'react-router-dom'
 import image from '../../logos/reb und(400 x 100 px).png'
+import SignUpFunction from "../../Controllers/SignUpController";
+import {useSnackbar} from "notistack";
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -55,6 +57,14 @@ const schema = Joi.object({
         .min(3)
         .max(30)
         .required(),
+    bio: Joi.string()
+        .optional()
+        .min(0)
+        .max(300),
+    location: Joi.string()
+        .optional()
+        .min(0)
+        .max(30),
 
     password: Joi.string()
         .pattern(new RegExp('^[a-zA-Z0-9]{8,30}$')),
@@ -85,6 +95,16 @@ const initialState = {
         changed: false,
         error: undefined
     },
+    bio: {
+        value: "",
+        changed: false,
+        error: undefined
+    },
+    location: {
+        value: "",
+        changed: false,
+        error: undefined
+    },
 
     password: {
         value: "",
@@ -109,6 +129,8 @@ export default function SignUp() {
     const classes = useStyles()
     const navigate = useNavigate()
     const [state, setState] = useState(initialState)
+    const { enqueueSnackbar } = useSnackbar();
+
 
     const getValue = state => ({
         username: state.username.value,
@@ -116,6 +138,8 @@ export default function SignUp() {
         firstName: state.firstName.value,
 
         lastName: state.lastName.value,
+        bio: state.bio.value,
+        location: state.location.value,
 
         password: state.password.value,
 
@@ -142,6 +166,20 @@ export default function SignUp() {
         }
         setState(newState)
     }
+    const submit = _=>{
+        const value = getValue(state)
+        const result = schema.validate(value, {abortEarly: false})
+        if(result.error)return
+        SignUpFunction(value).then(_=>{
+                navigate("/profile/"+value.username)
+                enqueueSnackbar("Your account is successfully created.", {variant: "success"})
+            })
+            .catch(e=>{
+                enqueueSnackbar("An error occured in the server.", {variant: "error"})
+                console.log(e)
+            })
+    }
+
     return (
         <Container component="main" maxWidth="md">
             <CssBaseline />
@@ -216,6 +254,48 @@ export default function SignUp() {
                                     </Alert>:null
                             }
                         </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="bio"
+                                label="Biography"
+                                name="bio"
+                                autoComplete="lname"
+                                value={state.bio.value||""}
+                                onChange={handleChange}
+                            />
+                            {
+                                state.bio.error?
+                                    <Alert
+                                        style={{marginTop:5}}
+                                        severity="error">
+                                        {state.bio.error}
+                                    </Alert>:null
+                            }
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="location"
+                                label="Location"
+                                name="location"
+                                autoComplete="lname"
+                                value={state.location.value||""}
+                                onChange={handleChange}
+                            />
+                            {
+                                state.location.error?
+                                    <Alert
+                                        style={{marginTop:5}}
+                                        severity="error">
+                                        {state.location.error}
+                                    </Alert>:null
+                            }
+                        </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 variant="outlined"
@@ -285,11 +365,11 @@ export default function SignUp() {
                         </Grid>
                         <Grid item xs={6}>
                             <Button
-                                type="submit"
                                 fullWidth
                                 variant="contained"
                                 color="primary"
-                                className={classes.submit}>
+                                className={classes.submit}
+                                onClick={submit}>
                                 Sign Up
                             </Button>
                         </Grid>

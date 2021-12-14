@@ -1,0 +1,24 @@
+version: "3"
+services:
+  backend:
+    build: backend
+    ports:
+      - "9000:9000"
+    environment:
+      WAIT_HOSTS: database:5432
+      DEBUG: 'True'
+      EMAIL_USER: '451reboundapp@gmail.com'
+      EMAIL_PASSWORD: 'aimboytouueedvla'
+    env_file:
+      - database.env
+  database:
+    image: "postgres:latest"
+    env_file:
+      - database.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+
+volumes:
+  database-data:

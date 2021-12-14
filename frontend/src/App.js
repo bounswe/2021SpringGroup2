@@ -12,6 +12,10 @@ import Signup from './Views/Signup/Index'
 import EditProfile from "./Views/Profile/EditProfile";
 import ViewProfile from "./Views/Profile/ViewProfile";
 import Profile from "./Views/Profile/Index";
+import ResetPasswordPage from "./Views/Login/ForgotPassword";
+import SearchEvents from "./Views/SearchEvents/Index";
+
+import NotFound from "./Views/Not Found/NotFound";
 
 
 const App = () => {
@@ -27,7 +31,12 @@ const App = () => {
                         <Route path="edit" element={<EditProfile/>}/>
                         <Route path=":userid" element={<ViewProfile/>}/>
                         <Route index element={<ViewProfile/>}/>
-                    </Route>
+                    </Route>  <Route path="createevent" element={<CreateEventPage/>}/>
+                    <Route path="home" element={<Home />} />
+                    <Route path="resetpassword" element={<ResetPasswordPage/>}/>
+                    <Route path="search" element={<SearchEvents/>}/>
+                    <Route path="*" element={<NotFound />} />
+
                     <Route path="*" element={<Home />} />
                 </Route>
             </Routes>

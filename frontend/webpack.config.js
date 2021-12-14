@@ -9,11 +9,16 @@ module.exports = {
                 test: /\.(js|jsx)$/,
                 exclude: /(node_modules|bower_components)/,
                 loader: 'babel-loader',
-                options: { presets: ['@babel/env','@babel/preset-react'] },
+                options: { presets: ['@babel/env','@babel/preset-react'] }
             },
+
             {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
                 type: 'asset/resource',
+            },
+            {
+                test: /\.css$/,
+                use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
             },
         ],
     },
