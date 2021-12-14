@@ -76,7 +76,9 @@ const schema = Joi.object({
     repeat_password: Joi.ref('password'),
 
     email: Joi.string()
-        .email({ minDomainSegments: 2 , tlds: { allow: ['com', 'net', "edu"] }})
+        .email({ minDomainSegments: 2 , tlds: { allow: ['com', 'net', "edu"] }}),
+
+    birthday: Joi.string()
 })
     .with('password', 'repeat_password');
 
@@ -155,6 +157,7 @@ export default function SignUp() {
         repeat_password: state.repeat_password.value,
 
         email: state.email.value,
+        birthday: state.birthday.value.toISOString().split("T")[0],
 
     })
     const handleChange = e=>{
@@ -178,6 +181,8 @@ export default function SignUp() {
     const submit = _=>{
         const value = getValue(state)
         const result = schema.validate(value, {abortEarly: false})
+        console.log(value.value)
+        console.log(result)
         if(result.error)return
         SignUpFunction(value).then(_=>{
                 navigate("/profile/"+value.username)
@@ -376,10 +381,10 @@ export default function SignUp() {
                                 fullWidth
                                 PaperProps={{fullWidth:true}}
                                 label="Birthday"
-                                value={state.birthday.value}
+                                value={new Date(state.birthday.value)}
                                 onChange={(newValue) => {
                                     const newState = {...state}
-                                    newState.birthday.value = newValue
+                                    newState.birthday.value = newValue.toISOString().split("T")[0]
                                     setState(newState)
                                 }}
                                 renderInput={(params) => <TextField {...params} />}
