@@ -12,6 +12,7 @@ import {useNavigate} from 'react-router-dom'
 import image from '../../logos/reb und(400 x 100 px).png'
 import SignUpFunction from "../../Controllers/SignUpController";
 import {useSnackbar} from "notistack";
+import DatePicker from "@mui/lab/DatePicker";
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -120,6 +121,11 @@ const initialState = {
 
     email: {
         value: "",
+        changed: false,
+        error: undefined
+    },
+    birthDay: {
+        value: new Date(),
         changed: false,
         error: undefined
     },
@@ -360,6 +366,18 @@ export default function SignUp() {
                                         {state.repeat_password.error}
                                     </Alert>:null
                             }
+                        </Grid>
+                        <Grid item xs={12}>
+                            <DatePicker
+                                label="Basic example"
+                                value={state.birthday.value}
+                                onChange={(newValue) => {
+                                    const newState = {...state}
+                                    newState.birthday.value = newValue
+                                    setState(newState)
+                                }}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
                         </Grid>
                         <Grid item xs={3}>
                         </Grid>
