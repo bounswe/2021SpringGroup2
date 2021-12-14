@@ -26,6 +26,9 @@ class FragmentCreateEvent : Fragment() {
     private val binding get() = _binding!!
     private lateinit var homeFragListener: FragmentHomeListener
     private var token = ""
+    private lateinit var startTime: Date
+    private lateinit var endTime: Date
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,8 +71,10 @@ class FragmentCreateEvent : Fragment() {
                         pickedDateTime.set(year, month, day, hour, minute)
 
                         if (isStart) {
+                            startTime = pickedDateTime.time
                             binding.etEventDateStart.setText(pickedDateTime.time.toString())
                         } else {
+                            endTime = pickedDateTime.time
                             binding.etEventDateEnd.setText(pickedDateTime.time.toString())
                         }
 
@@ -203,6 +208,9 @@ class FragmentCreateEvent : Fragment() {
 
         binding.buttonCreateEvent.setOnClickListener {
 
+            val durationMill = endTime.time - startTime.time
+            val durationMinute = durationMill / 60000
+
             val request = CreateEventRequest(
                 binding.etEventTitle.text.toString(),
                 binding.etEventDescription.text.toString(),
@@ -210,7 +218,7 @@ class FragmentCreateEvent : Fragment() {
                 binding.etLocationName.text.toString(),
                 binding.etLatitude.text.toString().toFloat(),
                 binding.etLongitude.text.toString().toFloat(),
-                60, //TODO CHANGE
+                durationMinute,
                 binding.spMinSkill.selectedItem.toString().toInt(),
                 binding.spMaxSkill.selectedItem.toString().toInt(),
                 binding.etMinAge.text.toString().toInt(),

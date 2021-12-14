@@ -7,7 +7,7 @@ data class CreateEventRequest(
     val location: String?,
     val latitude: Float,
     val longitude: Float,
-    val duration: Int,
+    val duration: Long,
     val min_skill_level: Int,
     val max_skill_level: Int,
     val min_age: Int,
