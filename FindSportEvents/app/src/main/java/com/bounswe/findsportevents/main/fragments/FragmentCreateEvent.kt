@@ -21,6 +21,7 @@ import com.bounswe.findsportevents.network.modalz.responses.CreateEventResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
 import java.util.*
 
 class FragmentCreateEvent : Fragment() {
@@ -29,7 +30,9 @@ class FragmentCreateEvent : Fragment() {
     private lateinit var createEventListener: FragmentCreateEventListener
     private var token = ""
     private lateinit var startTime: Date
+    private lateinit var startTimeIso: String
     private lateinit var endTime: Date
+    private lateinit var endTimeIso: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,14 +74,21 @@ class FragmentCreateEvent : Fragment() {
                     requireContext(),
                     TimePickerDialog.OnTimeSetListener { _, hour, minute ->
                         val pickedDateTime = Calendar.getInstance()
-                        pickedDateTime.set(year, month, day, hour, minute)
+                        val tz = TimeZone.getTimeZone("UTC")
+                        val sdf= SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                        sdf.timeZone = tz
+                        pickedDateTime.set(year, month, day, hour, minute, Calendar.getInstance().time.seconds)
 
                         if (isStart) {
                             startTime = pickedDateTime.time
                             binding.etEventDateStart.setText(pickedDateTime.time.toString())
+                            startTimeIso = sdf.format(pickedDateTime.time).toString()
+                            Toast.makeText(requireContext(), startTimeIso, Toast.LENGTH_SHORT).show()
                         } else {
                             endTime = pickedDateTime.time
                             binding.etEventDateEnd.setText(pickedDateTime.time.toString())
+                            endTimeIso = sdf.format(pickedDateTime.time).toString()
+                            Toast.makeText(requireContext(), endTimeIso, Toast.LENGTH_SHORT).show()
                         }
 
                     },
@@ -229,7 +239,7 @@ class FragmentCreateEvent : Fragment() {
                 binding.etPlayerCapacity.text.toString().toInt(),
                 binding.etSpectatorCapacity.text.toString().toInt(),
                 3, //TODO CHANGE
-                binding.etEventDateStart.text.toString()
+                startTimeIso
             )
 
             ReboundAPI.create().createEvent(token, request).enqueue(object: Callback<CreateEventResponse> {
