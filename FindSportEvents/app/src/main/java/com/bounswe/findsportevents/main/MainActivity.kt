@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity(), FragmentCreateEvent.FragmentCreateEven
                         false
                     }
                     R.id.bottom_event -> {
-                        displayHomeFragment(token)
+                        displayHomeFragment(token, testList)
                         false
                     }
                     R.id.bottom_search -> {
@@ -93,8 +93,8 @@ class MainActivity : AppCompatActivity(), FragmentCreateEvent.FragmentCreateEven
     private fun displayViewAllEventsFragment(token: String){
         supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentViewAllEvents.newInstance(token), FragmentViewAllEvents.TAG).commit()
     }
-    private fun displayHomeFragment(token: String) {
-        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentCreateEvent.newInstance(token, username), FragmentCreateEvent.TAG).commit()
+    private fun displayHomeFragment(token: String, testList: ArrayList<String>) {
+        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentCreateEvent.newInstance(token, username, testList), FragmentCreateEvent.TAG).commit()
     }
 
     private fun displayProfileFragment(token: String, username: String) {
