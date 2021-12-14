@@ -15,7 +15,7 @@ export const getUserInfoLoggedIn = ()=>{
 }
 export const getUserInfo = async (username) =>{
     const options = {
-        method: 'POST',
+        method: 'GET',
         headers: { 'Content-Type': 'application/json' },
     }
     return fetch("/api/users/"+username+"/",options)
