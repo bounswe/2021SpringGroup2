@@ -53,6 +53,12 @@ interface ReboundAPI {
         @Header("Authorization") token: String,
     ): Call<AllEventsResponse>
 
+    @POST("api/posts/")
+    fun createEvent(
+        @Header("Authorization") token: String,
+        @Body request: CreateEventRequest
+    ): Call<CreateEventResponse>
+
     @GET("api/posts/{eventId}")
     fun getEventbyId(
         @Header("Authorization") token : String,
