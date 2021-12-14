@@ -16,6 +16,7 @@ import ResetPasswordPage from "./Views/Login/ForgotPassword";
 import SearchEvents from "./Views/SearchEvents/Index";
 
 import NotFound from "./Views/Not Found/NotFound";
+import CreateEventPage from "./Views/Create Event/CreateEventPage";
 
 
 const App = () => {
