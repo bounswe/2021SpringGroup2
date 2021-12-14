@@ -13,6 +13,7 @@ import ResetPasswordPage from "./Views/Login/ForgotPassword";
 import SearchEvents from "./Views/SearchEvents/Index";
 
 import NotFound from "./Views/Not Found/NotFound";
+import Event from "./Views/Event Page/Event";
 
 
 
@@ -29,6 +30,9 @@ const App = () => {
                     <Route path="home" element={<Home />} />
                     <Route path="resetpassword" element={<ResetPasswordPage/>}/>
                     <Route path="search" element={<SearchEvents/>}/>
+                    <Route path="event" element={<Outlet/>}>
+                        <Route path=":eventid" element={<Event/>}/>
+                    </Route>
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>
