@@ -46,13 +46,13 @@ const schema = Joi.object({
         .max(30)
         .required(),
 
-    firstName: Joi.string()
+    first_name: Joi.string()
         .alphanum()
         .min(3)
         .max(30)
         .required(),
 
-    lastName: Joi.string()
+    last_name: Joi.string()
         .alphanum()
         .min(3)
         .max(30)
@@ -84,13 +84,13 @@ const initialState = {
         error: undefined
     },
 
-    firstName: {
+    first_name: {
         value: "",
         changed: false,
         error: undefined
     },
 
-    lastName: {
+    last_name: {
         value: "",
         changed: false,
         error: undefined
@@ -135,9 +135,9 @@ export default function SignUp() {
     const getValue = state => ({
         username: state.username.value,
 
-        firstName: state.firstName.value,
+        first_name: state.first_name.value,
 
-        lastName: state.lastName.value,
+        last_name: state.last_name.value,
         bio: state.bio.value,
         location: state.location.value,
 
@@ -214,22 +214,22 @@ export default function SignUp() {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 autoComplete="fname"
-                                name="firstName"
+                                name="first_name"
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="firstName"
+                                id="first_name"
                                 label="First Name"
                                 autoFocus
-                                value={state.firstName.value||""}
+                                value={state.first_name.value||""}
                                 onChange={handleChange}
                             />
                             {
-                                state.firstName.error?
+                                state.first_name.error?
                                     <Alert
                                         style={{marginTop:5}}
                                         severity="error">
-                                        {state.firstName.error}
+                                        {state.first_name.error}
                                     </Alert>:null
                             }
                         </Grid>
@@ -238,19 +238,19 @@ export default function SignUp() {
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="lastName"
+                                id="last_name"
                                 label="Last Name"
-                                name="lastName"
+                                name="last_name"
                                 autoComplete="lname"
-                                value={state.lastName.value||""}
+                                value={state.last_name.value||""}
                                 onChange={handleChange}
                             />
                             {
-                                state.lastName.error?
+                                state.last_name.error?
                                     <Alert
                                         style={{marginTop:5}}
                                         severity="error">
-                                        {state.lastName.error}
+                                        {state.last_name.error}
                                     </Alert>:null
                             }
                         </Grid>
