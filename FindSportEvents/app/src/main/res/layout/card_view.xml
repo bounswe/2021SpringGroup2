@@ -16,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
+
         <TextView
             android:id="@+id/event_type_tv1"
             android:layout_width="wrap_content"
@@ -25,6 +26,7 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/event_type_tv"
             android:layout_width="wrap_content"
@@ -33,6 +35,7 @@
             android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@id/event_type_tv1"
             app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/creator_tv1"
             android:layout_width="wrap_content"
@@ -62,6 +65,7 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/creator_tv" />
+
         <TextView
             android:id="@+id/field_tv"
             android:layout_width="wrap_content"
@@ -70,6 +74,7 @@
             android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@id/field_tv1"
             app:layout_constraintTop_toBottomOf="@+id/creator_tv" />
+
         <TextView
             android:id="@+id/players_tv1"
             android:layout_width="wrap_content"
@@ -79,6 +84,7 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/field_tv" />
+
         <TextView
             android:id="@+id/players_tv"
             android:layout_width="wrap_content"
@@ -93,9 +99,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="date:  "
-            android:textStyle="bold"
-
             android:textSize="20sp"
+
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.419"
             app:layout_constraintStart_toEndOf="@+id/field_tv"
@@ -140,9 +146,11 @@
             android:id="@+id/btn_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:text="Details"
-            tools:layout_editor_absoluteX="252dp"
-            tools:layout_editor_absoluteY="-5dp" />
+            app:layout_constraintBottom_toTopOf="@+id/date_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/event_type_tv" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
