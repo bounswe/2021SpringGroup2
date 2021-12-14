@@ -2,10 +2,7 @@ package com.bounswe.findsportevents.network
 
 
 import com.bounswe.findsportevents.BuildConfig
-import com.bounswe.findsportevents.network.modalz.requests.ConfirmResetPasswordRequest
-import com.bounswe.findsportevents.network.modalz.requests.ObtainTokenRequest
-import com.bounswe.findsportevents.network.modalz.requests.ResetPasswordRequest
-import com.bounswe.findsportevents.network.modalz.requests.SignupRequest
+import com.bounswe.findsportevents.network.modalz.requests.*
 import com.bounswe.findsportevents.network.modalz.responses.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -13,6 +10,7 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -46,7 +44,12 @@ interface ReboundAPI {
     @GET("api/posts/")
     fun getEvents(
         @Header("Authorization") token: String,
-    ): Call<AllEventsResponse>
+        ): Call<AllEventsResponse>
+    @GET("api/posts/")
+    fun searchEvents(
+        @Header("Authorization") token: String,
+        @Query("request") request: SearchEventRequest
+    ):Call<AllEventsResponse>
     @GET("api/posts/{eventId}")
     fun getEventbyId(
         @Header("Authorization") token : String,

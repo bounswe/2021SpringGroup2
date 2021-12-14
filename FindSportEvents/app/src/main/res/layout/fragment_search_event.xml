@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#81D4FA"
-    android:padding="40dp"
+    android:padding="30dp"
     tools:ignore="ExtraText">
 
     <Spinner
@@ -34,7 +35,7 @@
         android:layout_height="wrap_content"
         android:text="Max Skill Level: "
         android:textSize="25sp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_min_skill_level" />
 
@@ -42,7 +43,7 @@
         android:id="@+id/tv_min_skill_level"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
         android:text="Min Skill Level: "
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,7 +52,7 @@
     <Spinner
         android:id="@+id/min_age_spinner"
         android:layout_width="150dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="25dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@+id/tv_min_age"
         app:layout_constraintTop_toBottomOf="@+id/max_skills_spinner" />
@@ -59,7 +60,7 @@
     <Spinner
         android:id="@+id/max_age_spinner"
         android:layout_width="150dp"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="23dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@+id/tv_max_age"
         app:layout_constraintTop_toBottomOf="@+id/min_age_spinner" />
@@ -68,7 +69,7 @@
         android:id="@+id/tv_min_age"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:text="Minimum Age: "
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -80,23 +81,62 @@
         android:layout_height="wrap_content"
         android:text="Maximum Age: "
         android:textSize="25sp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_min_age" />
 
+    <EditText
+        android:id="@+id/et_min_duration"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toEndOf="@+id/tv_min_duration"
+        app:layout_constraintTop_toBottomOf="@+id/tv_selected_end" />
+
+    <EditText
+        android:id="@+id/et_max_duration"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/tv_max_duration"
+        app:layout_constraintTop_toBottomOf="@+id/et_min_duration" />
+
+    <TextView
+        android:id="@+id/tv_min_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="10dp"
+        android:text="Min Duration(minutes): "
+        android:textSize="22sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_selected_start" />
+
+    <TextView
+        android:id="@+id/tv_max_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="15dp"
+        android:text="Max Duration(minutes): "
+        android:textSize="22sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_min_duration" />
+
     <Spinner
         android:id="@+id/max_skills_spinner"
-        android:layout_width="200dp"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="23dp"
         app:layout_constraintStart_toEndOf="@+id/tv_max_skill_level"
         app:layout_constraintTop_toBottomOf="@+id/min_skills_spinner" />
 
     <Spinner
         android:id="@+id/min_skills_spinner"
-        android:layout_width="200dp"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
 
         app:layout_constraintStart_toEndOf="@+id/tv_max_skill_level"
         app:layout_constraintTop_toBottomOf="@+id/sports_spinner" />
@@ -106,7 +146,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:width="150dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="5dp"
         android:text="Starting Time"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_max_age" />
@@ -118,7 +158,7 @@
         android:layout_marginStart="25dp"
         android:width="150dp"
         android:text="Ending Time"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintStart_toEndOf="@+id/btn_start_time"
         app:layout_constraintTop_toBottomOf="@+id/max_age_spinner" />
 
@@ -130,6 +170,7 @@
         android:textAlignment="center"
         android:textStyle="bold"
         android:width="150dp"
+        android:textSize="10sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_start_time" />
 
@@ -141,6 +182,7 @@
         android:text="SELECTED END"
         android:textAlignment="center"
         android:textStyle="bold"
+        android:textSize="10sp"
         android:layout_marginStart="25dp"
         app:layout_constraintStart_toEndOf="@+id/tv_selected_start"
         app:layout_constraintTop_toBottomOf="@+id/btn_end_time" />
@@ -149,29 +191,47 @@
         android:id="@+id/btn_select_area"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:width="200dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="20dp"
+        android:width="100dp"
         android:text="SELECT AREA"
-        android:layout_marginTop="25dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_selected_end" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_max_duration" />
 
     <TextView
         android:id="@+id/tv_coordinates1"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="28dp"
         android:text="Coordinates1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_select_area" />
+        android:textSize="10sp"
+        app:layout_constraintStart_toEndOf="@+id/btn_select_area"
+        app:layout_constraintTop_toBottomOf="@+id/tv_max_duration" />
 
     <TextView
         android:id="@+id/tv_coordinates2"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="64dp"
+        android:layout_marginEnd="4dp"
         android:text="Coordinates2"
+        android:layout_marginTop="28dp"
+        android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_max_duration" />
+
+    <Button
+        android:id="@+id/btn_find_events"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="#EF9A9A"
+        android:text="FIND EVENTS"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.432"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_select_area" />
 
 
