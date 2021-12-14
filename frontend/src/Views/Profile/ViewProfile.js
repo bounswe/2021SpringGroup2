@@ -45,6 +45,17 @@ const useStyles = makeStyles(theme => createStyles({
 }));
 
 const initialProfile = {
+    id: {
+        value: 0,
+        changed: false,
+        error: undefined
+    },
+    avatar: {
+        value: 0,
+        changed: false,
+        error: undefined
+    },
+
     first_name: {
         value: "Doğukan",
         changed: false,
@@ -106,6 +117,7 @@ const Index = _ =>{
                     setLoading(false)
                     const newProfile = {...profile}
                     for(let i in p){
+                        console.log(i)
                         newProfile[i].value = p[i]
                     }
                     newProfile.username.value = userid
