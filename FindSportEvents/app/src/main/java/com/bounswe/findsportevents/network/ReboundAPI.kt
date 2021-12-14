@@ -57,7 +57,20 @@ interface ReboundAPI {
     @GET("api/posts/")
     fun searchEvents(
         @Header("Authorization") token: String,
-        @Query("request") request: SearchEventRequest
+        @Query("query") query : String,
+        @Query("sport") sport : String,
+        @Query("min_skill") min_skill : Int,
+        @Query("max_skill") max_skill : Int,
+        @Query("min_age") min_age : Int,
+        @Query("max_age") max_age : Int,
+        @Query("min_duration") min_duration : Int,
+        @Query("max_duration") max_duration : Int,
+        @Query("min_date") min_date : String,
+        @Query("max_date") max_date : String,
+        @Query("min_latitude") min_latitude: Float,
+        @Query("max_latitude") max_latitude: Float,
+        @Query("min_longitude") min_longitude: Float,
+        @Query("max_longitude") max_longitude: Float,
     ):Call<AllEventsResponse>
 
     @POST("api/posts/")

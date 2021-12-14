@@ -44,6 +44,7 @@ class FragmentSearchResults : Fragment() {
     private var endTime = ""
     private var minDuration =0
     private var maxDuration =0
+    private var query=""
     var events : MutableList<String> = mutableListOf()
     var creators:MutableList<Int> = mutableListOf()
     var fields:MutableList<String> = mutableListOf()
@@ -82,7 +83,8 @@ class FragmentSearchResults : Fragment() {
             sport,minSkillLevel,maxSkillLevel,minAge,maxAge,minDuration,maxDuration,startTime,endTime,
             minLatitude,maxLatitude,minLongitude,maxLongitude
         )
-        ReboundAPI.create().searchEvents(token,searchEventRequest).enqueue(object : Callback<AllEventsResponse> {
+        ReboundAPI.create().searchEvents(token,query,sport,minSkillLevel,maxSkillLevel,minAge,maxAge,minDuration,maxDuration,startTime,endTime,
+            minLatitude,maxLatitude,minLongitude,maxLongitude).enqueue(object : Callback<AllEventsResponse> {
 
             override fun onResponse(
                 call: Call<AllEventsResponse>,
@@ -91,12 +93,16 @@ class FragmentSearchResults : Fragment() {
 
                 if (response.isSuccessful) {
 
-                    response.body()?.results?.get(0)?.let { events.add(it.sport) }
-                    response.body()?.results?.get(0)?.let { creators.add(it.owner) }
-                    response.body()?.results?.get(0)?.let { fields.add(it.location) }
-                    response.body()?.results?.get(0)?.let { players.add(it.player_capacity) }
-                    response.body()?.results?.get(0)?.let { spectators.add(it.spec_capacity) }
-                    response.body()?.results?.get(0)?.let { date.add(it.date.toString()) }
+                    for(i in 0 until (response.body()?.results?.size!!)){
+                        response.body()?.results?.get(i)?.let { events.add(it.sport) }
+                        response.body()?.results?.get(i)?.let { creators.add(it.owner) }
+                        response.body()?.results?.get(i)?.let { fields.add(it.location) }
+                        response.body()?.results?.get(i)
+                            ?.let { players.add(it.player_capacity) }
+                        response.body()?.results?.get(i)
+                            ?.let { spectators.add(it.spec_capacity) }
+                        response.body()?.results?.get(i)?.let { date.add(it.date.toString()) }
+                    }
                     layoutManager= LinearLayoutManager(context)
                     binding.recyclerView2.layoutManager=layoutManager
                     adapter = RecyclerAdapter2(events,creators,fields,players,spectators,date)

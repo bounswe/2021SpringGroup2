@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity(), FragmentCreateEvent.FragmentCreateEven
             setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.bottom_home -> {
-                        displayHomeFragment(token)
+                        displayViewAllEventsFragment(token)
                         false
                     }
                     R.id.bottom_profile -> {
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity(), FragmentCreateEvent.FragmentCreateEven
                         false
                     }
                     R.id.bottom_event -> {
-                        displayViewAllEventsFragment(token)
+                        displayHomeFragment(token)
                         false
                     }
                     R.id.bottom_search -> {
