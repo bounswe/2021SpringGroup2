@@ -37,6 +37,9 @@ const useStyles = makeStyles(theme => createStyles({
     },
     submit: {
         margin: theme.spacing(3, 0, 2)
+    },
+    date: {
+        width:"100%"
     }
 }));
 
@@ -124,7 +127,7 @@ const initialState = {
         changed: false,
         error: undefined
     },
-    birthDay: {
+    birthday: {
         value: new Date(),
         changed: false,
         error: undefined
@@ -369,7 +372,10 @@ export default function SignUp() {
                         </Grid>
                         <Grid item xs={12}>
                             <DatePicker
-                                label="Basic example"
+                                className={classes.date}
+                                fullWidth
+                                PaperProps={{fullWidth:true}}
+                                label="Birthday"
                                 value={state.birthday.value}
                                 onChange={(newValue) => {
                                     const newState = {...state}
