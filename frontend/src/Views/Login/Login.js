@@ -51,7 +51,7 @@ export default function LoginPage(props){
                  }
                  else{
                      setHeaders(r.refresh, r.access)
-                     getUserInfo(state.username).then(r => console.log(r))
+                     getUserInfo(state.username.value).then(r => console.log(r))
                      navigate("/")
                  }
              })
