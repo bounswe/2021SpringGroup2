@@ -91,14 +91,12 @@ const initialEvent = {
         "content": "",
         "title": "Beginner friendly tennis game",
         "creationDate": "2014-11-31T23:00:00-08:00",
-        "lastUpdateDate": "2014-11-31T23:00:00-08:00",
         "numberOfClicks": 0,
         "location": {
             "name": "Etiler Tennis Club",
             "type": "Place",
             "longitude": 12.34,
             "latitude": 56.78,
-            "altitude": 90,
             "units": "m"
         },
         "eventDate": "2014-12-31T23 00 00-08 00",
@@ -131,7 +129,6 @@ export default function Event (){
             .then(r=>setEvent(r)||r)
             .then(r=>getSportInfo(r.event.object.eventSport))
             .then(setSport)
-            .catch(console.log)
     }, []);
 
     return(
@@ -139,10 +136,10 @@ export default function Event (){
         <div style={{background:`url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}>
 
             <Grid item xs={12} sm={12} container spacing={3} alignItems="stretch"  className={classes.paper}>
-                <Grid item  style={{display: 'flex'}} align={"center"}>
-                    <EventInfoCard {...sport}/>
+                    <Grid item  style={{display: 'flex'}} align={"center"}>
+                        <EventInfoCard {...sport}/>
 
-                </Grid>
+                    </Grid>
             </Grid>
 
             <Grid container spacing={2} xs={12} sm={12}>
@@ -155,7 +152,7 @@ export default function Event (){
                         Type of Sport: {event.object.eventSport}
                     </Typography>
                     <Typography variant="subtitle1" component="div" align={"center"} style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain"}}>
-                        Location: {event.object.location.type} {event.object.location.longitude} {event.object.location.altitude} {event.object.location.latitude}
+                        Location: {event.object.location.type} {event.object.location.longitude} {event.object.location.latitude}
                     </Typography>
                     <Typography gutterBottom variant="body1" align={"center"} style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain"}}>
                         Event Date: {event.object.eventDate}
@@ -198,6 +195,7 @@ export default function Event (){
                 </Grid>
 
             </Grid>
+
 
         </div>
 

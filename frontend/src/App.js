@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    Outlet,
     Route,
     Routes,
 } from "react-router-dom";
@@ -30,7 +31,7 @@ const App = () => {
                     <Route path="home" element={<Home />} />
                     <Route path="resetpassword" element={<ResetPasswordPage/>}/>
                     <Route path="search" element={<SearchEvents/>}/>
-                    <Route path="event" element={<Outlet/>}>
+                    <Route path="event" element={_=><Outlet/>}>
                         <Route path=":eventid" element={<Event/>}/>
                     </Route>
                     <Route path="*" element={<NotFound />} />
