@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.setFragmentResultListener
 import com.bounswe.findsportevents.R
 import com.bounswe.findsportevents.databinding.FragmentCreateEventBinding
 import com.bounswe.findsportevents.network.ReboundAPI
@@ -35,6 +37,7 @@ class FragmentCreateEvent : Fragment() {
         createEventListener = requireActivity() as FragmentCreateEventListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
         token = "JWT $token"
+        setFragmentListeners()
     }
 
     override fun onCreateView(
@@ -245,6 +248,27 @@ class FragmentCreateEvent : Fragment() {
 
             })
         }
+
+        binding.ivMapLatitude.setOnClickListener {
+            val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.container_main, FragmentCreateEventMap()).addToBackStack("create-event-map")
+            transaction.commit()
+        }
+
+        binding.ivMapLongitude.setOnClickListener {
+            val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.container_main, FragmentCreateEventMap()).addToBackStack("create-event-map")
+            transaction.commit()
+        }
+    }
+
+    private fun setFragmentListeners(){
+        setFragmentResultListener(REQUEST_KEY) { key, bundle ->
+            binding.etLatitude.setText(bundle.getFloat(BUNDLE_KEY).toString())
+        }
+        setFragmentResultListener(REQUEST_KEY_1) { key, bundle ->
+            binding.etLongitude.setText(bundle.getFloat(BUNDLE_KEY_1).toString())
+        }
     }
 
     interface FragmentCreateEventListener {
@@ -254,6 +278,10 @@ class FragmentCreateEvent : Fragment() {
     companion object {
         const val TAG = "home"
         private const val TOKEN_KEY = "token_key"
+        private const val REQUEST_KEY ="request_key"
+        private const val REQUEST_KEY_1 ="request_key_1"
+        private const val BUNDLE_KEY ="bundle_key"
+        private const val BUNDLE_KEY_1 = "bundle_key_1"
         fun newInstance(token: String) = FragmentCreateEvent().apply {
             arguments = Bundle().apply {
                 putString(TOKEN_KEY, token)
