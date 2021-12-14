@@ -42,9 +42,9 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
     private var testList= arrayListOf("")
     private var sport =""
     private var minAge = 0
-    private var maxAge = 0
-    private var minSkillLevel = ""
-    private var maxSkillLevel = ""
+    private var maxAge = 100
+    private var minSkillLevel = "1"
+    private var maxSkillLevel = "5"
     private var minLongitude=0f
     private var maxLongitude=0f
     private var minLatitude=0f
@@ -52,7 +52,7 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
     private var startTime=""
     private var endTime = ""
     private var minDuration =0
-    private var maxDuration =0
+    private var maxDuration =100000
     private var m1Latitude=0f
     private var m1Longitude=0f
     private var m2Latitude=0f
@@ -225,6 +225,8 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
                     val isoDate=sdf.format(pickedDateTime.time)
                     binding.tvSelectedEnd.text= isoDate.toString()
                 }
+                startTime=binding.tvSelectedStart.text.toString()
+                endTime=binding.tvSelectedEnd.text.toString()
             }, startHour, startMinute, true).show()
         }, startYear, startMonth, startDay).show()
     }
