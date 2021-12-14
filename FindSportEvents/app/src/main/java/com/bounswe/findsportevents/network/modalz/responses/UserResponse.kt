@@ -1,6 +1,7 @@
 package com.bounswe.findsportevents.network.modalz.responses
 
 data class UserResponse(
+    val id: Long,
     val first_name: String?,
     val last_name: String?,
     val bio: String?,

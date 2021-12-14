@@ -14,6 +14,6 @@ data class CreateEventRequest(
     val max_age: Int,
     val player_capacity: Int,
     val spec_capacity: Int,
-    val owner: Int,
+    val owner: Long,
     val date: String
 )

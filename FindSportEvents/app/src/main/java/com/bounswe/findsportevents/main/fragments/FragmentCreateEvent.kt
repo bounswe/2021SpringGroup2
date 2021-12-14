@@ -2,6 +2,7 @@ package com.bounswe.findsportevents.main.fragments
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,17 +19,25 @@ import com.bounswe.findsportevents.databinding.FragmentCreateEventBinding
 import com.bounswe.findsportevents.network.ReboundAPI
 import com.bounswe.findsportevents.network.modalz.requests.CreateEventRequest
 import com.bounswe.findsportevents.network.modalz.responses.CreateEventResponse
+import com.bounswe.findsportevents.network.modalz.responses.UserResponse
+import com.bounswe.findsportevents.util.DialogManager
+import com.bounswe.findsportevents.util.LoadingDialog
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
-class FragmentCreateEvent : Fragment() {
+class FragmentCreateEvent : Fragment(), DialogManager {
     private var _binding: FragmentCreateEventBinding? = null
     private val binding get() = _binding!!
+
+    private var dialog: LoadingDialog? = null
+
     private lateinit var createEventListener: FragmentCreateEventListener
     private var token = ""
+    private var username = ""
     private lateinit var startTime: Date
     private lateinit var startTimeIso: String
     private lateinit var endTime: Date
@@ -39,6 +48,7 @@ class FragmentCreateEvent : Fragment() {
         super.onCreate(savedInstanceState)
         createEventListener = requireActivity() as FragmentCreateEventListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
+        username = requireArguments().getString(USERNAME_KEY) ?: ""
         token = "JWT $token"
         setFragmentListeners()
     }
@@ -221,39 +231,58 @@ class FragmentCreateEvent : Fragment() {
 
         binding.buttonCreateEvent.setOnClickListener {
 
-            val durationMill = endTime.time - startTime.time
-            val durationMinute = durationMill / 60000
-
-            val request = CreateEventRequest(
-                binding.etEventTitle.text.toString(),
-                binding.etEventDescription.text.toString(),
-                binding.spSport.selectedItem.toString(),
-                binding.etLocationName.text.toString(),
-                binding.etLatitude.text.toString().toFloat(),
-                binding.etLongitude.text.toString().toFloat(),
-                durationMinute,
-                binding.spMinSkill.selectedItem.toString().toInt(),
-                binding.spMaxSkill.selectedItem.toString().toInt(),
-                binding.etMinAge.text.toString().toInt(),
-                binding.etMaxAge.text.toString().toInt(),
-                binding.etPlayerCapacity.text.toString().toInt(),
-                binding.etSpectatorCapacity.text.toString().toInt(),
-                3, //TODO CHANGE
-                startTimeIso
-            )
-
-            ReboundAPI.create().createEvent(token, request).enqueue(object: Callback<CreateEventResponse> {
-                override fun onResponse(
-                    call: Call<CreateEventResponse>,
-                    response: Response<CreateEventResponse>
-                ) {
+            context?.run {
+                showLoading(this)
+            }
+            ReboundAPI.create().getUser(token, username).enqueue(object: Callback<UserResponse> {
+                override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                     if(response.isSuccessful){
-                        Toast.makeText(requireContext(),"EVENT CREATION SUCCESSFULLY DONE!", Toast.LENGTH_SHORT).show()
+                        val durationMill = endTime.time - startTime.time
+                        val durationMinute = durationMill / 60000
+
+                        val request = CreateEventRequest(
+                            binding.etEventTitle.text.toString(),
+                            binding.etEventDescription.text.toString(),
+                            binding.spSport.selectedItem.toString(),
+                            binding.etLocationName.text.toString(),
+                            binding.etLatitude.text.toString().toFloat(),
+                            binding.etLongitude.text.toString().toFloat(),
+                            durationMinute,
+                            binding.spMinSkill.selectedItem.toString().toInt(),
+                            binding.spMaxSkill.selectedItem.toString().toInt(),
+                            binding.etMinAge.text.toString().toInt(),
+                            binding.etMaxAge.text.toString().toInt(),
+                            binding.etPlayerCapacity.text.toString().toInt(),
+                            binding.etSpectatorCapacity.text.toString().toInt(),
+                            response.body()?.id ?: 0,
+                            startTimeIso
+                        )
+
+                        ReboundAPI.create().createEvent(token, request).enqueue(object: Callback<CreateEventResponse> {
+                            override fun onResponse(
+                                call: Call<CreateEventResponse>,
+                                response: Response<CreateEventResponse>
+                            ) {
+                                hideLoading()
+                                if(response.isSuccessful){
+                                    Toast.makeText(requireContext(),"EVENT CREATION SUCCESSFULLY DONE!", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+
+                            override fun onFailure(call: Call<CreateEventResponse>, t: Throwable) {
+                                hideLoading()
+                                Toast.makeText(requireContext(),"AN ERROR OCCURRED, PLEASE TRY AGAIN LATER", Toast.LENGTH_SHORT).show()
+                            }
+
+                        })
+
+                    }else{
+                        hideLoading()
                     }
                 }
 
-                override fun onFailure(call: Call<CreateEventResponse>, t: Throwable) {
-                    Toast.makeText(requireContext(),"AN ERROR OCCURRED, PLEASE TRY AGAIN LATER", Toast.LENGTH_SHORT).show()
+                override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                    hideLoading()
                 }
 
             })
@@ -292,10 +321,32 @@ class FragmentCreateEvent : Fragment() {
         private const val REQUEST_KEY_1 ="request_key_1"
         private const val BUNDLE_KEY ="bundle_key"
         private const val BUNDLE_KEY_1 = "bundle_key_1"
-        fun newInstance(token: String) = FragmentCreateEvent().apply {
+        private const val USERNAME_KEY = "username_key"
+        fun newInstance(token: String, username: String) = FragmentCreateEvent().apply {
             arguments = Bundle().apply {
                 putString(TOKEN_KEY, token)
+                putString(USERNAME_KEY, username)
             }
+        }
+    }
+
+    override fun showLoading(context: Context) {
+        try {
+            hideLoading()
+            dialog = LoadingDialog(context)
+            dialog?.setCancelable(false)
+            dialog?.show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun hideLoading() {
+        try {
+            dialog?.dismiss()
+            dialog = null
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity(), FragmentCreateEvent.FragmentCreateEven
         supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentViewAllEvents.newInstance(token), FragmentViewAllEvents.TAG).commit()
     }
     private fun displayHomeFragment(token: String) {
-        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentCreateEvent.newInstance(token), FragmentCreateEvent.TAG).commit()
+        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentCreateEvent.newInstance(token, username), FragmentCreateEvent.TAG).commit()
     }
 
     private fun displayProfileFragment(token: String, username: String) {
