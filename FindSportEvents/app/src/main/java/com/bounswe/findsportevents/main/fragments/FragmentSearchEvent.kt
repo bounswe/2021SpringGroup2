@@ -1,5 +1,6 @@
 package com.bounswe.findsportevents.main.fragments
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,22 +13,52 @@ import java.util.*
 
 import android.app.TimePickerDialog
 import android.app.TimePickerDialog.OnTimeSetListener
+import android.os.Build
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.*
 import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.RecyclerView
+import com.bounswe.findsportevents.adapter.RecyclerAdapter
+import com.bounswe.findsportevents.network.DecathlonAPI
+import com.bounswe.findsportevents.network.modalz.responses.DataResponse
+import com.bounswe.findsportevents.network.modalz.responses.GetSportsResponse
+import com.bounswe.findsportevents.network.modalz.responses.UserResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import kotlin.math.max
+import kotlin.math.min
 
 
 class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, FragmentResultOwner {
 
     private var token = ""
+    private var layoutManager: RecyclerView.LayoutManager?=null
+    private var adapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>?=null
     private var sports = mutableListOf(0)
+    private var testList= arrayListOf("")
     private var sport =""
     private var minAge = 0
     private var maxAge = 0
     private var minSkillLevel = ""
     private var maxSkillLevel = ""
+    private var minLongitude=0f
+    private var maxLongitude=0f
+    private var minLatitude=0f
+    private var maxLatitude=0f
     private var startTime=""
     private var endTime = ""
+    private var minDuration =0
+    private var maxDuration =0
+    private var m1Latitude=0f
+    private var m1Longitude=0f
+    private var m2Latitude=0f
+    private var m2Longitude=0f
+
+
     private var result=""
     private var _binding: FragmentSearchEventBinding? = null
     private val binding get() = _binding!!
@@ -35,8 +66,10 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setFragmentListeners()
+
         searchEventFragListener = requireActivity() as FragmentSearchEventListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
+        testList=requireArguments().getStringArrayList(TEST_KEY) ?: arrayListOf("")
         token="JWT $token"//Adding JWT at the beginning of the token
 
 
@@ -47,6 +80,7 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
         super.onResume()
         setFragmentListeners()
     }
+    @SuppressLint("ResourceType")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -61,19 +95,16 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
 
         _binding = FragmentSearchEventBinding.inflate(inflater, container, false)
         setFragmentListeners()
-        val spinner1: Spinner = binding.sportsSpinner
+        val spinner1 : Spinner =binding.sportsSpinner
         spinner1.onItemSelectedListener=this
-        context?.let {
-            ArrayAdapter.createFromResource(
-                it,
-                R.array.sports_array,
-                android.R.layout.simple_spinner_item
-            ).also{adapter->
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                spinner1.adapter = adapter
-            }
+        val adapter3: ArrayAdapter<String>? =
+            context?.let { ArrayAdapter<String>(it, android.R.layout.simple_spinner_item, testList).also {
+                    adapter3 ->
+                adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinner1.adapter = adapter3
 
-        }
+            }
+            }
 
         val spinner2: Spinner = binding.minSkillsSpinner
         spinner2.onItemSelectedListener=this
@@ -81,7 +112,7 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
 
             ArrayAdapter.createFromResource(
                 it,
-                R.array.skills_array,
+                R.array.age_array,
                 android.R.layout.simple_spinner_item
             ).also{adapter->
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -114,7 +145,7 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
 
             ArrayAdapter.createFromResource(
                 it,
-                R.array.skills_array,
+                R.array.age_array,
                 android.R.layout.simple_spinner_item
             ).also{adapter->
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -136,6 +167,7 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
 
         //Save the fragment's state here
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setClickListeners()
@@ -146,13 +178,29 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
     }
     private fun setFragmentListeners(){
         setFragmentResultListener(REQUEST_KEY) { key, bundle ->
-            val resultReceived = bundle.getString(BUNDLE_KEY)
-            Toast.makeText(context, resultReceived,Toast.LENGTH_SHORT).show()
-            binding.tvCoordinates1.text=resultReceived
+            val resultReceived = bundle.getFloat(BUNDLE_KEY)
+            m1Latitude=resultReceived
+            binding.tvCoordinates1.text=resultReceived.toString()
             // ...
+        }
+        setFragmentResultListener("request_key1") { key, bundle ->
+            val resultReceived = bundle.getFloat("bundle_key1")
+           m1Longitude=resultReceived
+            binding.tvCoordinates1.text="${binding.tvCoordinates1.text},${resultReceived.toString()}"
+        }
+        setFragmentResultListener("request_key2") { key, bundle ->
+            val resultReceived = bundle.getFloat("bundle_key2")
+            m2Latitude=resultReceived
+            binding.tvCoordinates2.text=resultReceived.toString()
+        }
+        setFragmentResultListener("request_key3") { key, bundle ->
+            val resultReceived = bundle.getFloat("bundle_key3")
+            m2Longitude=resultReceived
+            binding.tvCoordinates2.text="${binding.tvCoordinates2.text},${resultReceived.toString()}"
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun pickDateTime(button: Button) {
         val currentDateTime = Calendar.getInstance()
         val startYear = currentDateTime.get(Calendar.YEAR)
@@ -160,17 +208,22 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
         val startDay = currentDateTime.get(Calendar.DAY_OF_MONTH)
         val startHour = currentDateTime.get(Calendar.HOUR_OF_DAY)
         val startMinute = currentDateTime.get(Calendar.MINUTE)
+        val startSecond=currentDateTime.get(Calendar.SECOND)
 
         DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { _, year, month, day ->
             TimePickerDialog(requireContext(), TimePickerDialog.OnTimeSetListener { _, hour, minute ->
                 val pickedDateTime = Calendar.getInstance()
-
-                pickedDateTime.set(year, month, day, hour, minute)
+                val tz=TimeZone.getTimeZone("UTC")
+                val sdf=SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                sdf.timeZone=tz
+                pickedDateTime.set(year, month, day, hour, minute,Calendar.getInstance().time.seconds)
                 if(button==binding.btnStartTime){
-                binding.tvSelectedStart.text= pickedDateTime.time.toString()
+                    val isoDate=sdf.format(pickedDateTime.time)
+                binding.tvSelectedStart.text= isoDate.toString()
                 }
                 if(button==binding.btnEndTime){
-                    binding.tvSelectedEnd.text= pickedDateTime.time.toString()
+                    val isoDate=sdf.format(pickedDateTime.time)
+                    binding.tvSelectedEnd.text= isoDate.toString()
                 }
             }, startHour, startMinute, true).show()
         }, startYear, startMonth, startDay).show()
@@ -181,6 +234,7 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
  //       TODO("Not yet implemented")
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setClickListeners() {
 
         binding.btnStartTime.setOnClickListener {
@@ -192,7 +246,24 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
         binding.btnSelectArea.setOnClickListener {
             val mapFragment= FragmentMap()
             val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.container_main,FragmentMap.newInstance(token,sport,minSkillLevel,maxSkillLevel,minAge,maxAge,startTime,endTime)).addToBackStack("map")
+            transaction.replace(R.id.container_main,FragmentMap.newInstance(token,sport,token,token,minAge,maxAge,startTime,endTime)).addToBackStack("map")
+            transaction.commit()
+        }
+        binding.btnFindEvents.setOnClickListener {
+            maxLatitude=max(m1Latitude,m2Latitude)
+            minLatitude= min(m1Latitude,m2Latitude)
+            maxLongitude=max(m1Longitude,m2Longitude)
+            minLongitude=min(m1Longitude,m2Longitude)
+            if(!binding.etMinDuration.text.toString().equals("")) {
+                minDuration = binding.etMinDuration.text?.toString()?.toInt() ?: 0
+            }
+            if(!binding.etMaxDuration.text.toString().equals("")) {
+                maxDuration = binding.etMaxDuration.text?.toString()?.toInt() ?: 10000
+
+            }
+            val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.container_main,FragmentSearchResults.newInstance(token,sport,minSkillLevel.toInt(),maxSkillLevel.toInt(),minAge,maxAge,startTime,endTime,minDuration
+            ,maxDuration,minLatitude,maxLatitude,minLongitude,maxLongitude))
             transaction.commit()
         }
 
@@ -210,12 +281,13 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
     companion object {
         const val TAG = "Search Event"
         private const val TOKEN_KEY = "token_key"
+        private const val TEST_KEY = "test_key"
         const val REQUEST_KEY ="request_key"
         const val BUNDLE_KEY ="bundle_key"
 
-        fun newInstance(token: String) = FragmentSearchEvent().apply {
+        fun newInstance(token: String,testList : ArrayList<String>) = FragmentSearchEvent().apply {
             arguments=Bundle().apply {
-
+                putStringArrayList(TEST_KEY,testList)
                 putString(TOKEN_KEY,token)
             }
         }
