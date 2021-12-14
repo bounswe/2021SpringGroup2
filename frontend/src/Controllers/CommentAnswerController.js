@@ -1,4 +1,5 @@
 import * as CommentAnswerController from "./CommentAnswerController"
+import {getUserInfoLoggedIn} from "./AuthInfo";
 
 export async function getAnswersOfComment(post_id,comment_id){
     const options = {
@@ -73,7 +74,9 @@ export async function getCommentsAndAnswersOfEvent(post_id){
     }
     return comments
 }
-export function postComment(post_id,owner_id,username,content){
+export function postComment(post_id,content){
+    let username = getUserInfoLoggedIn().username
+    let owner_id = getUserInfoLoggedIn().user_id
     const date = new Date().toISOString()
     const options = {
         headers: { 'Accept': 'application/json','Content-Type': 'application/json'},
@@ -108,7 +111,9 @@ export function postComment(post_id,owner_id,username,content){
     console.log("comment",comment)
     return comment
 }
-export function postAnswer(post_id,comment_id,owner_id,username,content){
+export function postAnswer(post_id,comment_id,content){
+    let username = getUserInfoLoggedIn().username
+    let owner_id = getUserInfoLoggedIn().user_id
     const date = new Date().toISOString()
     const options = {
         headers: { 'Accept': 'application/json','Content-Type': 'application/json'},

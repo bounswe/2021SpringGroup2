@@ -1,11 +1,11 @@
-import {getToken} from "./AuthInfo";
+import {getToken, getUserInfoLoggedIn} from "./AuthInfo";
 
 export function postEvent(params){
     const options = {
-        method: 'POST',
         headers: { 'Content-Type': 'application/json' , "Authorization": getToken()},
+        method: 'POST',
         body: JSON.stringify({
-            owner: params.owner,
+            owner: getUserInfoLoggedIn().user_id,
             content: params.content?params.content:"",
             title: params.title,
             location: params.location,
