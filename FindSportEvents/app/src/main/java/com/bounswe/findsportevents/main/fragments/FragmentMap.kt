@@ -10,7 +10,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.bounswe.findsportevents.R
-import com.bounswe.findsportevents.databinding.FragmentHomeBinding
 import com.bounswe.findsportevents.databinding.FragmentMapBinding
 import com.bounswe.findsportevents.databinding.FragmentSearchEventBinding
 import org.osmdroid.config.Configuration
@@ -126,6 +125,15 @@ class FragmentMap : Fragment() {
 
     private fun setClickListeners() {
     binding.btnOk.setOnClickListener {
+
+        val result = marker1
+        val result2=marker2
+
+        parentFragmentManager.setFragmentResult(REQUEST_KEY, bundleOf(BUNDLE_KEY to result.latitude.toFloat()))
+        parentFragmentManager.setFragmentResult("request_key1", bundleOf("bundle_key1" to result.longitude.toFloat()))
+        parentFragmentManager.setFragmentResult("request_key2", bundleOf("bundle_key2" to result2.latitude.toFloat()))
+        parentFragmentManager.setFragmentResult("request_key3", bundleOf("bundle_key3" to result2.longitude.toFloat()))
+
         requireActivity().supportFragmentManager.popBackStack()
     }
 

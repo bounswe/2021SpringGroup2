@@ -1,5 +1,7 @@
 package com.bounswe.findsportevents.network.modalz.responses
 
+import java.util.*
+
 data class ObjectResponse (
 
         val type : String,
@@ -8,12 +10,12 @@ data class ObjectResponse (
         val ownerId : Int,
         val content : String,
         val title : String,
-        val creationDate : String,
-        val lastUpdateDate : String,
+        val creationDate : Date,
+        val lastUpdateDate : Date,
         val numberOfClicks : Int,
         val location : LocationResponse,
-        val eventDate : String,
-        val eventSport : String,
+        val eventDate : Date,
+        val sport : String,
         val eventMinAge : Int,
         val eventMaxAge : Int,
         val eventMinSkillLevel : Int,

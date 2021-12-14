@@ -3,27 +3,50 @@ package com.bounswe.findsportevents.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe.findsportevents.R
-import com.bounswe.findsportevents.adapter.RecyclerAdapter
 import com.bounswe.findsportevents.databinding.ActivityMainBinding
 import com.bounswe.findsportevents.extensions.startActivity
 import com.bounswe.findsportevents.login.LoginActivity
 import com.bounswe.findsportevents.main.fragments.*
+import com.bounswe.findsportevents.network.DecathlonAPI
+import com.bounswe.findsportevents.network.modalz.responses.GetSportsResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener,FragmentMap.FragmentMapListener,FragmentSearchEvent.FragmentSearchEventListener, FragmentProfile.FragmentProfileListener,FragmentViewAllEvents.FragmentViewAllEventsListener {
+class MainActivity : AppCompatActivity(), FragmentCreateEvent.FragmentCreateEventListener,FragmentViewAllEvents.FragmentViewAllEventsListener,FragmentMap.FragmentMapListener,FragmentSearchEvent.FragmentSearchEventListener, FragmentProfile.FragmentProfileListener,FragmentSearchResults.FragmentSearchResultsListener {
 
     private lateinit var binding: ActivityMainBinding
 
     private var login = false
     private var token = ""
     private var username = ""
+    private var testList= arrayListOf("Football","Sumo Wrestling")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+            DecathlonAPI.create().getSports().enqueue(object: Callback<GetSportsResponse> {
+                override fun onResponse(call: Call<GetSportsResponse>, response: Response<GetSportsResponse>){
+                    if(response.isSuccessful){
+                        response.body()?.data?.let { testList.ensureCapacity(it.size) }
+                        for(item in response.body()?.data!!){
+                        testList.add(item.attributes.name)
+                        }
+                        }
+                    }
+
+                override fun onFailure(call: Call<GetSportsResponse>, t: Throwable) {
+            //        TODO("Not yet implemented")
+                }
+            }
+
+
+            )
+
 
 
         if (intent.extras != null) {
@@ -41,7 +64,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener,Frag
             setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.bottom_home -> {
-                        displayHomeFragment(token)
+                        displayViewAllEventsFragment(token)
                         false
                     }
                     R.id.bottom_profile -> {
@@ -49,11 +72,11 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener,Frag
                         false
                     }
                     R.id.bottom_event -> {
-                        displayViewAllEventsFragment(token)
+                        displayHomeFragment(token)
                         false
                     }
                     R.id.bottom_search -> {
-                        displaySearchEventFragment(token)
+                        displaySearchEventFragment(token,testList)
                         false
                     }
                     else -> false
@@ -64,14 +87,14 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener,Frag
         initListeners()
         setObservers()
     }
-    private fun displaySearchEventFragment(token: String){
-        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentSearchEvent.newInstance(token), FragmentSearchEvent.TAG).commit()
+    private fun displaySearchEventFragment(token: String,testList: ArrayList<String>){
+        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentSearchEvent.newInstance(token,testList), FragmentSearchEvent.TAG).commit()
     }
     private fun displayViewAllEventsFragment(token: String){
         supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentViewAllEvents.newInstance(token), FragmentViewAllEvents.TAG).commit()
     }
     private fun displayHomeFragment(token: String) {
-        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentHome.newInstance(token), FragmentHome.TAG).commit()
+        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentCreateEvent.newInstance(token, username), FragmentCreateEvent.TAG).commit()
     }
 
     private fun displayProfileFragment(token: String, username: String) {

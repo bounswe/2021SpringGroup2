@@ -99,6 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="date:  "
+
             android:textSize="20sp"
 
             android:textStyle="bold"
@@ -107,17 +108,15 @@
             app:layout_constraintStart_toEndOf="@+id/field_tv"
             app:layout_constraintTop_toBottomOf="@id/creator_tv" />
 
+
         <TextView
             android:id="@+id/date_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="date"
-
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.529"
-            app:layout_constraintStart_toEndOf="@id/date_tv1"
-            app:layout_constraintTop_toBottomOf="@id/creator_tv" />
+            app:layout_constraintStart_toEndOf="@+id/date_tv1"
+            app:layout_constraintTop_toBottomOf="@+id/players_tv" />
 
         <TextView
             android:id="@+id/spectators_tv1"
@@ -126,10 +125,8 @@
             android:text="spectators:  "
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.162"
-            app:layout_constraintStart_toEndOf="@+id/players_tv"
-            app:layout_constraintTop_toBottomOf="@id/date_tv" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/date_tv1" />
 
         <TextView
             android:id="@+id/spectators_tv"
@@ -137,10 +134,8 @@
             android:layout_height="wrap_content"
             android:text="spectators"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@id/spectators_tv1"
-            app:layout_constraintTop_toBottomOf="@id/date_tv" />
+            app:layout_constraintStart_toEndOf="@+id/spectators_tv1"
+            app:layout_constraintTop_toBottomOf="@+id/date_tv" />
 
         <Button
             android:id="@+id/btn_details"

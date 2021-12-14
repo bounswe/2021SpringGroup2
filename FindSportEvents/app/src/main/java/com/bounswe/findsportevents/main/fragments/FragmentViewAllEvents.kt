@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,12 +24,12 @@ class FragmentViewAllEvents : Fragment() {
     private var layoutManager: RecyclerView.LayoutManager?=null
     private var adapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>?=null
     private var token = ""
-    var events = mutableListOf("")
-    var creators = mutableListOf(0)
-    var fields= mutableListOf("")
-    var players= mutableListOf(0)
-    var spectators= mutableListOf(0)
-    var date= mutableListOf("")
+    var events : MutableList<String> = mutableListOf()
+    var creators:MutableList<Int> = mutableListOf()
+    var fields:MutableList<String> = mutableListOf()
+    var players:MutableList<Int> = mutableListOf()
+    var spectators:MutableList<Int> = mutableListOf()
+    var date:MutableList<String> = mutableListOf()
     var empList : MutableList<Int> = mutableListOf(0)
     var eventList = mutableListOf(2,3,4)
     private lateinit var viewAllEventsFragListener: FragmentViewAllEventsListener
@@ -38,31 +39,36 @@ class FragmentViewAllEvents : Fragment() {
         viewAllEventsFragListener = requireActivity() as FragmentViewAllEventsListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
         token= "JWT $token"
+
             ReboundAPI.create().getEvents(token).enqueue(object : Callback<AllEventsResponse> {
 
                 override fun onResponse(
                     call: Call<AllEventsResponse>,
                     response: Response<AllEventsResponse>
                 ) {
-                    events.add("s")
-                    creators.add(8)
-                    fields.add("ss")
-                    players.add(2)
-                    spectators.add(2)
-                    date.add("3")
+
                     if (response.isSuccessful) {
 
-                        events.add(response.body().toString())
-                        creators.add(8)
-                        fields.add("ss")
-                        players.add(2)
-                        spectators.add(2)
-                        date.add("3")
+                        for(i in 0 until (response.body()?.results?.size!!)){
+                            response.body()?.results?.get(i)?.let { events.add(it.sport) }
+                            response.body()?.results?.get(i)?.let { creators.add(it.owner) }
+                            response.body()?.results?.get(i)?.let { fields.add(it.location) }
+                            response.body()?.results?.get(i)
+                                ?.let { players.add(it.player_capacity) }
+                            response.body()?.results?.get(i)
+                                ?.let { spectators.add(it.spec_capacity) }
+                            response.body()?.results?.get(i)?.let { date.add(it.date.toString()) }
+                        }
+                        layoutManager=LinearLayoutManager(context)
+                        binding.recyclerView.layoutManager=layoutManager
+                        adapter = RecyclerAdapter(events,creators,fields,players,spectators,date)
+                        binding.recyclerView.adapter = adapter
+
                     }
                 }
 
                 override fun onFailure(call: Call<AllEventsResponse>, t: Throwable) {
-                val x = ""
+                //
                 }
             }
             )
@@ -75,11 +81,14 @@ class FragmentViewAllEvents : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         _binding = FragmentViewAllEventsBinding.inflate(inflater, container, false)
+        
         layoutManager=LinearLayoutManager(context)
         binding.recyclerView.layoutManager=layoutManager
         adapter = RecyclerAdapter(events,creators,fields,players,spectators,date, this::rvOnDetailButtonClickListener)
         binding.recyclerView.adapter = adapter
+
         return binding.root
     }
 
@@ -87,6 +96,7 @@ class FragmentViewAllEvents : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setClickListeners()
         setObservers()
+
     }
 
     private fun setObservers() {
