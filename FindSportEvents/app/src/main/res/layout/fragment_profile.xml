@@ -13,117 +13,106 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_first_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:hint="First Name"
-                android:enabled="false"/>
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivCard"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                app:layout_constraintCircleRadius="2dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/profile_avatar"/>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_last_name"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:hint="Last Name"
-                android:enabled="false"/>
+                android:layout_marginHorizontal="@dimen/space_xx_large">
 
-            <TextView
-                android:id="@+id/tv_birth_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:hint="@string/birth_date" />
-            <Button
-                android:id="@+id/btn_date_picker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="32dp"
-                android:text="Select Birth Date" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_first_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="First Name" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_mail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:hint="@string/mail" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_location"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:hint="Location"
-                android:enabled="false"/>
+                android:layout_marginHorizontal="@dimen/space_xx_large">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_fav_sport1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:hint="Fav Sport1" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_last_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Last Name" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_fav_sport2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:hint="Fav Sport2" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_fav_sport3"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:hint="Fav Sport3" />
+                android:layout_marginHorizontal="@dimen/space_xx_large">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_bio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:hint="Bio" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Location" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_skills"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:enabled="false"
-                android:text="@string/skills" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_badges"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:enabled="false"
-                android:text="@string/badges" />
+                android:layout_marginHorizontal="@dimen/space_xx_large">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_followed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:enabled="false"
-                android:text="@string/followed" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_fav_sport1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Fav Sport1" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_followers"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:enabled="false"
-                android:text="@string/following" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/post_history"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:enabled="false"
-                android:text="@string/post_history" />
+                android:layout_marginHorizontal="@dimen/space_xx_large">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_fav_sport2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Fav Sport2" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/space_xx_large">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_fav_sport3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Fav Sport3" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/space_xx_large">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_bio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Bio" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
 
             <Button
                 android:id="@+id/button_update_profile"
@@ -137,21 +126,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:text="@string/update_password" />
+                android:text="@string/update_password"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/button_logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:text="@string/logout" />
+                android:text="@string/logout"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/button_delete_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/space_xx_large"
-                android:text="@string/delete_profile" />
+                android:text="@string/delete_profile"
+                android:visibility="gone"/>
 
 
 

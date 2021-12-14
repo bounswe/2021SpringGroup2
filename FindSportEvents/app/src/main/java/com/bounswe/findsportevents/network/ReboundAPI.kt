@@ -41,15 +41,31 @@ interface ReboundAPI {
         @Header("Authorization") token: String,
         @Path("username") username: String
     ): Call<UserResponse>
+
+    @PUT("api/users/{username}/")
+    fun updateUser(
+        @Header("Authorization") token: String,
+        @Path("username") username: String,
+        @Body request: UpdateProfileRequest
+    ): Call<UpdateProfileResponse>
+
     @GET("api/posts/")
     fun getEvents(
         @Header("Authorization") token: String,
+
         ): Call<AllEventsResponse>
     @GET("api/posts/")
     fun searchEvents(
         @Header("Authorization") token: String,
         @Query("request") request: SearchEventRequest
     ):Call<AllEventsResponse>
+
+    @POST("api/posts/")
+    fun createEvent(
+        @Header("Authorization") token: String,
+        @Body request: CreateEventRequest
+    ): Call<CreateEventResponse>
+
     @GET("api/posts/{eventId}")
     fun getEventbyId(
         @Header("Authorization") token : String,

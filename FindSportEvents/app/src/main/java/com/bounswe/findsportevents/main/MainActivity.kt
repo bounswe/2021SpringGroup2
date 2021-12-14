@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe.findsportevents.R
-import com.bounswe.findsportevents.adapter.RecyclerAdapter
 import com.bounswe.findsportevents.databinding.ActivityMainBinding
 import com.bounswe.findsportevents.extensions.startActivity
 import com.bounswe.findsportevents.login.LoginActivity
@@ -95,7 +94,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener,Frag
         supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentViewAllEvents.newInstance(token), FragmentViewAllEvents.TAG).commit()
     }
     private fun displayHomeFragment(token: String) {
-        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentHome.newInstance(token), FragmentHome.TAG).commit()
+        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentCreateEvent.newInstance(token), FragmentCreateEvent.TAG).commit()
     }
 
     private fun displayProfileFragment(token: String, username: String) {
