@@ -24,7 +24,7 @@ import java.util.*
 class FragmentCreateEvent : Fragment() {
     private var _binding: FragmentCreateEventBinding? = null
     private val binding get() = _binding!!
-    private lateinit var homeFragListener: FragmentHomeListener
+    private lateinit var createEventListener: FragmentCreateEventListener
     private var token = ""
     private lateinit var startTime: Date
     private lateinit var endTime: Date
@@ -32,7 +32,7 @@ class FragmentCreateEvent : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        homeFragListener = requireActivity() as FragmentHomeListener
+        createEventListener = requireActivity() as FragmentCreateEventListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
         token = "JWT $token"
     }
@@ -247,7 +247,7 @@ class FragmentCreateEvent : Fragment() {
         }
     }
 
-    interface FragmentHomeListener {
+    interface FragmentCreateEventListener {
         //TODO: will be implemented later
     }
 
