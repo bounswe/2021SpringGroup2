@@ -13,7 +13,7 @@ export default function MiaxCreationDate(props){
                 value={new Date(props[props.id])}
                 onChange={(newValue) => {
                     console.log(newValue.getTime())
-                    props.setValue(props.id)(newValue.toGMTString());
+                    props.setValue(props.id)(newValue.toISOString().split("T")[0]);
                 }}
                 renderInput={(params) => <TextField {...params} />}
             />
