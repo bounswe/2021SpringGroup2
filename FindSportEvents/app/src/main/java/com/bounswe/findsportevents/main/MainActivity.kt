@@ -77,6 +77,9 @@ class MainActivity : AppCompatActivity(), FragmentHome.FragmentHomeListener,Frag
     private fun displayProfileFragment(token: String, username: String) {
         supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentProfile.newInstance(token, username), FragmentProfile.TAG).commit()
     }
+    fun displayViewEventDetailedFragment(token:String, eventId:Int) {
+        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentViewEventDetailed.newInstance(token,eventId),FragmentViewEventDetailed.TAG).commit()
+    }
 
     private fun setObservers() {
         //TODO FOR AUTOLOGIN: auth observer is gonna be implemented
