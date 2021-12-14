@@ -124,12 +124,19 @@ const Header = props => {
                                         />
                                     </Search>
                                 </Toolbar>
-
+                                <Button
+                                    component={Link} to="/createevent"
+                                    color="primary"
+                                    variant="outlined"
+                                    style={{marginRight:10}}>
+                                    Create a new event
+                                </Button>
                                 <Button
                                     component={Link} to="/home"
                                     color="primary"
                                     variant="outlined"
-                                    startIcon={<HomeOutlinedIcon />} >
+                                    startIcon={<HomeOutlinedIcon />}
+                                    style={{marginRight:10}}>
                                     Home
                                 </Button>
                                 <Button
