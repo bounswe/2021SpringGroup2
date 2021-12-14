@@ -36,8 +36,6 @@ const App = () => {
                     <Route path="resetpassword" element={<ResetPasswordPage/>}/>
                     <Route path="search" element={<SearchEvents/>}/>
                     <Route path="*" element={<NotFound />} />
-
-                    <Route path="*" element={<Home />} />
                 </Route>
             </Routes>
         </React.Fragment>
