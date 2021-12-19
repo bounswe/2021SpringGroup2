@@ -9,10 +9,6 @@ import { makeStyles, createStyles } from "@mui/styles";
 import Container from "@mui/material/Container";
 import Joi from 'joi'
 import {useNavigate} from 'react-router-dom'
-import image from '../../logos/reb und(400 x 100 px).png'
-import SignUpFunction from "../../Controllers/SignUpController";
-import {useSnackbar} from "notistack";
-import DatePicker from "@mui/lab/DatePicker";
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -37,9 +33,6 @@ const useStyles = makeStyles(theme => createStyles({
     },
     submit: {
         margin: theme.spacing(3, 0, 2)
-    },
-    date: {
-        width:"100%"
     }
 }));
 
@@ -61,14 +54,12 @@ const schema = Joi.object({
         .min(3)
         .max(30)
         .required(),
+
     bio: Joi.string()
+        .alphanum()
         .optional()
-        .min(0)
-        .max(300),
-    location: Joi.string()
-        .optional()
-        .min(0)
-        .max(30),
+        .allow('')
+        .max(150),
 
     password: Joi.string()
         .pattern(new RegExp('^[a-zA-Z0-9]{8,30}$')),
@@ -76,19 +67,12 @@ const schema = Joi.object({
     repeat_password: Joi.ref('password'),
 
     email: Joi.string()
-        .email({ minDomainSegments: 2 , tlds: { allow: ['com', 'net', "edu"] }}),
-
-    birthday: Joi.string()
+        .email({ minDomainSegments: 2 , tlds: { allow: ['com', 'net', "edu"] }})
 })
     .with('password', 'repeat_password');
 
 
 const initialState = {
-    username: {
-        value: "",
-        changed: false,
-        error: undefined
-    },
 
     first_name: {
         value: "",
@@ -106,31 +90,28 @@ const initialState = {
         changed: false,
         error: undefined
     },
+    age: {
+        value: "",
+        changed: false,
+        error: undefined
+    },
     location: {
         value: "",
         changed: false,
         error: undefined
     },
-
-    password: {
+    fav_sport_1: {
         value: "",
         changed: false,
         error: undefined
     },
-
-    repeat_password: {
+    fav_sport_2: {
         value: "",
         changed: false,
         error: undefined
     },
-
-    email: {
+    fav_sport_3: {
         value: "",
-        changed: false,
-        error: undefined
-    },
-    birthday: {
-        value: new Date(),
         changed: false,
         error: undefined
     },
@@ -140,25 +121,19 @@ export default function SignUp() {
     const classes = useStyles()
     const navigate = useNavigate()
     const [state, setState] = useState(initialState)
-    const { enqueueSnackbar } = useSnackbar();
-
 
     const getValue = state => ({
-        username: state.username.value,
 
-        first_name: state.first_name.value,
+        first_name: state.firstame.value,
 
         last_name: state.last_name.value,
+
         bio: state.bio.value,
+        age: state.age.value,
         location: state.location.value,
-
-        password: state.password.value,
-
-        repeat_password: state.repeat_password.value,
-
-        email: state.email.value,
-        birthday: state.birthday.value.toISOString().split("T")[0],
-
+        fav_sport_1: state.fav_sport_1.value,
+        fav_sport_2: state.fav_sport_2.value,
+        fav_sport_3: state.fav_sport_3.value,
     })
     const handleChange = e=>{
         const newState = {...state}
@@ -178,53 +153,15 @@ export default function SignUp() {
         }
         setState(newState)
     }
-    const submit = _=>{
-        const value = getValue(state)
-        const result = schema.validate(value, {abortEarly: false})
-        console.log(value.value)
-        console.log(result)
-        if(result.error)return
-        SignUpFunction(value).then(_=>{
-                navigate("/profile/"+value.username)
-                enqueueSnackbar("Your account is successfully created.", {variant: "success"})
-            })
-            .catch(e=>{
-                enqueueSnackbar("An error occured in the server.", {variant: "error"})
-                console.log(e)
-            })
-    }
-
     return (
         <Container component="main" maxWidth="md">
             <CssBaseline />
             <div className={classes.paper}>
-                <img src={image} alt={"logo"}/>
                 <Typography component="h1" variant="h5">
-                    Sign up
+                    Edit Profile
                 </Typography>
                 <form className={classes.form} noValidate>
                     <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="username"
-                                label="User Name"
-                                name="username"
-                                autoComplete="username"
-                                value={state.username.value||""}
-                                onChange={handleChange}
-                            />
-                            {
-                                state.username.error?
-                                    <Alert
-                                        style={{marginTop:5}}
-                                        severity="error">
-                                        {state.username.error}
-                                    </Alert>:null
-                            }
-                        </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 autoComplete="fname"
@@ -268,15 +205,15 @@ export default function SignUp() {
                                     </Alert>:null
                             }
                         </Grid>
-                        <Grid item xs={12} sm={12}>
+                        <Grid item xs={12}>
                             <TextField
                                 variant="outlined"
                                 required
                                 fullWidth
                                 id="bio"
-                                label="Biography"
+                                label="Your Biography"
                                 name="bio"
-                                autoComplete="lname"
+                                autoComplete="bio"
                                 value={state.bio.value||""}
                                 onChange={handleChange}
                             />
@@ -289,15 +226,36 @@ export default function SignUp() {
                                     </Alert>:null
                             }
                         </Grid>
-                        <Grid item xs={12} sm={12}>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="age"
+                                label="Your Age"
+                                name="age"
+                                autoComplete="age"
+                                value={state.age.value||""}
+                                onChange={handleChange}
+                            />
+                            {
+                                state.age.error?
+                                    <Alert
+                                        style={{marginTop:5}}
+                                        severity="error">
+                                        {state.age.error}
+                                    </Alert>:null
+                            }
+                        </Grid>
+                        <Grid item xs={12}>
                             <TextField
                                 variant="outlined"
                                 required
                                 fullWidth
                                 id="location"
-                                label="Location"
+                                label="Your Location"
                                 name="location"
-                                autoComplete="lname"
+                                autoComplete="location"
                                 value={state.location.value||""}
                                 onChange={handleChange}
                             />
@@ -315,19 +273,19 @@ export default function SignUp() {
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                                value={state.email.value||""}
+                                id="fav_sport_1"
+                                label="Your Favourite Sports"
+                                name="fav_sport_1"
+                                autoComplete="fav_sport_1"
+                                value={state.fav_sport_1.value||""}
                                 onChange={handleChange}
                             />
                             {
-                                state.email.error?
+                                state.fav_sport_1.error?
                                     <Alert
                                         style={{marginTop:5}}
                                         severity="error">
-                                        {state.email.error}
+                                        {state.fav_sport_1.error}
                                     </Alert>:null
                             }
                         </Grid>
@@ -336,20 +294,19 @@ export default function SignUp() {
                                 variant="outlined"
                                 required
                                 fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                                value={state.password.value||""}
+                                id="fav_sport_2"
+                                label="Your Favourite Sports"
+                                name="fav_sport_2"
+                                autoComplete="fav_sport_2"
+                                value={state.fav_sport_2.value||""}
                                 onChange={handleChange}
                             />
                             {
-                                state.password.error?
+                                state.fav_sport_2.error?
                                     <Alert
                                         style={{marginTop:5}}
                                         severity="error">
-                                        {state.password.error}
+                                        {state.fav_sport_2.error}
                                     </Alert>:null
                             }
                         </Grid>
@@ -358,58 +315,33 @@ export default function SignUp() {
                                 variant="outlined"
                                 required
                                 fullWidth
-                                name="repeat_password"
-                                label="Repeat Password"
-                                type="password"
-                                id="repeat_password"
-                                autoComplete="current-repeatpassword"
-                                value={state.repeat_password.value||""}
+                                id="fav_sport_3"
+                                label="Your Favourite Sports"
+                                name="fav_sport_3"
+                                autoComplete="fav_sport_3"
+                                value={state.fav_sport_3.value||""}
                                 onChange={handleChange}
                             />
                             {
-                                state.repeat_password.error?
+                                state.fav_sport_3.error?
                                     <Alert
                                         style={{marginTop:5}}
                                         severity="error">
-                                        {state.repeat_password.error}
+                                        {state.fav_sport_3.error}
                                     </Alert>:null
                             }
-                        </Grid>
-                        <Grid item xs={12}>
-                            <DatePicker
-                                className={classes.date}
-                                fullWidth
-                                PaperProps={{fullWidth:true}}
-                                label="Birthday"
-                                value={new Date(state.birthday.value)}
-                                onChange={(newValue) => {
-                                    const newState = {...state}
-                                    newState.birthday.value = newValue.toISOString().split("T")[0]
-                                    setState(newState)
-                                }}
-                                renderInput={(params) => <TextField {...params} />}
-                            />
                         </Grid>
                         <Grid item xs={3}>
                         </Grid>
                         <Grid item xs={6}>
                             <Button
+                                type="submit"
                                 fullWidth
                                 variant="contained"
                                 color="primary"
-                                className={classes.submit}
-                                onClick={submit}>
-                                Sign Up
+                                className={classes.submit}>
+                                Save
                             </Button>
-                        </Grid>
-                        <Grid item xs={3}>
-                        </Grid>
-                        <Grid item xs={3}>
-                        </Grid>
-                        <Grid item xs={6} textAlign={"center"}>
-                            <Typography style={{ cursor: "pointer" }} variant="body2" color="textSecondary" align="center" onClick={_=>navigate("/login")}>
-                                Already have an account? Sign in
-                            </Typography>
                         </Grid>
                     </Grid>
                 </form>
