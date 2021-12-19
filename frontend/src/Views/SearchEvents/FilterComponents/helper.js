@@ -1,6 +1,6 @@
 
 
-export function datetoGMTString(date){
-    return date.toGMTString()
+export function datetoISOString(date){
+    return date.toISOString()
 
 }
