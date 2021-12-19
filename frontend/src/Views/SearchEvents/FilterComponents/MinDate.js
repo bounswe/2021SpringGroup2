@@ -14,6 +14,7 @@ export default function MinCreationDate(props){
                 onChange={(newValue) => {
                     console.log(newValue.getTime())
                     props.setValue(props.id)(newValue.toISOString());
+                    props.setValue(props.id)(newValue.toISOString().split("T")[0]);
                 }}
                 renderInput={(params) => <TextField {...params} />}
             />
