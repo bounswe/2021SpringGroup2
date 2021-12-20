@@ -137,6 +137,7 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
                     adapter1 ->
                 adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 spinner4.adapter = adapter1
+                spinner4.setSelection(100)
             }
             }
         val spinner5: Spinner = binding.maxSkillsSpinner
@@ -150,6 +151,7 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
             ).also{adapter->
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 spinner5.adapter = adapter
+                spinner5.setSelection(4)
             }
 
         }
