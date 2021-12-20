@@ -5,6 +5,8 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,6 +70,7 @@ class FragmentCreateEvent : Fragment(), DialogManager {
         super.onViewCreated(view, savedInstanceState)
         setSpinners()
         setClickListeners()
+        initListeners()
     }
 
     private fun setDatePickers(isStart: Boolean) {
@@ -289,6 +292,79 @@ class FragmentCreateEvent : Fragment(), DialogManager {
             transaction.replace(R.id.container_main, FragmentCreateEventMap()).addToBackStack("create-event-map")
             transaction.commit()
         }
+    }
+    private fun initListeners() {
+        binding.etEventTitle.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                checkFields()
+            }
+        })
+        binding.etLocationName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                checkFields()
+            }
+        })
+        binding.etLatitude.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                checkFields()
+            }
+        })
+        binding.etLongitude.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                checkFields()
+            }
+        })
+        binding.etEventDateStart.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                checkFields()
+            }
+        })
+        binding.etEventDateEnd.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                checkFields()
+            }
+        })
+    }
+    private fun checkFields(){
+         binding.buttonCreateEvent.isEnabled=binding.etEventTitle.text.toString().length>=5 && binding.etLocationName.text.toString().length>=5
+                 && binding.etLatitude.text.toString().length>=1 && binding.etLongitude.text.toString().length>=1 && binding.etEventDateStart.text.toString().length>=5
+                 && binding.etEventDateEnd.text.toString().length>=5
     }
 
     private fun setFragmentListeners(){
