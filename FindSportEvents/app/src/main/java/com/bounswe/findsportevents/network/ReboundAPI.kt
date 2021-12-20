@@ -36,7 +36,7 @@ interface ReboundAPI {
         @Body request: ConfirmResetPasswordRequest
     ): Call<ConfirmResetPasswordResponse>
 
-    @GET("api/users/{username}")
+    @GET("api/users/{username}/")
     fun getUser(
         @Header("Authorization") token: String,
         @Path("username") username: String
