@@ -24,6 +24,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import {useNavigate} from "react-router-dom";
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -76,7 +77,7 @@ export const initialFilters = {
 
 export default function SearchEvents() {
     const classes = useStyles()
-    //const navigate = useNavigate()
+    const navigate = useNavigate()
     //const { enqueueSnackbar } = useSnackbar();
     const [events, setEvents] = useState([])
     const [filters, setFilters] = useState(initialFilters)
@@ -229,6 +230,9 @@ export default function SearchEvents() {
                                         Players:  {e.spectators.length} / {e.spec_capacity}
                                     </Typography>
                                 </CardContent>
+                                <CardActions>
+                                    <Button size="small" onClick={_=>navigate("/profile/"+e.owmer+"/")}>See Owner</Button>
+                                </CardActions>
                             </Card>
                         ))}
                     </Grid>
