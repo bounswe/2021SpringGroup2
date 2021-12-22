@@ -1,6 +1,6 @@
-from eventposts.models import EventPost, Post
+from eventposts.models import EventPost, Post, EquipmentPost
 from authentication.models import User
-from eventposts.serializers import EventSerializer
+from eventposts.serializers import EventSerializer, EquipmentSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.http import JsonResponse
@@ -16,6 +16,36 @@ class EventPostsPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'page_size'
     max_page_size = 1000
+
+
+class EquipmentPostsPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
+
+class EquipmentViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    authentication_classes = [JWTAuthentication]
+    pagination_class = EquipmentPostsPagination
+    queryset = EquipmentPost.objects.all()
+    serializer_class = EquipmentSerializer
+    JWTauth = JWTAuthentication()
+    lookup_field = "id"
+
+    def authenticate(self):
+        user, _ = self.JWTauth.authenticate(self.request)
+        return user.id == self.request.data["owner"]
+
+    def create(self, request, *args, **kwargs):
+        if self.authenticate():
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        else:
+            return JsonResponse(status=401, data={'detail': 'Unauthorized.'})
 
 
 class EventViewSet(viewsets.ModelViewSet):

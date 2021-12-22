@@ -3,28 +3,37 @@ from authentication.models import User
 from django.contrib.postgres.fields import ArrayField
 from datetime import datetime
 
+
 def empty_list():
     return list([])
 
-class Post(models.Model):
 
+class Post(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    content = models.TextField(default="")
-    title = models.TextField(default="")
+    content = models.TextField()
+    title = models.TextField()
 
     creation_date = models.DateTimeField(default=datetime.now())
-    location = models.TextField(default="")
+    location = models.TextField()
+
+    min_skill_level = models.IntegerField(default=0)
+    max_skill_level = models.IntegerField(default=0)
+
+    sport = models.CharField(max_length=30)
 
     class Meta:
         abstract = True
 
 
-class EventPost(Post):
-    date = models.DateTimeField(default=datetime.now())
-    duration = models.IntegerField(default=60)
+class EquipmentPost(Post):
+    equipment_type = models.TextField()
 
-    sport = models.CharField(max_length=30)
+
+class EventPost(Post):
+    event_start = models.DateTimeField()
+    event_end = models.DateTimeField()
+
     min_age = models.IntegerField(default=18)
     max_age = models.IntegerField(default=75)
 
@@ -34,8 +43,5 @@ class EventPost(Post):
     applicants = ArrayField(models.IntegerField(), default=empty_list)
     spectators = ArrayField(models.IntegerField(), default=empty_list)
 
-    min_skill_level = models.IntegerField(default=0)
-    max_skill_level = models.IntegerField(default=0)
-
-    latitude = models.FloatField(default=1.0)
-    longitude = models.FloatField(default=1.0)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
