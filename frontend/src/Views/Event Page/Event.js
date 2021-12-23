@@ -24,6 +24,9 @@ const useStyles = makeStyles(theme => createStyles({
     fav: {
         color: theme.palette.warning.light,
         fontsize: 20,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center"
     },
     other: {
         color: theme.palette.secondary.light,
