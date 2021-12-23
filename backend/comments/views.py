@@ -118,7 +118,33 @@ class Answers(APIView):
         response = {"@context": "https://www.w3.org/ns/activitystreams", "summary": "Object History",
                     "type": "Collection", "totalItems": len(answers), "items": listItems}
         return Response(response)
+        
+    def post(self,request, post_id, comment_id):
+        try:
+            EventPost.objects.get(id=post_id)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        body = {}
+        body["eventid"]=post_id
+        body["commentid"]=comment_id
+        body["answer"]=request.data["answer"]
+        body["owner"]=request.data["ownerId"]
+        body["creationDate"]=request.data["creationDate"]
 
+        try:
+            answerSerializer=AnswerSerializer(data=body)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if answerSerializer.is_valid():
+
+            answerSerializer.save()
+            object= {"answer":body["answer"],"creationDate":timezone.now()}
+            response = {"@context": "https://www.w3.org/ns/activitystreams", "summary":answerSerializer.validated_data["owner"].username+ " created a comment",
+            "type": "Create", "actor":{"type":"Person","name":answerSerializer.validated_data["owner"].username } }
+            response["object"]=object
+            return Response(response)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 
