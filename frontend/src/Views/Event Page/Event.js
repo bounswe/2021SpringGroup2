@@ -106,7 +106,8 @@ export default function Event (){
         fetch("http://34.68.66.109/api/posts/"+eventid+"/")
             .then(r=>r.json())
             .then(r=>setEvent(r)||r)
-            .then(r=>getSportInfo(r.event.object.eventSport))
+            .then(r=>getSportInfo(r.object.eventSport))
+            //.then(r=>getSportInfo("Tennis"))
             .then(setSport)
     }, []);
     // useEffect(() => {
@@ -118,7 +119,7 @@ export default function Event (){
         //style={{background:`url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}
         <div style={{background:`url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}>
 
-            <Grid item xs={12} sm={12} container spacing={3} alignItems="stretch"  className={classes.other}>
+            <Grid item xs={12} sm={12} container spacing={3} alignItems="stretch"  className={classes.fav}>
                     <Grid item  style={{display: 'flex'}} align={"center"}>
                         <EventInfoCard {...sport}/>
 
