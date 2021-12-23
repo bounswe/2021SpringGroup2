@@ -7,9 +7,7 @@ import {createStyles, makeStyles, styled} from "@mui/styles";
 import {ListItemText, TextField} from "@mui/material";
 import {getSports} from '../../Controllers/SportsController';
 import EventInfoCard from "../Home/EventInfoCard";
-import EventInfo from "../Home/SportsEventCard";
 import Capture from '../images/Capture.png'
-import Stack from "@mui/material/Stack";
 
 const useStyles = makeStyles(theme => createStyles({
     "@global": {
@@ -101,17 +99,17 @@ export default function Event (){
     const getSportInfo = sport => console.log(sport) || getSports()
         .then(sports=>sports.find(s=>s.title===sport))
 
-    // useEffect(() => {
-    //     fetch("http://34.68.66.109/api/posts/"+eventid)
-    //         .then(r=>r.json())
-    //         .then(r=>setEvent(r)||r)
-    //         .then(r=>getSportInfo(r.event.object.eventSport))
-    //         .then(setSport)
-    // }, []);
     useEffect(() => {
-        getSportInfo(r=>r.event.object.eventSport)
+        fetch("http://34.68.66.109/api/posts/"+eventid+"/")
+            .then(r=>r.json())
+            .then(r=>setEvent(r)||r)
+            .then(r=>getSportInfo(r.event.object.eventSport))
             .then(setSport)
-    })
+    }, []);
+    // useEffect(() => {
+    //     getSportInfo(r=>r.event.object.eventSport)
+    //         .then(setSport)
+    // })
 
     return(
         //style={{background:`url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}
