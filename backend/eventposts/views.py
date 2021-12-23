@@ -45,11 +45,11 @@ class EventViewSet(viewsets.ModelViewSet):
                                                                                     "longitude": data["longitude"],
                                                                                     "latitude": data["latitude"],
                                                                                     "units": "m"
-                                                                                }}, "eventDate": data["date"],
+                                                                                }, "eventDate": data["date"],
              "eventSport": data["sport"], "eventMinAge": data["min_age"], "eventMaxAge": data["max_age"],
              "eventMinSkillLevel": data["min_skill_level"], "eventMaxSkillLevel": data["max_skill_level"],
              "eventPlayerCapacity": data["player_capacity"], "eventSpectatorCapacity": data["spec_capacity"],
-             "eventApplicants": data["applicants"], "eventPlayers": data["players"]}
+             "eventApplicants": data["applicants"], "eventPlayers": data["players"]}}
 
         return response
 
