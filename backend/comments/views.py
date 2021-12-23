@@ -12,6 +12,30 @@ from rest_framework.views import APIView
 from django.forms.models import model_to_dict
 from django.utils import timezone
 
+
+
+class GetCommentById(APIView):
+
+    def get (self,request,postid,commentid):
+        try:
+            comments=Comment.objects.filter(eventid=postid,id=commentid)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        if(len(comments)==0):
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        commentserializer = CommentSerializer(comments, many=True)
+        object = {"type": "Comment", "postId": comments[0].eventid.id, "ownerId": comments[0].owner.id, "content": comments[0].comment,
+                  "creationDate": comments[0].creationDate}     #timezone.now()}
+
+        response = {"@context": "https://www.w3.org/ns/activitystreams",
+                    "summary": comments[0].owner.username + " created a comment",
+                    "type":"Create",
+                    "actor":{"type":"Person","name":comments[0].owner.username } }
+        response["object"] = object
+        return Response(response)
+
+
 class Comments(APIView):
     def get(self, request,id):
 
