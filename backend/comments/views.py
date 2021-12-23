@@ -96,6 +96,30 @@ class Comments(APIView):
 
 
 
+class Answers(APIView):
+    def get(self, request, post_id,comment_id):
+
+        try:
+            comments = Comment.objects.filter(eventid=post_id, id=comment_id)
+            answers = Answer.objects.filter(commentid=comment_id)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        if len(comments)==0:
+            return Response(status=status.HTTP_404_BAD_REQUEST)
+        print(answers)
+        listItems = []
+
+        for answer in answers:
+            objectValue = {"answer":answer.answer, "creationDate":answer.creationDate}
+            listItem = {"type": "Create", "actor": {"type": "Person", "name": answer.owner.username},
+                        "object": objectValue}
+            listItems.append(listItem)
+ 
+        response = {"@context": "https://www.w3.org/ns/activitystreams", "summary": "Object History",
+                    "type": "Collection", "totalItems": len(answers), "items": listItems}
+        return Response(response)
+
+
 
 
 
