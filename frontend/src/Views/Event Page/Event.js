@@ -8,7 +8,8 @@ import {ListItemText, TextField} from "@mui/material";
 import {getSports} from '../../Controllers/SportsController';
 import EventInfoCard from "../Home/EventInfoCard";
 import EventInfo from "../Home/SportsEventCard";
-import Capture from '../images/Capture.JPG'
+import Capture from '../images/Capture.png'
+import Stack from "@mui/material/Stack";
 
 const useStyles = makeStyles(theme => createStyles({
     "@global": {
@@ -17,7 +18,6 @@ const useStyles = makeStyles(theme => createStyles({
         }
     },
     paper: {
-        color: theme.palette.secondary.light,
         marginTop: theme.spacing(8),
         display: "flex",
         flexDirection: "column",
@@ -43,32 +43,6 @@ const useStyles = makeStyles(theme => createStyles({
         color: theme.palette.warning.light,
         fontsize: 20,
     },
-    infos: {
-        color: theme.palette.common.light,
-        fontsize: 20,
-    },
-    infotexts: {
-        color: theme.palette.background.light,
-        fontsize: 20,
-    },
-    hero: {
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://penaltyfile.com/wp-content/uploads/2020/06/different-types-of-sports-June32020-1-min.jpg')`,
-        height: "250px",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        position: "relative",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        color: "#fff",
-        fontSize: "4rem",
-        [theme.breakpoints.down("sm")]: {
-            height: 300,
-            fontSize: "3em"
-        }
-    },
-
     media: {
         height: 350
     },
@@ -127,20 +101,20 @@ export default function Event (){
     const getSportInfo = sport => console.log(sport) || getSports()
         .then(sports=>sports.find(s=>s.title===sport))
 
-    useEffect(() => {
-        fetch("http://34.68.66.109/api/posts/"+eventid)
-            .then(r=>r.json())
-            .then(r=>setEvent(r)||r)
-            .then(r=>getSportInfo(r.event.object.eventSport))
-            .then(setSport)
-    }, []);
     // useEffect(() => {
-    //     getSportInfo(r=>r.event.object.eventSport)
+    //     fetch("http://34.68.66.109/api/posts/"+eventid)
+    //         .then(r=>r.json())
+    //         .then(r=>setEvent(r)||r)
+    //         .then(r=>getSportInfo(r.event.object.eventSport))
     //         .then(setSport)
-    // })
+    // }, []);
+    useEffect(() => {
+        getSportInfo(r=>r.event.object.eventSport)
+            .then(setSport)
+    })
 
     return(
-
+        //style={{background:`url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}
         <div style={{background:`url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}>
 
             <Grid item xs={12} sm={12} container spacing={3} alignItems="stretch"  className={classes.other}>
@@ -150,46 +124,45 @@ export default function Event (){
                     </Grid>
             </Grid>
 
-            <Grid container spacing={2} xs={12} sm={12} >
+            <Grid container spacing={2}>
 
                 <Grid item xs={12} sm={12}>
-                    <Typography className={classes.infotext} variant="h4" component="div" align={"center"} style={{backgroundColor:"black", display:"flex", width:500}}>
+                    {/*style={{backgroundColor:"white", display:"flex"}}*/}
+                    <Typography className={classes.fav} variant="h4" component="div" align={"center"}>
                         {event.object.title}
                     </Typography>
-                    <Typography variant="subtitle1" component="div" align={"center"} style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain", width:400}}>
+                    {/*style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain", width:400}}*/}
+                    <Typography variant="subtitle1" component="div" align={"center"}>
                         Type of Sport: {event.object.eventSport}
                     </Typography>
-                    <Typography variant="subtitle1" component="div" align={"center"} style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain", width:400}}>
+                    {/*style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain", width:400}}*/}
+                    <Typography variant="subtitle1" component="div" align={"center"} >
                         Location: {event.object.location.type} {event.object.location.longitude} {event.object.location.latitude}
                     </Typography>
-                    <Typography gutterBottom variant="body1" align={"center"} style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain", width:400}}>
+                    {/*style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain", width:400}}*/}
+                    <Typography gutterBottom variant="body1" align={"center"} >
                         Event Date: {event.object.eventDate}
                     </Typography>
                 </Grid>
 
-                {/*<Grid item xs={12} sm={12}>*/}
-                {/*</Grid>*/}
-                <Grid item backgroundColor={"black"}>
-                    <Typography variant="body1" className={classes.fav}>
+                <Grid item xs={12} sm={12}>
+                    <Typography variant="h5" align={"center"}>
                         Requirements (to apply)
                     </Typography>
-                    <Typography className={classes.other}>
-                        Age: You should be minimum {event.object.eventMinAge} and maximum {event.object.eventMaxAge} years old.
-                    </Typography>
-                    <Typography className={classes.other}>
-                        Skill: Your skill level should be minimum {event.object.eventMinSkillLevel} and maximum {event.object.eventMaxSkillLevel}.
-                    </Typography>
-                </Grid>
-                {/*<Grid item xs={12} sm={12}>*/}
-                {/*    Age: You should be minimum {event.object.eventMinAge} and maximum {event.object.eventMaxAge} years old.*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={12} sm={12}>*/}
-                {/*    Skill: Your skill level should be minimum {event.object.eventMinSkillLevel} and maximum {event.object.eventMaxSkillLevel}.*/}
-                {/*</Grid>*/}
-                <Grid item xs={12} sm={12}>
-                    <Typography className={classes.fav} variant="body1" >
-                        Player Capacity: {event.object.eventPlayerCapacity}
-                    </Typography>
+                    <Grid container spacing={2} justifyContent={"space-between"} >
+                        <Grid item xs={12} sm={6}>
+                            <ListItemText className={classes.fav} primary="Minimum Age" secondary={event.object.eventMinAge} />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <ListItemText className={classes.fav} primary="Minimum Skill Level" secondary={event.object.eventMinSkillLevel} />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <ListItemText className={classes.fav} primary="Maximum Age" secondary={event.object.eventMaxAge} />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <ListItemText className={classes.fav} primary="Maximum Skill Level" secondary={event.object.eventMaxSkillLevel} />
+                        </Grid>
+                    </Grid>
                 </Grid>
                 <Grid item xs={12} sm={12}>
                     <Grid container spacing={2} justifyContent={"space-between"}>
@@ -197,13 +170,13 @@ export default function Event (){
                             <ListItemText className={classes.fav} primary="Players" secondary={event.object.eventPlayers} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <ListItemText className={classes.fav} style={{textAlign:"right"}} primary="Event Owner" secondary={event.actor.name} />
+                            <ListItemText className={classes.fav} primary="Event Owner" secondary={event.actor.name} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <ListItemText className={classes.fav} primary="Creation Date: " secondary={event.object.creationDate} />
+                            <ListItemText className={classes.fav} primary="Creation Date" secondary={event.object.creationDate} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <ListItemText className={classes.fav} style={{textAlign:"right"}} primary=" Player Capacity:" secondary={event.object.eventPlayerCapacity} />
+                            <ListItemText className={classes.fav} primary=" Player Capacity" secondary={event.object.eventPlayerCapacity} />
                         </Grid>
                     </Grid>
                 </Grid>
