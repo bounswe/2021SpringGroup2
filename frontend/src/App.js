@@ -31,9 +31,7 @@ const App = () => {
                     <Route path="home" element={<Home />} />
                     <Route path="resetpassword" element={<ResetPasswordPage/>}/>
                     <Route path="search" element={<SearchEvents/>}/>
-                    <Route path="event" element={_=><Outlet/>}>
-                        <Route path=":eventid" element={<Event/>}/>
-                    </Route>
+                    <Route path='event/:eventid' element={<Event/>}/>
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>

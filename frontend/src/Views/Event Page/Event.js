@@ -7,6 +7,7 @@ import {createStyles, makeStyles, styled} from "@mui/styles";
 import {ListItemText, TextField} from "@mui/material";
 import {getSports} from '../../Controllers/SportsController';
 import EventInfoCard from "../Home/EventInfoCard";
+import EventInfo from "../Home/SportsEventCard";
 import Capture from '../images/Capture.JPG'
 
 const useStyles = makeStyles(theme => createStyles({
@@ -71,6 +72,9 @@ const useStyles = makeStyles(theme => createStyles({
     media: {
         height: 350
     },
+    typography: {
+        align: "center"
+    }
 
 
 }));
@@ -130,48 +134,58 @@ export default function Event (){
             .then(r=>getSportInfo(r.event.object.eventSport))
             .then(setSport)
     }, []);
+    // useEffect(() => {
+    //     getSportInfo(r=>r.event.object.eventSport)
+    //         .then(setSport)
+    // })
 
     return(
 
         <div style={{background:`url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}>
 
-            <Grid item xs={12} sm={12} container spacing={3} alignItems="stretch"  className={classes.paper}>
+            <Grid item xs={12} sm={12} container spacing={3} alignItems="stretch"  className={classes.other}>
                     <Grid item  style={{display: 'flex'}} align={"center"}>
                         <EventInfoCard {...sport}/>
 
                     </Grid>
             </Grid>
 
-            <Grid container spacing={2} xs={12} sm={12}>
+            <Grid container spacing={2} xs={12} sm={12} >
 
-                <Grid item xs={12} sm={12} >
-                    <Typography className={classes.infotext} variant="h4" component="div" align={"center"} style={{alignContent: 'center',backgroundColor:"black"}}>
+                <Grid item xs={12} sm={12}>
+                    <Typography className={classes.infotext} variant="h4" component="div" align={"center"} style={{backgroundColor:"black", display:"flex", width:500}}>
                         {event.object.title}
                     </Typography>
-                    <Typography variant="subtitle1" component="div" align={"center"} style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain"}}>
+                    <Typography variant="subtitle1" component="div" align={"center"} style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain", width:400}}>
                         Type of Sport: {event.object.eventSport}
                     </Typography>
-                    <Typography variant="subtitle1" component="div" align={"center"} style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain"}}>
+                    <Typography variant="subtitle1" component="div" align={"center"} style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain", width:400}}>
                         Location: {event.object.location.type} {event.object.location.longitude} {event.object.location.latitude}
                     </Typography>
-                    <Typography gutterBottom variant="body1" align={"center"} style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain"}}>
+                    <Typography gutterBottom variant="body1" align={"center"} style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain", width:400}}>
                         Event Date: {event.object.eventDate}
                     </Typography>
                 </Grid>
 
-                <Grid item xs={12} sm={12}>
-                </Grid>
-                <Grid item >
+                {/*<Grid item xs={12} sm={12}>*/}
+                {/*</Grid>*/}
+                <Grid item backgroundColor={"black"}>
                     <Typography variant="body1" className={classes.fav}>
                         Requirements (to apply)
                     </Typography>
+                    <Typography className={classes.other}>
+                        Age: You should be minimum {event.object.eventMinAge} and maximum {event.object.eventMaxAge} years old.
+                    </Typography>
+                    <Typography className={classes.other}>
+                        Skill: Your skill level should be minimum {event.object.eventMinSkillLevel} and maximum {event.object.eventMaxSkillLevel}.
+                    </Typography>
                 </Grid>
-                <Grid item xs={12} sm={12}>
-                    Age: You should be minimum {event.object.eventMinAge} and maximum {event.object.eventMaxAge} years old.
-                </Grid>
-                <Grid item xs={12} sm={12}>
-                    Skill: Your skill level should be minimum {event.object.eventMinSkillLevel} and maximum {event.object.eventMaxSkillLevel}.
-                </Grid>
+                {/*<Grid item xs={12} sm={12}>*/}
+                {/*    Age: You should be minimum {event.object.eventMinAge} and maximum {event.object.eventMaxAge} years old.*/}
+                {/*</Grid>*/}
+                {/*<Grid item xs={12} sm={12}>*/}
+                {/*    Skill: Your skill level should be minimum {event.object.eventMinSkillLevel} and maximum {event.object.eventMaxSkillLevel}.*/}
+                {/*</Grid>*/}
                 <Grid item xs={12} sm={12}>
                     <Typography className={classes.fav} variant="body1" >
                         Player Capacity: {event.object.eventPlayerCapacity}
