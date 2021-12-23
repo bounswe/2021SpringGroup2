@@ -25,6 +25,7 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import {useNavigate} from "react-router-dom";
+import SportType from "./FilterComponents/SportType";
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -56,7 +57,7 @@ export const initialFilters = {
     max_creation_date: new Date(2022).toISOString().split("T")[0],
     min_date: new Date(2020).toISOString().split("T")[0],
     max_date: new Date(2022).toISOString().split("T")[0],
-    sport: "",
+    sport: "Tennis",
     min_age: 0,
     max_age: 150,
     min_player_capacity: 0,
@@ -111,6 +112,12 @@ export default function SearchEvents() {
                             </Typography>
 
                             <div>  {space}  </div>
+                            <SportType
+                                text={"Sport Type"}
+                                {...filters}
+                                id={"sport"}
+                                setValue={setValue}
+                            />
                             <MinSkillLevel
                                 {...filters}
                                 id={"min_skill_level"}

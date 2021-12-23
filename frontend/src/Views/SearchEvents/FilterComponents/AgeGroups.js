@@ -1,6 +1,7 @@
 import React from 'react'
 import Typography from "@mui/material/Typography";
 import Slider from '@mui/material/Slider';
+import {FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
 
 
 export default function AgeGroups(props){
@@ -10,16 +11,23 @@ export default function AgeGroups(props){
 
 
     return(
+
         <React.Fragment>
             <Typography variant="body1">
-                Age Group Range
+                Sport Types
             </Typography>
-            <Slider
-                getAriaLabel={() => 'Age Group Range'}
-                value={[props[props.ids[0]], props[props.ids[1]]]}
-                onChange={handleChange}
-                valueLabelDisplay="auto"
-            />
+            <FormControl fullWidth>
+                <Select
+                    getAriaLabel={() => 'Sport Types'}
+                    value={props.id}
+                    onChange={handleChange}
+                    valueLabelDisplay="auto"
+                >
+                    <MenuItem value={10}>Tennis</MenuItem>
+                    <MenuItem value={20}>Football</MenuItem>
+                    <MenuItem value={30}>Basketball</MenuItem>
+                </Select>
+            </FormControl>
         </React.Fragment>
     )
 }
