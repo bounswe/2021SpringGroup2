@@ -10,7 +10,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bounswe.findsportevents.adapter.RecyclerAdapter
 import com.bounswe.findsportevents.adapter.RecyclerAdapter2
 import com.bounswe.findsportevents.databinding.FragmentSearchResultsBinding
 import com.bounswe.findsportevents.network.ReboundAPI
@@ -23,11 +22,12 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class FragmentSearchResults : Fragment() {
+class FragmentSearchResults : Fragment(), RecyclerAdapter2.OnItemClickListener {
     private var _binding: FragmentSearchResultsBinding? = null
     private val binding get() = _binding!!
     private var token = ""
     private var layoutManager: RecyclerView.LayoutManager?=null
+    private var listener : RecyclerAdapter2.OnItemClickListener = this
     private var adapter: RecyclerView.Adapter<RecyclerAdapter2.ViewHolder>?=null
     private var sports = mutableListOf(0)
     private var testList= arrayListOf("")
@@ -56,9 +56,7 @@ class FragmentSearchResults : Fragment() {
     var page=1
     private lateinit var searchResultsFragListener : FragmentSearchResultsListener
 
-    interface FragmentSearchResultsListener {
 
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,7 +101,7 @@ class FragmentSearchResults : Fragment() {
                     }
                     layoutManager= LinearLayoutManager(context)
                     binding.recyclerView2.layoutManager=layoutManager
-                    adapter = RecyclerAdapter2(events,creators,fields,players,spectators,date)
+                    adapter = RecyclerAdapter2(events,creators,fields,players,spectators,date,listener)
                     binding.recyclerView2.adapter = adapter
                     if(page*1.0 < response.body()?.count!!/10.0){
                         page++
@@ -128,7 +126,7 @@ class FragmentSearchResults : Fragment() {
                                     }
                                     layoutManager=LinearLayoutManager(context)
                                     binding.recyclerView2.layoutManager=layoutManager
-                                    adapter = RecyclerAdapter2(events,creators,fields,players,spectators,date)
+                                    adapter = RecyclerAdapter2(events,creators,fields,players,spectators,date,listener)
                                     binding.recyclerView2.adapter = adapter
 
                                 }
@@ -181,6 +179,12 @@ class FragmentSearchResults : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+    interface FragmentSearchResultsListener {
+//
+    }
+    override fun onItemClick(position: Int) {
+        Toast.makeText(context,"Item ${events[position]}",Toast.LENGTH_SHORT).show()
     }
 
 

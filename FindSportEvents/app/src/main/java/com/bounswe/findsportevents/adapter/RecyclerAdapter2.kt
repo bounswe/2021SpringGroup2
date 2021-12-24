@@ -10,7 +10,7 @@ import com.bounswe.findsportevents.R
 
 class RecyclerAdapter2(val events : MutableList<String>,val creators : MutableList<Int>
                       ,val fields : MutableList<String>,val players : MutableList<Int>,val spectators : MutableList<Int>,
-                      val date : MutableList<String>) : RecyclerView.Adapter<RecyclerAdapter2.ViewHolder>() {
+                      val date : MutableList<String>, private val listener: OnItemClickListener ) : RecyclerView.Adapter<RecyclerAdapter2.ViewHolder>() {
 
 
 
@@ -32,7 +32,7 @@ class RecyclerAdapter2(val events : MutableList<String>,val creators : MutableLi
     override fun getItemCount(): Int {
         return events.size
     }
-    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView), View.OnClickListener{
         var eventType: TextView
         var eventCreator: TextView
         var field: TextView
@@ -46,7 +46,17 @@ class RecyclerAdapter2(val events : MutableList<String>,val creators : MutableLi
             players=itemView.findViewById(R.id.players_tv)
             date=itemView.findViewById(R.id.date_tv)
             spectators=itemView.findViewById(R.id.spectators_tv)
-
+            itemView.setOnClickListener(this)
         }
+
+        override fun onClick(p0: View?) {
+            val position = adapterPosition
+            if(position!=RecyclerView.NO_POSITION){
+                listener.onItemClick(position)
+            }
+        }
+    }
+    interface OnItemClickListener{
+        fun onItemClick(position: Int)
     }
 }
