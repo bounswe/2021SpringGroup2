@@ -69,12 +69,11 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
 
         searchEventFragListener = requireActivity() as FragmentSearchEventListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
-        testList=requireArguments().getStringArrayList(TEST_KEY) ?: arrayListOf("")
-        token="JWT $token"//Adding JWT at the beginning of the token
+        testList = requireArguments().getStringArrayList(TEST_KEY) ?: arrayListOf("")
+        token = "JWT $token"//Adding JWT at the beginning of the token
 
 
     }
-
     override fun onResume() {
 
         super.onResume()
