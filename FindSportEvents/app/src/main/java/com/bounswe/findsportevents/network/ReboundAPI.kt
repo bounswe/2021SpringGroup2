@@ -58,6 +58,7 @@ interface ReboundAPI {
     @GET("api/posts/")
     fun searchEvents(
         @Header("Authorization") token: String,
+        @Query("page") page: Int,
         @Query("query") query : String,
         @Query("sport") sport : String,
         @Query("min_skill") min_skill : Int,

@@ -53,6 +53,7 @@ class FragmentSearchResults : Fragment() {
     var date:MutableList<String> = mutableListOf()
     var empList : MutableList<Int> = mutableListOf(0)
     var eventList = mutableListOf(2,3,4)
+    var page=1
     private lateinit var searchResultsFragListener : FragmentSearchResultsListener
 
     interface FragmentSearchResultsListener {
@@ -79,11 +80,8 @@ class FragmentSearchResults : Fragment() {
         maxLongitude=requireArguments().getFloat(MAX_LONGITUDE_KEY)
         token= "$token"
 
-        val searchEventRequest= SearchEventRequest(
-            sport,minSkillLevel,maxSkillLevel,minAge,maxAge,minDuration,maxDuration,startTime,endTime,
-            minLatitude,maxLatitude,minLongitude,maxLongitude
-        )
-        ReboundAPI.create().searchEvents(token,query,sport,minSkillLevel,maxSkillLevel,minAge,maxAge,minDuration,maxDuration,startTime,endTime,
+
+        ReboundAPI.create().searchEvents(token,page,query,sport,minSkillLevel,maxSkillLevel,minAge,maxAge,minDuration,maxDuration,startTime,endTime,
             minLatitude,maxLatitude,minLongitude,maxLongitude).enqueue(object : Callback<AllEventsResponse> {
 
             override fun onResponse(
@@ -107,7 +105,42 @@ class FragmentSearchResults : Fragment() {
                     binding.recyclerView2.layoutManager=layoutManager
                     adapter = RecyclerAdapter2(events,creators,fields,players,spectators,date)
                     binding.recyclerView2.adapter = adapter
+                    if(page*1.0 < response.body()?.count!!/10.0){
+                        page++
+                        ReboundAPI.create().getEvents(token,page).enqueue(object : Callback<AllEventsResponse> {
 
+                            override fun onResponse(
+                                call: Call<AllEventsResponse>,
+                                response: Response<AllEventsResponse>
+                            ) {
+
+                                if (response.isSuccessful) {
+
+                                    for(i in 0 until response.body()?.results?.size!!){
+                                        response.body()?.results?.get(i)?.let { events.add(it.sport) }
+                                        response.body()?.results?.get(i)?.let { creators.add(it.owner) }
+                                        response.body()?.results?.get(i)?.let { fields.add(it.location) }
+                                        response.body()?.results?.get(i)
+                                            ?.let { players.add(it.player_capacity) }
+                                        response.body()?.results?.get(i)
+                                            ?.let { spectators.add(it.spec_capacity) }
+                                        response.body()?.results?.get(i)?.let { date.add(it.date.toString()) }
+                                    }
+                                    layoutManager=LinearLayoutManager(context)
+                                    binding.recyclerView2.layoutManager=layoutManager
+                                    adapter = RecyclerAdapter2(events,creators,fields,players,spectators,date)
+                                    binding.recyclerView2.adapter = adapter
+
+                                }
+                            }
+
+                            override fun onFailure(call: Call<AllEventsResponse>, t: Throwable) {
+                                //
+                            }
+
+                        }
+                        )
+                    }
                 }
             }
 
