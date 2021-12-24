@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.bounswe.findsportevents.R
 import com.bounswe.findsportevents.databinding.FragmentSearchEventBinding
 import java.text.SimpleDateFormat
@@ -15,6 +16,7 @@ import android.app.TimePickerDialog
 import android.app.TimePickerDialog.OnTimeSetListener
 import android.os.Build
 import android.widget.*
+import androidx.fragment.app.FragmentTransaction
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.*
 import androidx.lifecycle.LifecycleOwner
@@ -33,7 +35,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 
-class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, FragmentResultOwner {
+class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener{
 
     private var token = ""
     private var layoutManager: RecyclerView.LayoutManager?=null
@@ -51,6 +53,7 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
     private var maxLatitude=0f
     private var startTime=""
     private var endTime = ""
+
     private var minDuration =0
     private var maxDuration =100000
     private var m1Latitude=0f
@@ -60,11 +63,16 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
 
 
     private var result=""
+
     private var _binding: FragmentSearchEventBinding? = null
     private val binding get() = _binding!!
     private lateinit var searchEventFragListener : FragmentSearchEventListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        searchEventFragListener = requireActivity() as FragmentSearchEventListener
+        token = requireArguments().getString(TOKEN_KEY) ?: ""
+
+    }
         setFragmentListeners()
 
         searchEventFragListener = requireActivity() as FragmentSearchEventListener
@@ -86,16 +94,16 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-
         for(i in 1..100){
             sports.add(i)
         }
         val items = sports
 
         _binding = FragmentSearchEventBinding.inflate(inflater, container, false)
+
         setFragmentListeners()
         val spinner1 : Spinner =binding.sportsSpinner
+
         spinner1.onItemSelectedListener=this
         val adapter3: ArrayAdapter<String>? =
             context?.let { ArrayAdapter<String>(it, android.R.layout.simple_spinner_item, testList).also {
@@ -174,7 +182,6 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
         super.onViewCreated(view, savedInstanceState)
         setClickListeners()
         setObservers()
-        setFragmentListeners()
 
 
     }
@@ -278,16 +285,17 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
     }
 
 
-
     interface FragmentSearchEventListener{
         //TODO: will be implemented later
     }
     companion object {
         const val TAG = "Search Event"
         private const val TOKEN_KEY = "token_key"
+
         private const val TEST_KEY = "test_key"
         const val REQUEST_KEY ="request_key"
         const val BUNDLE_KEY ="bundle_key"
+
 
         fun newInstance(token: String,testList : ArrayList<String>) = FragmentSearchEvent().apply {
             arguments=Bundle().apply {
@@ -299,7 +307,6 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         var newItem= p0?.selectedItem
-
         if (p0 != null) {
             if (p0.id==binding.sportsSpinner.id){
                 sport= newItem as String
@@ -324,25 +331,5 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
      //   TODO("Not yet implemented")
-    }
-
-    override fun setFragmentResult(requestKey: String, result: Bundle) {
-        TODO("Not yet implemented")
-    }
-
-    override fun clearFragmentResult(requestKey: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun setFragmentResultListener(
-        requestKey: String,
-        lifecycleOwner: LifecycleOwner,
-        listener: FragmentResultListener
-    ) {
-    //    TODO("Not yet implemented")
-    }
-
-    override fun clearFragmentResultListener(requestKey: String) {
-        TODO("Not yet implemented")
     }
 }
