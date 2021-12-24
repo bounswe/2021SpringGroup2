@@ -5,6 +5,8 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,6 +40,7 @@ class FragmentCreateEvent : Fragment(), DialogManager {
     private lateinit var createEventListener: FragmentCreateEventListener
     private var token = ""
     private var username = ""
+    private var testList= arrayListOf("")
     private lateinit var startTime: Date
     private lateinit var startTimeIso: String
     private lateinit var endTime: Date
@@ -49,6 +52,7 @@ class FragmentCreateEvent : Fragment(), DialogManager {
         createEventListener = requireActivity() as FragmentCreateEventListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
         username = requireArguments().getString(USERNAME_KEY) ?: ""
+        testList=requireArguments().getStringArrayList(TEST_KEY) ?: arrayListOf("")
         token = "JWT $token"
         setFragmentListeners()
     }
@@ -66,6 +70,7 @@ class FragmentCreateEvent : Fragment(), DialogManager {
         super.onViewCreated(view, savedInstanceState)
         setSpinners()
         setClickListeners()
+        initListeners()
     }
 
     private fun setDatePickers(isStart: Boolean) {
@@ -119,13 +124,8 @@ class FragmentCreateEvent : Fragment(), DialogManager {
         val sportSpinnerAdapter = object : ArrayAdapter<String>(
             requireContext(),
             android.R.layout.simple_spinner_item,
-            sportItems
+            testList
         ) {
-            override fun isEnabled(position: Int): Boolean {
-                // Disable the first item from Spinner
-                // First item will be used for hint
-                return position != 0
-            }
 
             override fun getDropDownView(
                 position: Int,
@@ -134,13 +134,6 @@ class FragmentCreateEvent : Fragment(), DialogManager {
             ): View {
                 val view: TextView =
                     super.getDropDownView(position, convertView, parent) as TextView
-                //set the color of first item in the drop down list to gray
-                if (position == 0) {
-                    view.setTextColor(Color.GRAY)
-                } else {
-                    //here it is possible to define color for other items by
-                    //view.setTextColor(Color.RED)
-                }
                 return view
             }
         }
@@ -300,6 +293,79 @@ class FragmentCreateEvent : Fragment(), DialogManager {
             transaction.commit()
         }
     }
+    private fun initListeners() {
+        binding.etEventTitle.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                checkFields()
+            }
+        })
+        binding.etLocationName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                checkFields()
+            }
+        })
+        binding.etLatitude.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                checkFields()
+            }
+        })
+        binding.etLongitude.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                checkFields()
+            }
+        })
+        binding.etEventDateStart.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                checkFields()
+            }
+        })
+        binding.etEventDateEnd.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                checkFields()
+            }
+        })
+    }
+    private fun checkFields(){
+         binding.buttonCreateEvent.isEnabled=binding.etEventTitle.text.toString().length>=5 && binding.etLocationName.text.toString().length>=5
+                 && binding.etLatitude.text.toString().length>=1 && binding.etLongitude.text.toString().length>=1 && binding.etEventDateStart.text.toString().length>=5
+                 && binding.etEventDateEnd.text.toString().length>=5
+    }
 
     private fun setFragmentListeners(){
         setFragmentResultListener(REQUEST_KEY) { key, bundle ->
@@ -322,10 +388,12 @@ class FragmentCreateEvent : Fragment(), DialogManager {
         private const val BUNDLE_KEY ="bundle_key"
         private const val BUNDLE_KEY_1 = "bundle_key_1"
         private const val USERNAME_KEY = "username_key"
-        fun newInstance(token: String, username: String) = FragmentCreateEvent().apply {
+        private const val TEST_KEY = "test_key"
+        fun newInstance(token: String, username: String, testList : ArrayList<String>) = FragmentCreateEvent().apply {
             arguments = Bundle().apply {
                 putString(TOKEN_KEY, token)
                 putString(USERNAME_KEY, username)
+                putStringArrayList(TEST_KEY, testList)
             }
         }
     }

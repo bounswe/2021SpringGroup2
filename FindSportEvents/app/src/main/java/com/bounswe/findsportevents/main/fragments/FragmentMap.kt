@@ -1,5 +1,6 @@
 package com.bounswe.findsportevents.main.fragments
 
+import android.graphics.Color
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.LayoutInflater
@@ -20,6 +21,7 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.OverlayItem
+import org.osmdroid.views.overlay.Polyline
 import java.util.ArrayList
 
 
@@ -35,6 +37,10 @@ class FragmentMap : Fragment() {
     private var maxAge=""
     private var startTime=""
     private var endTime=""
+  
+    var tapCount=0
+    private lateinit var map : MapView;
+
     private var marker1=GeoPoint(0,0)
     private var marker2=GeoPoint(0,0)
     var tapCount=0
@@ -68,23 +74,26 @@ class FragmentMap : Fragment() {
         val items = ArrayList<OverlayItem>()
         var firstMarker=Marker(map)
         var secondMarker=Marker(map)
+        var myPath: Polyline = Polyline(map,true,true)
 
 //the overlay
         val receiver = object: MapEventsReceiver {
             override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
                 if (p != null) {
                     tapCount++
+
+                   // Toast.makeText(context,tapCount.toString(),Toast.LENGTH_SHORT).show()
                     items.add(OverlayItem("Title", "Description", GeoPoint(p)))
                     if(tapCount%2==1){
                         firstMarker.position = p
-                        map.overlays.add(firstMarker)
+                        marker1=firstMarker.position
+                        map.overlays.add(0,firstMarker)
                         map.invalidate()}
                     if(tapCount%2==0)
                     {
                         secondMarker.position=p
-                        map.overlays.add(firstMarker)
-                        map.overlays.add(secondMarker)
-                        marker1=firstMarker.position
+                        map.overlays.add(1,secondMarker)
+
                         marker2=secondMarker.position
                         map.invalidate()//updating map
                     }
@@ -94,6 +103,16 @@ class FragmentMap : Fragment() {
                     Toast.makeText(context,p.toString(),Toast.LENGTH_SHORT).show()
                 }
                 checkFields()
+                if(tapCount>=2 ){
+
+                    var corner1=GeoPoint(marker1.latitude,marker2.longitude)
+                    var corner2=GeoPoint(marker2.latitude,marker1.longitude)
+                    myPath.setPoints(listOf(marker1,corner1,marker2,corner2))
+                    map.overlays.add(2,myPath)
+                    map.invalidate()//updating map
+                }
+                setClickListeners()
+
                 return false
             }
 
@@ -110,7 +129,6 @@ class FragmentMap : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setClickListeners()
         setObservers()
     }
 
@@ -137,9 +155,11 @@ class FragmentMap : Fragment() {
         requireActivity().supportFragmentManager.popBackStack()
     }
 
+
     }
     private fun checkFields(){
         binding.btnOk.isEnabled=tapCount>=2
+
     }
     override fun onResume() {
         super.onResume();
