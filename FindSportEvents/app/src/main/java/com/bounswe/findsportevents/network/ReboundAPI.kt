@@ -52,6 +52,7 @@ interface ReboundAPI {
     @GET("api/posts/")
     fun getEvents(
         @Header("Authorization") token: String,
+        @Query("page") page: Int
 
         ): Call<AllEventsResponse>
     @GET("api/posts/")

@@ -15,6 +15,7 @@ import com.bounswe.findsportevents.network.modalz.responses.AllEventsResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.properties.Delegates
 
 
 class FragmentViewAllEvents : Fragment() {
@@ -31,6 +32,7 @@ class FragmentViewAllEvents : Fragment() {
     var date:MutableList<String> = mutableListOf()
     var empList : MutableList<Int> = mutableListOf(0)
     var eventList = mutableListOf(2,3,4)
+    var next = false
     private lateinit var viewAllEventsFragListener: FragmentViewAllEventsListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,8 +40,8 @@ class FragmentViewAllEvents : Fragment() {
         viewAllEventsFragListener = requireActivity() as FragmentViewAllEventsListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
         token= "JWT $token"
-
-            ReboundAPI.create().getEvents(token).enqueue(object : Callback<AllEventsResponse> {
+        var page=1
+            ReboundAPI.create().getEvents(token,page).enqueue(object : Callback<AllEventsResponse> {
 
                 override fun onResponse(
                     call: Call<AllEventsResponse>,
@@ -47,8 +49,8 @@ class FragmentViewAllEvents : Fragment() {
                 ) {
 
                     if (response.isSuccessful) {
-
-                        for(i in 0 until (response.body()?.results?.size!!)){
+                        next= response.body()?.next!=null
+                        for(i in 0 until response.body()?.results?.size!!){
                             response.body()?.results?.get(i)?.let { events.add(it.sport) }
                             response.body()?.results?.get(i)?.let { creators.add(it.owner) }
                             response.body()?.results?.get(i)?.let { fields.add(it.location) }
@@ -63,12 +65,50 @@ class FragmentViewAllEvents : Fragment() {
                         adapter = RecyclerAdapter(events,creators,fields,players,spectators,date)
                         binding.recyclerView.adapter = adapter
 
+                        if(page.toDouble() <= (response.body()?.count!!/10).toDouble()){
+                            page++
+                            ReboundAPI.create().getEvents(token,page).enqueue(object : Callback<AllEventsResponse> {
+
+                                override fun onResponse(
+                                    call: Call<AllEventsResponse>,
+                                    response: Response<AllEventsResponse>
+                                ) {
+
+                                    if (response.isSuccessful) {
+                                        next= response.body()?.next!=null
+                                        for(i in 0 until response.body()?.results?.size!!){
+                                            response.body()?.results?.get(i)?.let { events.add(it.sport) }
+                                            response.body()?.results?.get(i)?.let { creators.add(it.owner) }
+                                            response.body()?.results?.get(i)?.let { fields.add(it.location) }
+                                            response.body()?.results?.get(i)
+                                                ?.let { players.add(it.player_capacity) }
+                                            response.body()?.results?.get(i)
+                                                ?.let { spectators.add(it.spec_capacity) }
+                                            response.body()?.results?.get(i)?.let { date.add(it.date.toString()) }
+                                        }
+                                        layoutManager=LinearLayoutManager(context)
+                                        binding.recyclerView.layoutManager=layoutManager
+                                        adapter = RecyclerAdapter(events,creators,fields,players,spectators,date)
+                                        binding.recyclerView.adapter = adapter
+
+                                    }
+                                }
+
+                                override fun onFailure(call: Call<AllEventsResponse>, t: Throwable) {
+                                    //
+                                }
+
+                            }
+                            )
+                        }
+
                     }
                 }
 
                 override fun onFailure(call: Call<AllEventsResponse>, t: Throwable) {
                 //
                 }
+
             }
             )
 

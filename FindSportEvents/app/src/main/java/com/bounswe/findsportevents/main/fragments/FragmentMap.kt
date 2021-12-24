@@ -83,7 +83,7 @@ class FragmentMap : Fragment()  {
                 if (p != null) {
                     tapCount++
 
-                    Toast.makeText(context,tapCount.toString(),Toast.LENGTH_SHORT).show()
+                   // Toast.makeText(context,tapCount.toString(),Toast.LENGTH_SHORT).show()
                     items.add(OverlayItem("Title", "Description", GeoPoint(p)))
                     if(tapCount%2==1){
                         firstMarker.position = p
