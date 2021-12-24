@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,12 +19,15 @@ import retrofit2.Response
 import kotlin.properties.Delegates
 
 
-class FragmentViewAllEvents : Fragment() {
+class FragmentViewAllEvents : Fragment(), RecyclerAdapter.OnItemClickListener {
     private var _binding: FragmentViewAllEventsBinding? = null
     private val binding get() = _binding!!
+    private var listener : RecyclerAdapter.OnItemClickListener = this
     private var layoutManager: RecyclerView.LayoutManager?=null
     private var adapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>?=null
     private var token = ""
+    var contents : MutableList<String> = mutableListOf()
+    var titles : MutableList<String> = mutableListOf()
     var events : MutableList<String> = mutableListOf()
     var creators:MutableList<Int> = mutableListOf()
     var fields:MutableList<String> = mutableListOf()
@@ -62,7 +66,9 @@ class FragmentViewAllEvents : Fragment() {
                         }
                         layoutManager=LinearLayoutManager(context)
                         binding.recyclerView.layoutManager=layoutManager
-                        adapter = RecyclerAdapter(events,creators,fields,players,spectators,date)
+                        adapter = RecyclerAdapter(events,creators,fields,players,spectators,date, listener)
+
+
                         binding.recyclerView.adapter = adapter
 
                         if(page*1.0 < response.body()?.count!!/10.0){
@@ -88,7 +94,7 @@ class FragmentViewAllEvents : Fragment() {
                                         }
                                         layoutManager=LinearLayoutManager(context)
                                         binding.recyclerView.layoutManager=layoutManager
-                                        adapter = RecyclerAdapter(events,creators,fields,players,spectators,date)
+                                        adapter = RecyclerAdapter(events,creators,fields,players,spectators,date,listener)
                                         binding.recyclerView.adapter = adapter
 
                                     }
@@ -140,6 +146,7 @@ class FragmentViewAllEvents : Fragment() {
 //        TODO("Not yet implemented")
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -157,6 +164,10 @@ class FragmentViewAllEvents : Fragment() {
                 it.putString(TOKEN_KEY,token)
             }
         }
+    }
+
+    override fun onItemClick(position: Int) {
+        Toast.makeText(context,"Item ${events[position]}",Toast.LENGTH_SHORT).show()
     }
 
 
