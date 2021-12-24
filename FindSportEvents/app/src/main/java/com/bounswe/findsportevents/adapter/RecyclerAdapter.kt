@@ -3,7 +3,6 @@ package com.bounswe.findsportevents.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe.findsportevents.R
@@ -11,7 +10,7 @@ import com.bounswe.findsportevents.R
 
 class RecyclerAdapter(val events : MutableList<String>,val creators : MutableList<Int>
 ,val fields : MutableList<String>,val players : MutableList<Int>,val spectators : MutableList<Int>,
-val date : MutableList<String>, val rvDetailedButtonOnClickListener: (Int)->View.OnClickListener) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+val date : MutableList<String>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
 
 
@@ -27,7 +26,7 @@ val date : MutableList<String>, val rvDetailedButtonOnClickListener: (Int)->View
         holder.players.text=players[position].toString()
         holder.spectators.text=spectators[position].toString()
         holder.date.text=date[position]
-        holder.detailButton.setOnClickListener(rvDetailedButtonOnClickListener(position))
+
     }
 
     override fun getItemCount(): Int {
@@ -40,7 +39,6 @@ val date : MutableList<String>, val rvDetailedButtonOnClickListener: (Int)->View
         var players: TextView
         var date: TextView
         var spectators: TextView
-        var detailButton: Button
         init{
             eventType=itemView.findViewById(R.id.event_type_tv)
             eventCreator=itemView.findViewById(R.id.creator_tv)
@@ -48,8 +46,6 @@ val date : MutableList<String>, val rvDetailedButtonOnClickListener: (Int)->View
             players=itemView.findViewById(R.id.players_tv)
             date=itemView.findViewById(R.id.date_tv)
             spectators=itemView.findViewById(R.id.spectators_tv)
-            detailButton=itemView.findViewById(R.id.btn_details)
-
 
         }
     }

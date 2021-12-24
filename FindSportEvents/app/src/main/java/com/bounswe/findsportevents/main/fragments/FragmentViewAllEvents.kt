@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe.findsportevents.adapter.RecyclerAdapter
 import com.bounswe.findsportevents.databinding.FragmentViewAllEventsBinding
-import com.bounswe.findsportevents.main.MainActivity
 import com.bounswe.findsportevents.network.ReboundAPI
 import com.bounswe.findsportevents.network.modalz.responses.AllEventsResponse
 import retrofit2.Call
@@ -123,12 +122,6 @@ class FragmentViewAllEvents : Fragment() {
     ): View {
 
         _binding = FragmentViewAllEventsBinding.inflate(inflater, container, false)
-        
-        layoutManager=LinearLayoutManager(context)
-        binding.recyclerView.layoutManager=layoutManager
-        adapter = RecyclerAdapter(events,creators,fields,players,spectators,date, this::rvOnDetailButtonClickListener)
-        binding.recyclerView.adapter = adapter
-
         return binding.root
     }
 
@@ -152,9 +145,6 @@ class FragmentViewAllEvents : Fragment() {
         _binding = null
     }
 
-    fun rvOnDetailButtonClickListener(eventId:Int) = View.OnClickListener {
-        (requireActivity() as MainActivity).displayViewEventDetailedFragment(token, eventId)
-    }
     interface FragmentViewAllEventsListener{
         //        TODO("Not yet implemented")
     }
@@ -168,4 +158,6 @@ class FragmentViewAllEvents : Fragment() {
             }
         }
     }
+
+
 }
