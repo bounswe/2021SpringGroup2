@@ -65,7 +65,7 @@ class FragmentViewAllEvents : Fragment() {
                         adapter = RecyclerAdapter(events,creators,fields,players,spectators,date)
                         binding.recyclerView.adapter = adapter
 
-                        if(page.toDouble() <= (response.body()?.count!!/10).toDouble()){
+                        if(page*1.0 < response.body()?.count!!/10.0){
                             page++
                             ReboundAPI.create().getEvents(token,page).enqueue(object : Callback<AllEventsResponse> {
 
