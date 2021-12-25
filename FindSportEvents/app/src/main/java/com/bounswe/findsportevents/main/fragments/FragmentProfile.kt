@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
+import com.bounswe.findsportevents.R
 import com.bounswe.findsportevents.databinding.FragmentProfileBinding
 import com.bounswe.findsportevents.main.MainActivity
 import com.bounswe.findsportevents.network.ReboundAPI
@@ -29,7 +31,7 @@ class FragmentProfile : Fragment(), DialogManager {
     private val binding get() = _binding!!
 
     private var dialog: LoadingDialog? = null
-
+    private var ownerId : Long = 0
     private lateinit var profileFragListener: FragmentProfileListener
     private var token = ""
     private var username = ""
@@ -55,6 +57,7 @@ class FragmentProfile : Fragment(), DialogManager {
                     binding.etFavSport2.setText(response.body()?.fav_sport_2 ?: "")
                     binding.etFavSport3.setText(response.body()?.fav_sport_3 ?: "")
                     binding.etLocation.setText(response.body()?.location ?: "")
+                    ownerId= response.body()?.id ?: 0
                 }
             }
 
@@ -119,6 +122,11 @@ class FragmentProfile : Fragment(), DialogManager {
                 }
 
             })
+        }
+        binding.btnViewEvents.setOnClickListener {
+            val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.container_main,FragmentMyEvents.newInstance(token,ownerId)).addToBackStack("myEvents")
+            transaction.commit()
         }
     }
 

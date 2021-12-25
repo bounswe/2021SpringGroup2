@@ -74,6 +74,14 @@ interface ReboundAPI {
         @Query("min_longitude") min_longitude: Float,
         @Query("max_longitude") max_longitude: Float,
     ):Call<AllEventsResponse>
+    @GET("api/posts/")
+    fun myEvents(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("owner") owner: Long,
+
+    ):Call<AllEventsResponse>
+
 
     @POST("api/posts/")
     fun createEvent(

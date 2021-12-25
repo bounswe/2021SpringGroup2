@@ -113,7 +113,14 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-
+            <Button
+                android:id="@+id/btn_view_events"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="VIEW YOUR EVENTS"
+                android:backgroundTint="#86000000"
+                android:layout_marginHorizontal="@dimen/space_xx_large"
+                />
             <Button
                 android:id="@+id/button_update_profile"
                 android:layout_width="match_parent"
