@@ -15,7 +15,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivity : AppCompatActivity(), FragmentCreateEvent.FragmentCreateEventListener,FragmentMyEvents.FragmentMyEventsListener,FragmentViewAllEvents.FragmentViewAllEventsListener,FragmentMap.FragmentMapListener,FragmentSearchEvent.FragmentSearchEventListener, FragmentProfile.FragmentProfileListener,FragmentSearchResults.FragmentSearchResultsListener {
+class MainActivity : AppCompatActivity(), FragmentCreateEvent.FragmentCreateEventListener,FragmentSearchUser.FragmentSearchUserListener,FragmentSearchTransit.FragmentSearchTransitListener,FragmentMyEvents.FragmentMyEventsListener,FragmentViewAllEvents.FragmentViewAllEventsListener,FragmentMap.FragmentMapListener,FragmentSearchEvent.FragmentSearchEventListener, FragmentProfile.FragmentProfileListener,FragmentSearchResults.FragmentSearchResultsListener {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity(), FragmentCreateEvent.FragmentCreateEven
                         false
                     }
                     R.id.bottom_search -> {
-                        displaySearchEventFragment(token,testList)
+                        displaySearchTransitFragment(token,testList)
                         false
                     }
                     else -> false
@@ -86,6 +86,9 @@ class MainActivity : AppCompatActivity(), FragmentCreateEvent.FragmentCreateEven
         }
         initListeners()
         setObservers()
+    }
+    private fun displaySearchTransitFragment(token: String,testList: ArrayList<String>){
+        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentSearchTransit.newInstance(token,testList), FragmentSearchTransit.TAG).commit()
     }
     private fun displaySearchEventFragment(token: String,testList: ArrayList<String>){
         supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentSearchEvent.newInstance(token,testList), FragmentSearchEvent.TAG).commit()

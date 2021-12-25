@@ -70,7 +70,7 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
         searchEventFragListener = requireActivity() as FragmentSearchEventListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
         testList = requireArguments().getStringArrayList(TEST_KEY) ?: arrayListOf("")
-        token = "JWT $token"//Adding JWT at the beginning of the token
+        token = "$token"//Adding JWT at the beginning of the token
 
 
     }
