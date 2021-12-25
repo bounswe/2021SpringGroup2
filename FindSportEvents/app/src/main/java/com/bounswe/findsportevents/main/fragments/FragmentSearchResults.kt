@@ -1,5 +1,6 @@
 package com.bounswe.findsportevents.main.fragments
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,14 +16,17 @@ import com.bounswe.findsportevents.databinding.FragmentSearchResultsBinding
 import com.bounswe.findsportevents.network.ReboundAPI
 import com.bounswe.findsportevents.network.modalz.requests.SearchEventRequest
 import com.bounswe.findsportevents.network.modalz.responses.AllEventsResponse
+import com.bounswe.findsportevents.util.DialogManager
+import com.bounswe.findsportevents.util.LoadingDialog
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class FragmentSearchResults : Fragment(), RecyclerAdapter2.OnItemClickListener {
+class FragmentSearchResults : Fragment(), RecyclerAdapter2.OnItemClickListener, DialogManager {
     private var _binding: FragmentSearchResultsBinding? = null
     private val binding get() = _binding!!
     private var token = ""
@@ -45,6 +49,7 @@ class FragmentSearchResults : Fragment(), RecyclerAdapter2.OnItemClickListener {
     private var minDuration =0
     private var maxDuration =0
     private var query=""
+    private var dialog: LoadingDialog? = null
     var events : MutableList<String> = mutableListOf()
     var creators:MutableList<Int> = mutableListOf()
     var fields:MutableList<String> = mutableListOf()
@@ -78,7 +83,9 @@ class FragmentSearchResults : Fragment(), RecyclerAdapter2.OnItemClickListener {
         maxLongitude=requireArguments().getFloat(MAX_LONGITUDE_KEY)
         token= "$token"
 
-
+        context?.run {
+            showLoading(this)
+        }
         ReboundAPI.create().searchEvents(token,page,query,sport,minSkillLevel,maxSkillLevel,minAge,maxAge,minDuration,maxDuration,startTime,endTime,
             minLatitude,maxLatitude,minLongitude,maxLongitude).enqueue(object : Callback<AllEventsResponse> {
 
@@ -86,7 +93,7 @@ class FragmentSearchResults : Fragment(), RecyclerAdapter2.OnItemClickListener {
                 call: Call<AllEventsResponse>,
                 response: Response<AllEventsResponse>
             ) {
-
+                hideLoading()
                 if (response.isSuccessful) {
 
                     for(i in 0 until (response.body()?.results?.size!!)){
@@ -133,7 +140,7 @@ class FragmentSearchResults : Fragment(), RecyclerAdapter2.OnItemClickListener {
                             }
 
                             override fun onFailure(call: Call<AllEventsResponse>, t: Throwable) {
-                                //
+                                hideLoading()
                             }
 
                         }
@@ -186,6 +193,26 @@ class FragmentSearchResults : Fragment(), RecyclerAdapter2.OnItemClickListener {
     override fun onItemClick(position: Int) {
         Toast.makeText(context,"Item ${events[position]}",Toast.LENGTH_SHORT).show()
     }
+    override fun showLoading(context: Context) {
+        try {
+            hideLoading()
+            dialog = LoadingDialog(context)
+            dialog?.setCancelable(false)
+            dialog?.show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun hideLoading() {
+        try {
+            dialog?.dismiss()
+            dialog = null
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 
 
     companion object {

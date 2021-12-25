@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bounswe.findsportevents.R
 import com.bounswe.findsportevents.adapter.RecyclerAdapterUser
 import com.bounswe.findsportevents.databinding.FragmentSearchUserBinding
 import com.bounswe.findsportevents.network.ReboundAPI
@@ -133,7 +135,10 @@ class FragmentSearchUser : Fragment(), RecyclerAdapterUser.OnItemClickListener {
     }
 
     override fun onItemClick(position: Int) {
-        Toast.makeText(context,"Item ${usernames[position]}", Toast.LENGTH_SHORT).show()
+        username=currentText
+        val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.container_main,FragmentUserResult.newInstance(token,username)).addToBackStack("userResult")
+        transaction.commit()
     }
 
 

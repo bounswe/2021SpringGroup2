@@ -1,5 +1,6 @@
 package com.bounswe.findsportevents.main.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,17 +13,21 @@ import com.bounswe.findsportevents.adapter.RecyclerAdapter
 import com.bounswe.findsportevents.databinding.FragmentMyEventsBinding
 import com.bounswe.findsportevents.network.ReboundAPI
 import com.bounswe.findsportevents.network.modalz.responses.AllEventsResponse
+import com.bounswe.findsportevents.util.DialogManager
+import com.bounswe.findsportevents.util.LoadingDialog
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 
-class FragmentMyEvents : Fragment(), RecyclerAdapter.OnItemClickListener {
+class FragmentMyEvents : Fragment(), RecyclerAdapter.OnItemClickListener , DialogManager{
     private var _binding: FragmentMyEventsBinding? = null
     private val binding get() = _binding!!
     private var listener: RecyclerAdapter.OnItemClickListener = this
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var adapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>? = null
     private var token = ""
+    private var dialog: LoadingDialog? = null
     var ownerId : Long=0
     var contents: MutableList<String> = mutableListOf()
     var titles: MutableList<String> = mutableListOf()
@@ -44,6 +49,9 @@ class FragmentMyEvents : Fragment(), RecyclerAdapter.OnItemClickListener {
         ownerId = requireArguments().getLong(OWNER_KEY) ?: 0
         token = "$token"
         var page = 1
+        context?.run {
+            showLoading(this)
+        }
         ReboundAPI.create().myEvents(token, page, ownerId).enqueue(object : Callback<AllEventsResponse> {
 
             override fun onResponse(
@@ -121,18 +129,21 @@ class FragmentMyEvents : Fragment(), RecyclerAdapter.OnItemClickListener {
                             }
 
                             override fun onFailure(call: Call<AllEventsResponse>, t: Throwable) {
-                                //
+                               //
                             }
 
                         }
                         )
+                    }
+                    else{
+                        hideLoading()
                     }
 
                 }
             }
 
             override fun onFailure(call: Call<AllEventsResponse>, t: Throwable) {
-                //
+                hideLoading()
             }
 
         }
@@ -191,5 +202,24 @@ class FragmentMyEvents : Fragment(), RecyclerAdapter.OnItemClickListener {
 
     override fun onItemClick(position: Int) {
         Toast.makeText(context, "Item ${events[position]}", Toast.LENGTH_SHORT).show()
+    }
+    override fun showLoading(context: Context) {
+        try {
+            hideLoading()
+            dialog = LoadingDialog(context)
+            dialog?.setCancelable(false)
+            dialog?.show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun hideLoading() {
+        try {
+            dialog?.dismiss()
+            dialog = null
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.bounswe.findsportevents.main.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,19 +14,23 @@ import com.bounswe.findsportevents.adapter.RecyclerAdapter
 import com.bounswe.findsportevents.databinding.FragmentViewAllEventsBinding
 import com.bounswe.findsportevents.network.ReboundAPI
 import com.bounswe.findsportevents.network.modalz.responses.AllEventsResponse
+import com.bounswe.findsportevents.util.DialogManager
+import com.bounswe.findsportevents.util.LoadingDialog
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 import kotlin.properties.Delegates
 
 
-class FragmentViewAllEvents : Fragment(), RecyclerAdapter.OnItemClickListener {
+class FragmentViewAllEvents : Fragment(), RecyclerAdapter.OnItemClickListener, DialogManager {
     private var _binding: FragmentViewAllEventsBinding? = null
     private val binding get() = _binding!!
     private var listener : RecyclerAdapter.OnItemClickListener = this
     private var layoutManager: RecyclerView.LayoutManager?=null
     private var adapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>?=null
     private var token = ""
+    private var dialog: LoadingDialog? = null
     var contents : MutableList<String> = mutableListOf()
     var titles : MutableList<String> = mutableListOf()
     var events : MutableList<String> = mutableListOf()
@@ -45,13 +50,16 @@ class FragmentViewAllEvents : Fragment(), RecyclerAdapter.OnItemClickListener {
         token = requireArguments().getString(TOKEN_KEY) ?: ""
         token= "JWT $token"
         var page=1
+        context?.run {
+            showLoading(this)
+        }
             ReboundAPI.create().getEvents(token,page).enqueue(object : Callback<AllEventsResponse> {
 
                 override fun onResponse(
                     call: Call<AllEventsResponse>,
                     response: Response<AllEventsResponse>
                 ) {
-
+                    hideLoading()
                     if (response.isSuccessful) {
                         next= response.body()?.next!=null
                         for(i in 0 until response.body()?.results?.size!!){
@@ -101,7 +109,7 @@ class FragmentViewAllEvents : Fragment(), RecyclerAdapter.OnItemClickListener {
                                 }
 
                                 override fun onFailure(call: Call<AllEventsResponse>, t: Throwable) {
-                                    //
+                                    hideLoading()
                                 }
 
                             }
@@ -168,6 +176,25 @@ class FragmentViewAllEvents : Fragment(), RecyclerAdapter.OnItemClickListener {
 
     override fun onItemClick(position: Int) {
         Toast.makeText(context,"Item ${events[position]}",Toast.LENGTH_SHORT).show()
+    }
+    override fun showLoading(context: Context) {
+        try {
+            hideLoading()
+            dialog = LoadingDialog(context)
+            dialog?.setCancelable(false)
+            dialog?.show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun hideLoading() {
+        try {
+            dialog?.dismiss()
+            dialog = null
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 
