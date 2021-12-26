@@ -8,4 +8,5 @@ urlpatterns = [
     re_path(r'^$', views.index),
     # match all other pages
     re_path(r'^(?:.*)/?$', views.index),
+    re_path(r'^(?:.*)/(?:.*)/?$', views.index),
 ]
