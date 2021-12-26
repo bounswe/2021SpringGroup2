@@ -1,11 +1,9 @@
 import {Dialog, DialogContent, DialogTitle, Grid, Button} from "@mui/material";
 import * as React from "react";
-import BadgeList from "./BadgeList"
-import MapWithRectangle from "../SearchEvents/FilterComponents/MapWithRectangle";
 import {useState} from "react";
-import Badge from "./Badge";
 import SelectableBadge from "./SelectableBadge";
 import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 export default function BadgeSelection(props) {
     const [selectionOpen,setSelectionOpen] = useState(false)
     const [selected, setSelected] = useState(null)
@@ -32,15 +30,22 @@ export default function BadgeSelection(props) {
     }
     return (
         <div>
-            <Button onClick={handleClickOpen}>Give a badge</Button>
+            <Button variant="contained" onClick={handleClickOpen}>Give a badge</Button>
             <Dialog open={selectionOpen} onClose={handleClose} fullWidth maxWidth="sm">
-                <DialogTitle>Select a badge from the list</DialogTitle>
-                <DialogContent style={{height:'300px',paddingTop:'50px',alignContent:"center"}}>
-                    <Grid container direction="column" alignItems="center" spacing={5}>
+                <DialogTitle>
+                    <Typography align={"center"}>
+                        Select a badge from the list
+                    </Typography>
+                </DialogTitle>
+                <DialogContent style={{height:'300px',paddingTop:'50px',alignContent:"stretch"}}>
+                    <Grid sx={{paddingLeft:5}} container direction="column" alignItems="center" spacing={5}>
                         {badgesGrid.map(d=>d)}
                     </Grid>
-                    {selected?<Typography>Do you want to give {selected} badge?</Typography>:null}
-                    <Button disabled={!selected}>Confirm</Button>
+                    <Box sx={{"paddingTop":10,justifyItems:"space-between"}} textAlign={"center"}>
+                        {selected?<Typography style={{"paddingBottom":10}}>Do you want to give {selected} badge?</Typography>:
+                            <Typography style={{"paddingBottom":10}}>Please select a badge from the list</Typography>}
+                        <Button variant="contained" disabled={!selected}>Confirm</Button>
+                    </Box>
                 </DialogContent>
             </Dialog>
         </div>
