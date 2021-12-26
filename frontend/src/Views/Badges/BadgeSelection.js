@@ -31,7 +31,7 @@ export default function BadgeSelection(props) {
     return (
         <div>
             <Button variant="contained" onClick={handleClickOpen}>Give a badge</Button>
-            <Dialog open={selectionOpen} onClose={handleClose} fullWidth maxWidth="sm">
+            <Dialog open={selectionOpen} onClose={handleClose} fullWidth maxWidth="sm" disableEnforceFocus>
                 <DialogTitle>
                     <Typography align={"center"}>
                         Select a badge from the list
