@@ -1,7 +1,8 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import Typography from "@mui/material/Typography";
 import Slider from '@mui/material/Slider';
 import {FormControl, MenuItem, Select} from "@material-ui/core";
+import {getSports} from '../../Controllers/SportsController';
 
 
 export default function SportType(props){
@@ -9,6 +10,23 @@ export default function SportType(props){
         props.setValue(props.ids)(newValue)
     };
 
+    const [sport, setSport] = useState([{}])
+
+    // const getSportInfo = sport => console.log(sport) || getSports()
+    //     .then(sports=>sports.find(s=>s.title===sport))
+
+    // useEffect(() => {
+    //     fetch("http://34.68.66.109/api/posts/"+eventid+"/")
+    //         .then(r=>r.json())
+    //         .then(r=>setEvent(r)||r)
+    //         .then(r=>getSportInfo(r.object.eventSport))
+    //         //.then(r=>getSportInfo("Tennis"))
+    //         .then(setSport)
+    // }, []);
+    useEffect(() => {
+        getSports(r=>r.object.eventSport)
+            .then(setSport)
+    }, [])
 
     return(
         <React.Fragment>
