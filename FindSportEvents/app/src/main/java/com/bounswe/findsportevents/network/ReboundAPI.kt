@@ -94,6 +94,12 @@ interface ReboundAPI {
         @Header("Authorization") token : String,
         @Path("eventId") eventId : Int,
     ): Call<EventbyIdResponse>
+    @GET("api/posts/{postId}/comments/")
+    fun getAllComments(
+        @Header("Authorization") token : String,
+        @Path("postId") postId : Int,
+    ): Call<AllCommentsResponse>
+
 
     companion object {
 

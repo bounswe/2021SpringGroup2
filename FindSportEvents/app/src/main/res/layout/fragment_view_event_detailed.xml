@@ -154,32 +154,34 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_players_result" />
 
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="218dp"
-        android:layout_height="67dp"
-        android:background="#2196F3"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:text="Return"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DISCUSSION"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_spectators_result"
-        app:layout_constraintVertical_bias="0.576" />
+        app:layout_constraintTop_toBottomOf="@+id/button2" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="212dp"
         android:layout_height="50dp"
         android:text="APPLY"
-        app:layout_constraintBottom_toTopOf="@+id/button4"
+        android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.475"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_spectators"
-        app:layout_constraintVertical_bias="0.791" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_spectators_result" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_discussion"
+        android:layout_width="391dp"
+        android:layout_height="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
