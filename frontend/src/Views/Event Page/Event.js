@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react'
-import Container from "@mui/material/Container";
 import {useParams} from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -94,7 +93,6 @@ const initialEvent = {
 export default function Event (){
     const classes = useStyles()
     const params = useParams()
-    //
     const eventid = params.eventid
     const [event, setEvent] = useState(initialEvent)
     const [sport, setSport] = useState([{}])
@@ -110,13 +108,8 @@ export default function Event (){
             //.then(r=>getSportInfo("Tennis"))
             .then(setSport)
     }, []);
-    // useEffect(() => {
-    //     getSportInfo(r=>r.event.object.eventSport)
-    //         .then(setSport)
-    // })
 
     return(
-        //style={{background:`url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}
         <div style={{background:`url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}>
 
             <Grid item xs={12} sm={12} container spacing={3} alignItems="stretch"  className={classes.fav}>
@@ -129,19 +122,15 @@ export default function Event (){
             <Grid container spacing={2}>
 
                 <Grid item xs={12} sm={12}>
-                    {/*style={{backgroundColor:"white", display:"flex"}}*/}
                     <Typography className={classes.fav} variant="h4" component="div" align={"center"}>
                         {event.object.title}
                     </Typography>
-                    {/*style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain", width:400}}*/}
                     <Typography variant="subtitle1" component="div" align={"center"}>
                         Type of Sport: {event.object.eventSport}
                     </Typography>
-                    {/*style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain", width:400}}*/}
                     <Typography variant="subtitle1" component="div" align={"center"} >
                         Location: {event.object.location.type} {event.object.location.longitude} {event.object.location.latitude}
                     </Typography>
-                    {/*style={{backgroundColor:"orange", borderBlockColor:"black", backgroundSize:"contain", width:400}}*/}
                     <Typography gutterBottom variant="body1" align={"center"} >
                         Event Date: {event.object.eventDate}
                     </Typography>
