@@ -2,18 +2,65 @@ import React, {useState, useEffect} from 'react'
 import Typography from "@mui/material/Typography";
 import Slider from '@mui/material/Slider';
 import {FormControl, MenuItem, Select} from "@material-ui/core";
-import {getSports} from '../../Controllers/SportsController';
+import {getSportsList} from '../../../Controllers/SportsController';
+import SportTypesInfoCard from "../../Home/SportTypesInfoCard";
+import Grid from "@mui/material/Grid";
+import {createStyles, makeStyles, styled} from "@mui/styles";
+
+
+const useStyles = makeStyles(theme => createStyles({
+    "@global": {
+        body: {
+            backgroundColor: theme.palette.common.white
+        }
+    },
+    paper: {
+        marginTop: theme.spacing(8),
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center"
+    },
+    fav: {
+        color: theme.palette.warning.light,
+        fontsize: 20,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center"
+    },
+    other: {
+        color: theme.palette.secondary.light,
+        fontsize: 20,
+    },
+    info: {
+        color: theme.palette.primary.light,
+        fontsize: 20,
+    },
+    infotext: {
+        color: theme.palette.secondary.light,
+        fontsize: 20,
+    },
+    others: {
+        color: theme.palette.warning.light,
+        fontsize: 20,
+    },
+    media: {
+        height: 350
+    },
+    typography: {
+        align: "center"
+    }
+
+
+}));
 
 
 export default function SportType(props){
+    const classes = useStyles()
+
     const handleChange = (event, newValue) => {
         props.setValue(props.ids)(newValue)
     };
 
-    const [sport, setSport] = useState([{}])
-
-    // const getSportInfo = sport => console.log(sport) || getSports()
-    //     .then(sports=>sports.find(s=>s.title===sport))
 
     // useEffect(() => {
     //     fetch("http://34.68.66.109/api/posts/"+eventid+"/")
@@ -23,9 +70,12 @@ export default function SportType(props){
     //         //.then(r=>getSportInfo("Tennis"))
     //         .then(setSport)
     // }, []);
+
+    const [sportTypes, setSportTypes] = useState([{}])
+
     useEffect(() => {
-        getSports(r=>r.object.eventSport)
-            .then(setSport)
+        getSportsList()
+            .then(setSportTypes)
     }, [])
 
     return(
@@ -45,6 +95,11 @@ export default function SportType(props){
                     <MenuItem value={30}>Basketball</MenuItem>
                 </Select>
             </FormControl>
+            <Grid item  style={{display: 'flex'}} align={"center"}>
+                {sportTypes.map(s => <div>{s.title}</div>)}
+
+            </Grid>
+
         </React.Fragment>
     )
 }
