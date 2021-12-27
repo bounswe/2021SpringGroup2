@@ -1,6 +1,8 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import Events from "./screens/Events";
 import EventPage from "./screens/EventPage";
+import Equipments from "./screens/Equipments";
+import EquipmentPage from "./screens/EquipmentPage";
 import {
     Route,
     Switch,
@@ -11,12 +13,19 @@ import {
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import {Divider, makeStyles, ListItemIcon, ListItemText} from "@material-ui/core";
+import {Divider, makeStyles, ListItemIcon, ListItemText, IconButton} from "@material-ui/core";
 import SportsIcon from '@material-ui/icons/Sports';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import MenuIcon from '@material-ui/icons/Menu';
+import CreateEvent from "./screens/CreateEvent";
+import CreateEquipment from "./screens/CreateEquipment";
+import FollowPage from "./screens/FollowPage";
+import BlockPage from "./screens/BlockPage";
+import UsersPage from "./screens/UsersPage";
+import NotificationPage from "./screens/NotificationPage";
 
 const drawerWidth = 240;
-
+export const url = ""
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -43,17 +52,42 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
     const classes = useStyles()
-    const history = useHistory();
+    const [open, setOpen] = useState(false)
 
+    const [width, setWidth] = useState(window.innerWidth);
+    const handleWindowSizeChange = () => {
+        setWidth(window.innerWidth);
+    }
+
+    useEffect(() => {
+        window.addEventListener('resize', handleWindowSizeChange);
+        return () => {
+            window.removeEventListener('resize', handleWindowSizeChange);
+        }
+    }, []);
     return (
-    <React.Fragment className="App">
+    <React.Fragment>
+        <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={_=>setOpen(true)}
+            edge="start"
+            style={{
+                left:5,
+                top:5
+            }}
+        >
+            <MenuIcon />
+        </IconButton>
         <Drawer
             className={classes.drawer}
-            variant="permanent"
+            open={open}
+            onClose={_=>setOpen(false)}
             classes={{
                 paper: classes.drawerPaper,
             }}
             anchor="left"
+            variant={width >= 1450?"permanent":null}
         >
             <List>
                 <ListItem button onClick={_=>{document.location.href="/events"}}>
@@ -68,12 +102,41 @@ function App() {
                     <ListItemText primary={"Equipments"} />
                 </ListItem>
             </List>
+            <Divider />
+            <List>
+                <ListItem button onClick={_=>{document.location.href="/create-event"}}>
+                    <ListItemIcon><ShoppingCartIcon/></ListItemIcon>
+                    <ListItemText primary={"Create Event"}/>
+                </ListItem>
+            </List>
+            <Divider />
+            <List>
+                <ListItem button onClick={_=>{document.location.href="/users"}}>
+                    <ListItemIcon><ShoppingCartIcon/></ListItemIcon>
+                    <ListItemText primary={"Users"} />
+                </ListItem>
+            </List>
+            <Divider />
+            <List>
+                <ListItem button onClick={_=>{document.location.href="/notifications"}}>
+                    <ListItemIcon><ShoppingCartIcon/></ListItemIcon>
+                    <ListItemText primary={"Notifications"} />
+                </ListItem>
+            </List>
         </Drawer>
         <Router>
             <Switch>
                 <Redirect exact from="/" to="/events"/>}
                 <Route path={'/events'} component={Events}/>
                 <Route path={'/event/:id'} component={EventPage}/>
+                <Route path={'/create-event'} component={CreateEvent}/>
+                <Route path={'/equipments'} component={Equipments}/>
+                <Route path={'/equipment/:id'} component={EquipmentPage}/>
+                <Route path={'/create-equipment'} component={CreateEquipment}/>
+                <Route path={'/follow/:user_id'} component={FollowPage}/>
+                <Route path={'/block/:user_id'} component={BlockPage}/>
+                <Route path={'/users'} component={UsersPage}/>
+                <Route path={'/notifications'} component={NotificationPage}/>
             </Switch>
         </Router>
     </React.Fragment>
