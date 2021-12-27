@@ -89,11 +89,11 @@ interface ReboundAPI {
         @Body request: CreateEventRequest
     ): Call<CreateEventResponse>
 
-    @GET("api/posts/{eventId}")
+    @GET("api/posts/{eventId}/")
     fun getEventbyId(
         @Header("Authorization") token : String,
         @Path("eventId") eventId : Int,
-    ): Call<EventResponse>
+    ): Call<EventbyIdResponse>
 
     companion object {
 

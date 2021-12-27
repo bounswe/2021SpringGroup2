@@ -15,7 +15,7 @@ data class ObjectResponse (
         val numberOfClicks : Int,
         val location : LocationResponse,
         val eventDate : Date,
-        val sport : String,
+        val eventSport : String,
         val eventMinAge : Int,
         val eventMaxAge : Int,
         val eventMinSkillLevel : Int,

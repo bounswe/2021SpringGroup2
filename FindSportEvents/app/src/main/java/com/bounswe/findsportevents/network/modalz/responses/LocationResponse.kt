@@ -5,7 +5,6 @@ data class LocationResponse(
     val type : String,
     val longitude : Float,
     val latitude : Float,
-    val altitude : Float,
     val units : String,
 
     )
