@@ -15,7 +15,7 @@ class Post(models.Model):
     title = models.TextField()
 
     creation_date = models.DateTimeField(default=datetime.now())
-    location = models.TextField()
+    location = models.TextField(default="")
 
     min_skill_level = models.IntegerField(default=0)
     max_skill_level = models.IntegerField(default=0)
