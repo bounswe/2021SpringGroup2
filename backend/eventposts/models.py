@@ -42,3 +42,6 @@ class EventPost(Post):
     player_applicants = ArrayField(models.IntegerField(), default=empty_list)
     spec_applicants = ArrayField(models.IntegerField(), default=empty_list)
     spectators = ArrayField(models.IntegerField(), default=empty_list)
+
+    class Meta:
+        app_label = 'eventposts'

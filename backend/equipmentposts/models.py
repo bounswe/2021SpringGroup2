@@ -6,3 +6,6 @@ from eventposts.models import Post
 class EquipmentPost(Post):
     url = models.TextField(default="")
     equipment_type = models.TextField()
+
+    class Meta:
+        app_label = 'equipmentposts'
