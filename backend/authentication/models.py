@@ -25,7 +25,7 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
 class User(AbstractUser):
     bio = models.TextField(default="")
 
-    birthday = models.DateField(default=datetime.now, blank=True)
+    birthday = models.DateField(default="2003-01-01", blank=True)
 
     avatar = models.TextField(default="")
     location = models.TextField(default="")
