@@ -19,7 +19,8 @@ class Post(models.Model):
 
     min_skill_level = models.IntegerField(default=0)
     max_skill_level = models.IntegerField(default=0)
-
+    latitude = models.FloatField(default=0)
+    longitude = models.FloatField(default=0)
     sport = models.CharField(max_length=30)
 
     class Meta:
@@ -28,6 +29,7 @@ class Post(models.Model):
 
 class EquipmentPost(Post):
     equipment_type = models.TextField()
+    url = models.TextField(default="")
 
 
 class EventPost(Post):
@@ -43,6 +45,3 @@ class EventPost(Post):
     player_applicants = ArrayField(models.IntegerField(), default=empty_list)
     spec_applicants = ArrayField(models.IntegerField(), default=empty_list)
     spectators = ArrayField(models.IntegerField(), default=empty_list)
-
-    latitude = models.FloatField()
-    longitude = models.FloatField()
