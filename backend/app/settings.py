@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django_rest_passwordreset',
     'eventposts',
     'profiles',
-    'frontend'
+    'frontend',
+    'badges',
 ]
 
 SITE_ID = 1
