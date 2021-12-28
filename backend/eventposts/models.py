@@ -40,7 +40,8 @@ class EventPost(Post):
     player_capacity = models.IntegerField(default=10)
     spec_capacity = models.IntegerField(default=0)
     players = ArrayField(models.IntegerField(), default=empty_list)
-    applicants = ArrayField(models.IntegerField(), default=empty_list)
+    player_applicants = ArrayField(models.IntegerField(), default=empty_list)
+    spec_applicants = ArrayField(models.IntegerField(), default=empty_list)
     spectators = ArrayField(models.IntegerField(), default=empty_list)
 
     latitude = models.FloatField()
