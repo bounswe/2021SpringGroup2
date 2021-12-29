@@ -10,7 +10,7 @@ from django.db.models import Q
 from datetime import datetime, timedelta
 
 
-class EventPostTests(APITestCase):
+class EventPostSearchTests(APITestCase):
     def setUp(self):
         # create user and get auth token
         self.user = User.objects.create_user(email="user@user.com", password="1234567", username="user")
@@ -167,3 +167,195 @@ class EventPostTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.skill_between_2_4)
 
+
+class EventPostApplicationTests(APITestCase):
+    def setUp(self):
+        # create user and get auth token
+        self.user = User.objects.create_user(email="user@user.com", password="1234567", username="user",
+                                             birthday=datetime.now().date() - timedelta(days=25*365))
+        resp = self.client.post(reverse('token_create'), {'username': 'user', 'password': '1234567'})
+        self.token = resp.data['access']
+
+        # create additional users for spectators and players
+        self.user2 = User.objects.create_user(email="user2@user.com", password="1234567", username="user2")
+        self.user3 = User.objects.create_user(email="user3@user.com", password="1234567", username="user3")
+        self.user4 = User.objects.create_user(email="user4@user.com", password="1234567", username="user4")
+
+        # create mock events for testing
+        self.event_01 = EventPost.objects.create(owner=self.user, title='Football Event',
+                                                 content='We are organizing a football match with FC Barcelona fans.',
+                                                 location='Madrid', date=datetime(2021, 9, 3), sport='Football',
+                                                 min_age=13, max_age=45, player_capacity=14, spec_capacity=20,
+                                                 min_skill_level=3, max_skill_level=4, latitude=40.43103333341609,
+                                                 longitude=-3.705507357022727, duration=90)
+
+        self.event_02 = EventPost.objects.create(owner=self.user, title='Basketball Event',
+                                                 content='We are organizing a basketball match with Anadolu Efes fans.',
+                                                 location='Madrid', date=datetime(2021, 9, 3), sport='Football',
+                                                 min_age=13, max_age=45, player_capacity=1, spec_capacity=10,
+                                                 min_skill_level=3, max_skill_level=4, latitude=40.43103333341609,
+                                                 longitude=-3.705507357022727, duration=90, players=[self.user2.id],
+                                                 spectators=[self.user3.id])
+
+        self.event_03 = EventPost.objects.create(owner=self.user, title='Basketball Event for Real Madrid',
+                                                 content='We are organizing a basketball match with Real Madrid fans.',
+                                                 location='Madrid', date=datetime(2021, 9, 3), sport='Football',
+                                                 min_age=13, max_age=45, player_capacity=10, spec_capacity=1,
+                                                 min_skill_level=3, max_skill_level=4, latitude=40.43103333341609,
+                                                 longitude=-3.705507357022727, duration=90, players=[self.user2.id],
+                                                 spectators=[self.user3.id])
+
+        self.event_04 = EventPost.objects.create(owner=self.user, title='Football Match FB vs GS',
+                                                 content='All fans are invited, no fight just game',
+                                                 location='Madrid', date=datetime(2021, 9, 3), sport='Football',
+                                                 min_age=13, max_age=17, player_capacity=10, spec_capacity=10,
+                                                 min_skill_level=3, max_skill_level=4, latitude=40.43103333341609,
+                                                 longitude=-3.705507357022727, duration=90,
+                                                 spec_applicants=[self.user2.id, self.user3.id],
+                                                 player_applicants=[self.user4.id])
+
+        self.event_05 = EventPost.objects.create(owner=self.user, title='Football Match FB vs GS',
+                                                 content='All fans are invited, no fight just game',
+                                                 location='Madrid', date=datetime(2021, 9, 3), sport='Football',
+                                                 min_age=13, max_age=17, player_capacity=1, spec_capacity=1,
+                                                 min_skill_level=3, max_skill_level=4, latitude=40.43103333341609,
+                                                 longitude=-3.705507357022727, duration=90,
+                                                 spec_applicants=[self.user2.id],
+                                                 player_applicants=[self.user4.id],
+                                                 players=[self.user.id], spectators=[self.user3.id])
+
+    def test_apply_as_spectator(self):
+        response = self.client.post(reverse('eventpost-apply', args=[str(self.event_01.id)]),
+                                    {'type': 'spectator', 'user': self.user.id}, HTTP_AUTHORIZATION=f'JWT {self.token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['summary'], f"{str(self.user.id)} applied to event {str(self.event_01.id)} as spectator")
+        self.assertEqual(response.data['type'], 'Join')
+
+    def test_apply_as_player(self):
+        response = self.client.post(reverse('eventpost-apply', args=[str(self.event_01.id)]),
+                                    {'type': 'player', 'user': self.user.id},
+                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['summary'],
+                         f"{str(self.user.id)} applied to event {str(self.event_01.id)} as player")
+        self.assertEqual(response.data['type'], 'Join')
+
+    def test_apply_as_player_at_full_capacity(self):
+        response = self.client.post(reverse('eventpost-apply', args=[str(self.event_02.id)]),
+                                    {'type': 'player', 'user': self.user.id},
+                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
+        self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
+        self.assertEqual(response.data['detail'], "the event has reached its capacity for players.")
+
+    def test_apply_as_spectator_at_full_capacity(self):
+        response = self.client.post(reverse('eventpost-apply', args=[str(self.event_03.id)]),
+                                    {'type': 'spectator', 'user': self.user.id},
+                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
+
+        self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
+        self.assertEqual(response.data['detail'], "the event has reached its capacity for spectators.")
+
+    def test_apply_as_player_when_not_qualified(self):
+        response = self.client.post(reverse('eventpost-apply', args=[str(self.event_04.id)]),
+                                    {'type': 'player', 'user': self.user.id},
+                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
+
+        self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
+        self.assertEqual(response.data['detail'], "Applicant age is not appropriate for this event.")
+
+    def test_accept_applicant_as_player(self):
+        response = self.client.post(reverse('eventpost-applicants', args=[str(self.event_04.id)]),
+                                    {'type': 'player', 'user': self.user4.id, 'owner': self.user.id, 'accept': True},
+                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
+
+        # fetch the updated object
+        self.event_04 = EventPost.objects.get(id=self.event_04.id)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['summary'], f"{str(self.event_04.owner.id)} accepted {self.user4.id} to "
+                                                   f"event {self.event_04.id} as player")
+        self.assertEqual(response.data['type'], 'Accept')
+        self.assertEqual(self.event_04.player_applicants, [])
+        self.assertIn(self.user4.id, self.event_04.players)
+
+    def test_accept_applicant_as_spectator(self):
+        response = self.client.post(reverse('eventpost-applicants', args=[str(self.event_04.id)]),
+                                    {'type': 'spectator', 'user': self.user2.id, 'owner': self.user.id, 'accept': True},
+                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
+
+        # fetch the updated object
+        self.event_04 = EventPost.objects.get(id=self.event_04.id)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['summary'], f"{str(self.event_04.owner.id)} accepted {self.user2.id} to "
+                                                   f"event {self.event_04.id} as spectator")
+        self.assertEqual(response.data['type'], 'Accept')
+        self.assertEqual(self.event_04.spec_applicants, [self.user3.id])
+        self.assertIn(self.user2.id, self.event_04.spectators)
+
+    def test_accept_applicant_as_player_at_full_capacity(self):
+        response = self.client.post(reverse('eventpost-applicants', args=[str(self.event_05.id)]),
+                                    {'type': 'player', 'user': self.user4.id, 'owner': self.user.id, 'accept': True},
+                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
+
+        # fetch the updated object
+        self.event_05 = EventPost.objects.get(id=self.event_05.id)
+
+        self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
+        self.assertEqual(response.data['detail'], "the event has reached its capacity for players.")
+        self.assertIn(self.user4.id, self.event_05.player_applicants)
+        self.assertNotIn(self.user4.id, self.event_05.players)
+
+    def test_accept_applicant_as_spectator_at_full_capacity(self):
+        response = self.client.post(reverse('eventpost-applicants', args=[str(self.event_05.id)]),
+                                    {'type': 'spectator', 'user': self.user2.id, 'owner': self.user.id, 'accept': True},
+                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
+        # fetch the updated object
+        self.event_05 = EventPost.objects.get(id=self.event_05.id)
+
+        self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
+        self.assertEqual(response.data['detail'], "the event has reached its capacity for spectators.")
+        self.assertIn(self.user2.id, self.event_05.spec_applicants)
+        self.assertNotIn(self.user2.id, self.event_05.spectators)
+
+    def test_reject_applicant_as_spectator(self):
+        response = self.client.post(reverse('eventpost-applicants', args=[str(self.event_04.id)]),
+                                    {'type': 'spectator', 'user': self.user2.id, 'owner': self.user.id, 'accept': False},
+                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
+
+        # fetch the updated object
+        self.event_04 = EventPost.objects.get(id=self.event_04.id)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['summary'], f"{str(self.event_04.owner.id)} rejected {self.user2.id} from "
+                                                   f"event {self.event_04.id} as spectator")
+        self.assertEqual(response.data['type'], 'Reject')
+        self.assertEqual(self.event_04.spec_applicants, [self.user3.id])
+        self.assertNotIn(self.user2.id, self.event_04.players)
+
+    def test_reject_applicant_as_player(self):
+        response = self.client.post(reverse('eventpost-applicants', args=[str(self.event_04.id)]),
+                                    {'type': 'player', 'user': self.user4.id, 'owner': self.user.id, 'accept': False},
+                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
+
+        # fetch the updated object
+        self.event_04 = EventPost.objects.get(id=self.event_04.id)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['summary'], f"{str(self.event_04.owner.id)} rejected {self.user4.id} from "
+                                                   f"event {self.event_04.id} as player")
+        self.assertEqual(response.data['type'], 'Reject')
+        self.assertEqual(self.event_04.player_applicants, [])
+        self.assertNotIn(self.user4.id, self.event_04.players)
+
+    def test_get_spec_applicants(self):
+        response = self.client.get(reverse('eventpost-applicants', args=[str(self.event_04.id)]), {'type': 'spectator'},
+                                   HTTP_AUTHORIZATION=f'JWT {self.token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['applicants'], self.event_04.spec_applicants)
+
+    def test_get_player_applicants(self):
+        response = self.client.get(reverse('eventpost-applicants', args=[str(self.event_04.id)]), {'type': 'player'},
+                                   HTTP_AUTHORIZATION=f'JWT {self.token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['applicants'], self.event_04.player_applicants)

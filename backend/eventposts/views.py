@@ -8,9 +8,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework import permissions
+from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from django.db.models import Q, F, Func, IntegerField
-
+from datetime import datetime
 
 class EventPostsPagination(PageNumberPagination):
     page_size = 10
@@ -45,17 +46,18 @@ class EventViewSet(viewsets.ModelViewSet):
                                                                                     "longitude": data["longitude"],
                                                                                     "latitude": data["latitude"],
                                                                                     "units": "m"
-                                                                                }}, "eventDate": data["date"],
+                                                                                }, "eventDate": data["date"],
              "eventSport": data["sport"], "eventMinAge": data["min_age"], "eventMaxAge": data["max_age"],
              "eventMinSkillLevel": data["min_skill_level"], "eventMaxSkillLevel": data["max_skill_level"],
              "eventPlayerCapacity": data["player_capacity"], "eventSpectatorCapacity": data["spec_capacity"],
-             "eventApplicants": data["applicants"], "eventPlayers": data["players"]}
+             "eventApplicantsAsPlayer": data["player_applicants"],
+             "eventApplicantsAsSpectator": data["spec_applicants"], "eventPlayers": data["players"]}}
 
         return response
 
     def authenticate(self):
         user, _ = self.JWTauth.authenticate(self.request)
-        return user.id == self.request.data["owner"]
+        return user.id == int(self.request.data["owner"])
 
     def get_queryset(self):
         queryset = EventPost.objects.all()
@@ -204,3 +206,142 @@ class EventViewSet(viewsets.ModelViewSet):
             return Response(self.wrap(request, serializer.data), status=status.HTTP_201_CREATED, headers=headers)
         else:
             return JsonResponse(status=401, data={'detail': 'Unauthorized.'})
+
+    @action(detail=True, methods=['post'])
+    def apply(self, request, *args, **kwargs):
+        user_id = request.data.get('user')
+        event_id = kwargs['id']
+        applicant_type = request.data.get('type')
+
+        if user_id is not None:
+            applicant = User.objects.get(id=user_id)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'detail': 'user_id is not provided.'})
+
+        if event_id is not None:
+            event = EventPost.objects.get(id=event_id)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'detail': 'id is not provided.'})
+
+        if applicant_type == 'spectator':
+
+            if len(event.spectators) == event.spec_capacity:
+                return Response(status=status.HTTP_409_CONFLICT, data={'detail': 'the event has reached its capacity for spectators.'})
+
+            event.spec_applicants.append(user_id)
+
+        elif applicant_type == 'player':
+
+            if len(event.players) == event.player_capacity:
+                return Response(status=status.HTTP_409_CONFLICT,
+                                    data={'detail': 'the event has reached its capacity for players.'})
+
+            applicant_age = divmod((datetime.now().date() - applicant.birthday).total_seconds(), 365*24*60*60)[0]
+            if not (event.min_age <= applicant_age <= event.max_age):
+                return Response(status=status.HTTP_409_CONFLICT,
+                                data={'detail': 'Applicant age is not appropriate for this event.'})
+
+            event.player_applicants.append(user_id)
+
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'detail': 'wrong applicant type.'})
+
+        event.save()
+
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        response = self.wrap(request, serializer.data)
+
+        response['summary'] = str(user_id) + " applied to event " + str(event_id) + " as " + str(applicant_type)
+        response['type'] = "Join"
+
+        return Response(response, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['get', 'post'])
+    def applicants(self, request, *args, **kwargs):
+
+        event_id = kwargs['id']
+
+        if request.method == 'GET':
+            type = request.query_params.get('type')
+        else:
+            type = request.data.get('type')
+
+        if event_id is not None:
+            event = EventPost.objects.get(id=event_id)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'detail': 'id is not provided.'})
+
+        if type not in ['player', 'spectator']:
+            return Response(status=status.HTTP_400_BAD_REQUEST,
+                            data={'detail': 'applicant type is not provided or is incorrect type.'})
+
+        if request.method == 'GET':
+            applicants = event.player_applicants if type == 'player' else event.spec_applicants
+            return Response(status=status.HTTP_200_OK, data={'applicants': applicants})
+        elif request.method == 'POST':
+            if not self.authenticate():
+                return JsonResponse(status=401, data={'detail': 'Unauthorized.'})
+
+            user_id = int(request.data.get('user'))
+            accept = request.data.get('accept')
+
+            if user_id is None:
+                return Response(status=status.HTTP_400_BAD_REQUEST, data={'detail': 'user is not provided.'})
+
+            if accept is None:
+                return Response(status=status.HTTP_400_BAD_REQUEST, data={'detail': 'accept status is not provided.'})
+            elif accept == 'True':
+                accept = True
+            elif accept == 'False':
+                accept = False
+
+            # if user applied as spectator, remove it from spec_applicant and insert to spectators
+            if user_id in event.spec_applicants:
+
+                if len(event.spectators) == event.spec_capacity and accept:
+                    return Response(status=status.HTTP_409_CONFLICT,
+                                    data={'detail': 'the event has reached its capacity for spectators.'})
+
+                event.spec_applicants.remove(user_id)
+                if accept:
+                    event.spectators.append(user_id)
+                event.save()
+
+            # if user applied as player, remove it from player_applicant and insert to players
+            elif user_id in event.player_applicants:
+
+                if len(event.players) == event.player_capacity and accept:
+                    return Response(status=status.HTTP_409_CONFLICT,
+                                    data={'detail': 'the event has reached its capacity for players.'})
+
+                event.player_applicants.remove(user_id)
+                if accept:
+                    event.players.append(user_id)
+                event.save()
+
+            else:
+                return Response(status=status.HTTP_409_CONFLICT,
+                                    data={'detail': 'there is no such an applicant for this event.'})
+
+            instance = self.get_object()
+            serializer = self.get_serializer(instance)
+            response = self.wrap(request, serializer.data)
+
+            response['actor']['name'] = str(user_id)
+
+            if accept:
+                response['summary'] = f"{str(event.owner.id)} accepted {str(user_id)} to event {str(event_id)} as " \
+                                      f"{str(type)}"
+                response['type'] = "Accept"
+            else:
+                response['summary'] = f"{str(event.owner.id)} rejected {str(user_id)} from event {str(event_id)} " \
+                                      f"as {str(type)}"
+                response['type'] = "Reject"
+
+            return Response(response, status=status.HTTP_200_OK)
+        else:
+            return JsonResponse(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+
