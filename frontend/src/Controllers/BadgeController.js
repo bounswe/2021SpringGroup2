@@ -1,4 +1,4 @@
-import {getUserInfoLoggedIn} from "./AuthInfo";
+import {getToken, getUserInfoLoggedIn} from "./AuthInfo";
 
 export async function getBadgeDetails(badge_name) {
     const options = {
@@ -50,60 +50,68 @@ export async function getAllBadges() {
 }
 
 
-export function getAllEventsAvailableForBadgeGift(target_user){
+export async function getAllEventsAvailableForBadgeGift(target_user) {
     let logged_user = getUserInfoLoggedIn()
-    if(!logged_user){
+    if (!logged_user) {
         return null
     }
+    let key;
+    await getToken().then(d => {
+        key = d
+    })
     const options = {
-        headers: { 'Accept': 'application/json','Content-Type': 'application/json'},
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'JWT ' + key},
         method: 'POST',
         body: JSON.stringify({
-            offerer:logged_user.username
+            offerer: logged_user.username
         })
     }
     let response
     try {
-        response = fetch("/api/users/"+String(target_user)+"/relatedEvents/",options)
-            .then(response=>response.json())
-            .then(result=>{
-                    return result.items.map(element=>({
-                        title:element.title,
-                        sport:element.eventSport,
-                        date:element.eventDate,
-                        event_id:element.postId
+        response = fetch("/api/users/" + String(target_user) + "/relatedEvents/", options)
+            .then(response => response.json())
+            .then(result => {
+                    return result.items.map(element => ({
+                        title: element.title,
+                        sport: element.eventSport,
+                        date: element.eventDate,
+                        event_id: element.postId
                     }))
                 }
             );
-    } catch (err){
+    } catch (err) {
         console.log(err)
     }
 
     return response
 }
 
-export function giveBadgeToUser(target_user,badge_name,event_id){
+export async function giveBadgeToUser(target_user, badge_name, event_id) {
     let logged_user = getUserInfoLoggedIn()
-    if(!logged_user){
+    if (!logged_user) {
         return null
     }
+    let key;
+    await getToken().then(d => {
+        key = d
+    })
     const options = {
-        headers: { 'Accept': 'application/json','Content-Type': 'application/json'},
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'JWT ' + key},
         method: 'POST',
         body: JSON.stringify({
-            offerer:logged_user.username,
-            event_id:event_id,
-            badge_name:badge_name
+            offerer: logged_user.username,
+            event_id: event_id,
+            badge_name: badge_name
         })
     }
     let response
     try {
-        response = fetch("/api/users/"+String(target_user)+"/badges/",options)
-            .then(response=>response.json())
-            .then(result=> {
+        response = fetch("/api/users/" + String(target_user) + "/badges/", options)
+            .then(response => response.json())
+            .then(result => {
                 return result
             });
-    } catch (err){
+    } catch (err) {
         console.log(err)
     }
 
