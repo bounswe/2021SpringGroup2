@@ -15,14 +15,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivity : AppCompatActivity(),FragmentUserResult.FragmentUserResultListener, FragmentCreateEvent.FragmentCreateEventListener,FragmentSearchUser.FragmentSearchUserListener,FragmentSearchTransit.FragmentSearchTransitListener,FragmentMyEvents.FragmentMyEventsListener,FragmentViewAllEvents.FragmentViewAllEventsListener,FragmentMap.FragmentMapListener,FragmentSearchEvent.FragmentSearchEventListener, FragmentProfile.FragmentProfileListener,FragmentSearchResults.FragmentSearchResultsListener,FragmentViewEventDetailed.FragmentViewEventDetailedListener {
+class MainActivity : AppCompatActivity(),FragmentUserResult.FragmentUserResultListener,FragmentEquipmentResults.FragmentEquipmentResultsListener,FragmentEquipmentDetailed.FragmentEquipmentDetailedListener, FragmentCreateEvent.FragmentCreateEventListener,FragmentSearchUser.FragmentSearchUserListener,FragmentSearchTransit.FragmentSearchTransitListener,FragmentMyEvents.FragmentMyEventsListener,FragmentViewAllEvents.FragmentViewAllEventsListener,FragmentMap.FragmentMapListener,FragmentSearchEvent.FragmentSearchEventListener, FragmentProfile.FragmentProfileListener,FragmentSearchResults.FragmentSearchResultsListener,FragmentViewEventDetailed.FragmentViewEventDetailedListener {
 
     private lateinit var binding: ActivityMainBinding
 
     private var login = false
     private var token = ""
     private var username = ""
-    private var testList= arrayListOf("Football","Sumo Wrestling")
+    private var testList= arrayListOf("","Football","Sumo Wrestling")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

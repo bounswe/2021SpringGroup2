@@ -102,6 +102,7 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
                 adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 spinner1.adapter = adapter3
 
+
             }
             }
 

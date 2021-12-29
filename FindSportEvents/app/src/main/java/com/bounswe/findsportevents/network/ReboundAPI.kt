@@ -99,6 +99,11 @@ interface ReboundAPI {
         @Header("Authorization") token : String,
         @Path("postId") postId : Int,
     ): Call<AllCommentsResponse>
+    @GET("api/equipments/")
+    fun getEquipments(
+        @Header("Authorization") token : String,
+        @Query("sport") sport : String,
+    ): Call<AllEquipmentsResponse>
 
 
     companion object {

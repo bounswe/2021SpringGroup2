@@ -27,6 +27,7 @@
             app:srcCompat="@drawable/rebound" />
 
         <TextView
+            android:id="@+id/tv_title_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TITLE"
