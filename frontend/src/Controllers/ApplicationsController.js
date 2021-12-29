@@ -46,3 +46,26 @@ export async function applyToEvent(post_id, type) {
     return response
 }
 
+export async function evaluateApplication(post_id, user_id, type, accept, owner_id) {
+    let logged_user = getUserInfoLoggedIn()
+    if(!logged_user || owner_id!==logged_user.user_id){
+        return null
+    }
+    const options = {
+        method: 'POST',
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+        body: JSON.stringify({user:user_id,type:type, owner:owner_id,accept:accept})
+    }
+    let response
+    try {
+        response = await fetch("/api/posts/" + String(post_id) + "/applicants", options)
+            .then(response => {
+                    return response.json()
+                }
+            )
+    } catch (err) {
+        console.log(err);
+    }
+    return response
+}
+
