@@ -28,7 +28,7 @@ class EquipmentPostSearchTests(APITestCase):
                                                  min_skill_level=3, max_skill_level=4, latitude=40.43103333341609,
                                                  longitude=-3.705507357022727)
 
-        self.event_02 = EquipmentPost.objects.create(owner=self.user, title='Basketballs shoes for sale',
+        self.event_02 = EquipmentPost.objects.create(owner=self.user, title='Basketball shoes for sale',
                                                  content='Selling my Air Jordans',
                                                  location='levent', sport='Basketball', equipment_type="shoes",
                                                  min_skill_level=0, max_skill_level=5, latitude=41.08204996728227,
