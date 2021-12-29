@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 from django.contrib.auth.models import AbstractUser
 from django.dispatch import receiver
 from django.db import models
@@ -25,7 +25,8 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
 class User(AbstractUser):
     bio = models.TextField(default="")
 
-    birthday = models.DateField(default="2003-01-01", blank=True)
+    birthday = models.DateField(default=datetime.date(datetime.date.today().year - 18,
+                                                      datetime.date.today().month, datetime.date.today().day), blank=True)
 
     avatar = models.TextField(default="")
     location = models.TextField(default="")
