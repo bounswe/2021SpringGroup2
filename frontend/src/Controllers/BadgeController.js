@@ -49,6 +49,27 @@ export async function getAllBadges() {
     return response
 }
 
+export async function getAllBadgesOfAUser(username) {
+    const options = {
+        method: 'GET',
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+    }
+    let response
+    try {
+        response = await fetch("/api/users/"+String(username)+"/" , options)
+            .then(response => response.json())
+            .then((result) => {
+                return result.badges.map(element=>(
+                        getBadgeDetails(element)
+                    )
+                )})
+    } catch (err) {
+        console.log(err);
+    }
+
+    return response
+}
+
 
 export async function getAllEventsAvailableForBadgeGift(target_user) {
     let logged_user = getUserInfoLoggedIn()
