@@ -3,5 +3,5 @@ from . import views
 from rest_framework.routers import SimpleRouter
 
 router = SimpleRouter()
-#router.register(r'badges', views.EventViewSet)
+router.register(r'badges', views.BadgeViewSet)
 urlpatterns = router.urls
