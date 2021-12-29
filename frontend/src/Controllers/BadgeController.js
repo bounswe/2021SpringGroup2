@@ -81,3 +81,31 @@ export function getAllEventsAvailableForBadgeGift(target_user){
 
     return response
 }
+
+export function giveBadgeToUser(target_user,badge_name,event_id){
+    let logged_user = getUserInfoLoggedIn()
+    if(!logged_user){
+        return null
+    }
+    const options = {
+        headers: { 'Accept': 'application/json','Content-Type': 'application/json'},
+        method: 'POST',
+        body: JSON.stringify({
+            offerer:logged_user.username,
+            event_id:event_id,
+            badge_name:badge_name
+        })
+    }
+    let response
+    try {
+        response = fetch("/api/users/"+String(target_user)+"/badges/",options)
+            .then(response=>response.json())
+            .then(result=> {
+                return result
+            });
+    } catch (err){
+        console.log(err)
+    }
+
+    return response
+}
