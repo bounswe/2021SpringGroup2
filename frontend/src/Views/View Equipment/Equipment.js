@@ -83,14 +83,15 @@ export default function Equipment (){
     const equipmentid = params.equipmentid
     const [equipment, setEquipment] = useState(initialEquipment)
 
-    // useEffect(() => {
-    //     fetch("http://34.68.66.109/api/equipments/"+equipmentid+"/")
-    //         .then(r=>r.json())
-    //         .then(r=>setEquipment(r))
-    // }, []);
+    useEffect(() => {
+        fetch("http://34.68.66.109/api/equipments/"+equipmentid+"/")
+            .then(r=>r.json())
+            .then(r=>setEquipment(r))
+    }, []);
 
     return(
-        <div style={{background:`url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}>
+        //style={{background:`url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}
+        <div >
 
             <Grid container spacing={2}>
 
@@ -109,17 +110,17 @@ export default function Equipment (){
                 <Grid item xs={12} sm={12}>
                     <Grid container spacing={2} justifyContent={"space-between"} >
                         <Grid item xs={12} sm={6}>
-                            <ListItemText className={classes.fav} primary="Minimum Skill Level" secondary={event.object.eventMinSkillLevel} />
+                            <ListItemText className={classes.fav} primary="Minimum Skill Level" secondary={equipment.object.minSkillLevel} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <ListItemText className={classes.fav} primary="Maximum Skill Level" secondary={event.object.eventMaxSkillLevel} />
+                            <ListItemText className={classes.fav} primary="Maximum Skill Level" secondary={equipment.object.maxSkillLevel} />
                         </Grid>
                     </Grid>
                 </Grid>
                 <Grid item xs={12} sm={12}>
                     <Grid container spacing={2} justifyContent={"space-between"}>
                         <Grid item xs={12} sm={6}>
-                            <ListItemText className={classes.fav} primary="Creation Date" secondary={event.object.creationDate} />
+                            <ListItemText className={classes.fav} primary="Creation Date" secondary={equipment.object.creationDate} />
                         </Grid>
                     </Grid>
                 </Grid>
