@@ -82,7 +82,6 @@ class EquipmentViewSet(viewsets.ModelViewSet):
 
         location = self.request.query_params.get('location')
 
-        min_date = self.request.query_params.get('min_date')
         max_date = self.request.query_params.get('max_date')
 
         sport = self.request.query_params.get('sport')
