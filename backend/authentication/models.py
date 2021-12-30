@@ -1,9 +1,14 @@
 from datetime import datetime
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import RegexValidator
 from django.dispatch import receiver
 from django.db import models
 from django_rest_passwordreset.signals import reset_password_token_created
 from django.core.mail import send_mail
+import re
+from django.core import validators
+from django.utils.deconstruct import deconstructible
+from django.utils.translation import gettext_lazy as _
 
 
 @receiver(reset_password_token_created)
@@ -22,7 +27,22 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         [reset_password_token.user.email]
     )
 
+
 class User(AbstractUser):
+    username_validator = RegexValidator(regex=r'^\w*\D\w*\Z', message='Enter a valid username. This value may contain only '
+                                                                 'letters, numbers, and underscores and may not be '
+                                                                 'entirely numeric.')
+    username = models.CharField(
+        _('username'),
+        max_length=150,
+        unique=True,
+        help_text=_('Required. 150 characters or fewer. Letters, digits and _ only, not entirely numeric.'),
+        validators=[username_validator],
+        error_messages={
+            'unique': _("A user with that username already exists."),
+        },
+    )
+
     bio = models.TextField(default="")
 
     birthday = models.DateField(default=datetime.now, blank=True)
@@ -34,11 +54,11 @@ class User(AbstractUser):
     fav_sport_2 = models.TextField(default="")
     fav_sport_3 = models.TextField(default="")
 
-    badge_1 = models.TextField(default="")
-    badge_2 = models.TextField(default="")
-    badge_3 = models.TextField(default="")
-
     privacy = models.BooleanField(default=True)
+
+    email = models.EmailField(_('email address'), blank=True, unique=True, error_messages={
+            'unique': _("A user with that email address already exists."),
+        },)
 
     class Meta:
         app_label = 'authentication'

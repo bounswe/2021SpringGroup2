@@ -8,22 +8,24 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.http import JsonResponse
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 
 
-class MultipleFieldLookupMixin(object):
+class MultipleFieldsLookupMixin(object):
     def get_object(self):
         queryset = self.get_queryset()
         queryset = self.filter_queryset(queryset)
-        filter = {}
-        for field in self.lookup_fields:
-            try:
-                filter[field] = self.kwargs[field]
-            except Exception:
-                pass
-        return get_object_or_404(queryset, **filter)
+        field = self.kwargs.get(self.lookup_field)
+        filters = {}
+        if field.isdigit():
+            filters['id'] = field
+        else:
+            filters['username'] = field
+        obj = get_object_or_404(queryset, **filters)
+        return obj
 
 
-class ProfileViewSet(viewsets.ModelViewSet):
+class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     authentication_classes = [JWTAuthentication]
     queryset = User.objects.all()
