@@ -41,10 +41,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'authentication',
     'django_rest_passwordreset',
+    'equipmentposts',
     'eventposts',
     'profiles',
     'frontend',
-    'badges',
 ]
 
 SITE_ID = 1

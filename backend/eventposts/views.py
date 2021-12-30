@@ -29,10 +29,12 @@ class EventViewSet(viewsets.ModelViewSet):
     lookup_field = "id"
 
     def wrap(self, request, data):
+        queryset = User.objects
+        owner = queryset.filter(id=data["owner"]).get().username
         response = \
-            {"@context": "https://www.w3.org/ns/activitystreams", "summary": str(request.user) + " created an event",
+            {"@context": "https://www.w3.org/ns/activitystreams", "summary": owner + " created an event",
              "type": "Create",
-             "actor": {"type": "Person", "name": str(request.user)}, "object": {"type": "Event",
+             "actor": {"type": "Person", "name": owner}, "object": {"type": "Event",
                                                                                 "name": "A Simple Event",
                                                                                 "postId": data["id"],
                                                                                 "ownerId": data["owner"],
