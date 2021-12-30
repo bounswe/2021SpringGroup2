@@ -10,12 +10,25 @@ from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 
 
-class ProfileViewSet(viewsets.ModelViewSet):
+class MultipleFieldLookupMixin(object):
+    def get_object(self):
+        queryset = self.get_queryset()
+        queryset = self.filter_queryset(queryset)
+        filter = {}
+        for field in self.lookup_fields:
+            try:
+                filter[field] = self.kwargs[field]
+            except Exception:
+                pass
+        return get_object_or_404(queryset, **filter)
+
+
+class ProfileViewSet(viewsets.ModelViewSet, MultipleFieldLookupMixin):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     authentication_classes = [JWTAuthentication]
     queryset = User.objects.all()
     serializer_class = ProfileSerializer
-    lookup_field = 'username'
+    lookup_fields = ('username', 'id')
     JWTauth = JWTAuthentication()
 
     def authenticate(self):
