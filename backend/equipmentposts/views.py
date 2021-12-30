@@ -112,7 +112,6 @@ class EquipmentViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(Q(equipment_type__icontains=equipment_type))
 
         # filter by event date
-        if max_date is not None:
             queryset = queryset.filter(date__lte=max_date)
 
         # filter by sport category
