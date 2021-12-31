@@ -5,3 +5,8 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventPost
         fields = "__all__"
+
+class SimpleEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventPost
+        fields = ["id", "title", "sport", "date"]
