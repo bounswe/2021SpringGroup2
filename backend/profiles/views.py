@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from badges.models import BadgeRecord
+from badges.models import BadgeRecord, Badge
 from django.db.models import Q
 from rest_framework.decorators import action
 
@@ -104,3 +104,58 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
             objects.append(self.wrap(data))
         return Response(self.wrap_all(objects))
 
+    def wrap_offer(self, data):
+        response =\
+            {
+                "@context": "https://www.w3.org/ns/activitystreams",
+                "summary": data["offerer_username"] + " gave badge to " + data["target_username"],
+                "type": "Offer",
+                "actor": {
+                    "type": "Person",
+                    "name": data["offerer_username"],
+                    "id": data["offerer_id"]
+                },
+                "object": {
+                    "type": "Badge",
+                    "name": data["badge_name"],
+                    "attributedTo": [
+                        {
+                            "type": "Event",
+                            "id": data["event_id"]
+                        }
+                    ]
+                },
+                "target": {
+                    "type": "Person",
+                    "name": data["target_username"],
+                    "id": data["target_id"]
+                }
+            }
+
+        return response
+
+    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    def badges(self, request, *args, **kwargs):
+        user, _ = self.JWTauth.authenticate(self.request)
+        target_username = kwargs['pk']
+        badge_name = request.data.get('badge_name')
+        event_id = request.data.get('event_id')
+        offerer_id = user.id
+
+        badge_queryset = Badge.objects.all()
+        user_queryset = User.objects.all()
+        badge_id = badge_queryset.get(name=badge_name).id
+        target = user_queryset.get(username=target_username)
+        BadgeRecord.objects.create(badge_id=badge_id, offerer_id=offerer_id, receiver_id=target.id, event_id=event_id)
+        target.badges.append(badge_name)
+        data = \
+            {
+                "badge_name": badge_name,
+                "offerer_id": offerer_id,
+                "offerer_username": user.username,
+                "target_id": target.id,
+                "target_username": target_username,
+                "event_id": event_id,
+            }
+
+        return Response(self.wrap_offer(data))
