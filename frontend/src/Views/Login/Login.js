@@ -5,7 +5,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import {obtainToken} from "../../Controllers/LoginController";
 import {useState} from "react";
 import {Alert} from "@mui/lab";
-import {setHeaders, getToken, getUserInfo} from "../../Controllers/AuthInfo";
+import {setHeaders, getToken, getUserInfo, setUserInfo} from "../../Controllers/AuthInfo";
 
 const initialState = {
     username: {
@@ -51,7 +51,7 @@ export default function LoginPage(props){
                  }
                  else{
                      setHeaders(r.access, r.refresh)
-                     getUserInfo(state.username.value).then(r => console.log(r))
+                     setUserInfo(state.username.value, '')
                      navigate("/")
                  }
              })

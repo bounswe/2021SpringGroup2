@@ -1,5 +1,14 @@
 const headers = {}
 
+export function logOut(){
+    localStorage.removeItem('access')
+    localStorage.removeItem('refresh')
+    localStorage.removeItem('accessTimeStamp')
+    localStorage.removeItem('username')
+    localStorage.removeItem('user_id')
+
+}
+
 export const setHeaders = (accessToken, refreshToken) =>{
     localStorage.setItem('access', accessToken)
     localStorage.setItem('refresh', refreshToken)
