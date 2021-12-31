@@ -17,10 +17,22 @@ class BadgeViewSet(viewsets.ModelViewSet):
     lookup_field = 'name'
     JWTauth = JWTAuthentication()
 
-    def wrap(self, request, data):
+    def wrap_all(self, objects):
         response = \
             {
                 "@context": "https://www.w3.org/ns/activitystreams",
+                "summary": "Badge list",
+                "type": "Collection",
+                "totalItems": len(objects),
+                "items": objects
+            }
+
+        return response
+
+    def wrap(self, request, data):
+        response = \
+            {
+                "@context": data["url"],
                 "type": "Badge",
                 "name": data["name"],
                 "content": data["description"],
@@ -47,8 +59,9 @@ class BadgeViewSet(viewsets.ModelViewSet):
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
-        response = []
+        objects = []
 
         for data in serializer.data:
-            response.append(self.wrap(request, data))
-        return Response(response)
+            objects.append(self.wrap(request, data))
+
+        return Response(self.wrap_all(objects))
