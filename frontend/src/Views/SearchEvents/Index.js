@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { makeStyles, createStyles } from "@mui/styles";
 import Container from "@mui/material/Container";
@@ -99,6 +99,7 @@ export default function SearchEvents() {
             .then(r=>console.log(r)||r.results)
             .then(setEvents)
     }
+    useEffect(search, [])
     return (
         <React.Fragment>
             <Container component="main" maxWidth={"lg"}>
@@ -200,7 +201,6 @@ export default function SearchEvents() {
                             value={filters.query}
                             onChange={e=>setValue("query")(e.target.value)}
                         />
-                        <EventCard/>
                         {events.map((e, i)=>(
                             <EventCard key={i} {...e}/>
                         ))}
@@ -210,6 +210,7 @@ export default function SearchEvents() {
                         <Button
                             color="primary"
                             variant="outlined"
+                            style={{marginTop:15}}
                             onClick={search}
                         >
                             Search

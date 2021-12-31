@@ -1,9 +1,11 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import {useNavigate} from "react-router-dom";
-import ButtonBase from "@material-ui/core/ButtonBase";
+import ButtonBase from "@mui/material/ButtonBase";
+import Skeleton from "@mui/material/Skeleton";
+import {getEvent} from "../../Controllers/SearchController";
 
 const initialEvent = {
     "@context": "https://www.w3.org/ns/activitystreams",
@@ -40,20 +42,40 @@ const initialEvent = {
         "eventSpectatorCapacity": 12,
         "eventApplicants": [1,2,3],
         "eventPlayers": [1,2,3],
-        "eventSpectators": [1,2,3],
+        "eventApplicantsAsSpectator": [1,2,3],
     }
 }
 
 export default function EventCard(props){
     const [event, setEvent] = useState(initialEvent)
+    const [loading, setLoading] = useState(true)
     const navigate = useNavigate()
-
-    return(
+    useEffect(_=>{
+        getEvent(props.id)
+            .then(e=>setEvent(e))
+            .then(_=>setLoading(false))
+    }, [])
+    return loading?(
+        <Card sx={{ minWidth: 275,  marginTop: 15}}>
+            <CardContent>
+                <Skeleton variant="text" width={300}/>
+                <Skeleton variant="text" width={50}/>
+                <Skeleton variant="text" />
+                <Skeleton variant="text" width={70}/>
+                <Skeleton variant="text" width={70}/>
+                <Skeleton variant="text" width={70}/>
+                <Skeleton variant="text" width={70}/>
+                <Skeleton variant="text" width={70}/>
+                <Skeleton variant="text" width={70}/>
+            </CardContent>
+        </Card>
+    ):(
         <Card sx={{ minWidth: 275,  marginTop: 15}}>
             <ButtonBase
             style={{
                 display: 'block',
-                textAlign: 'initial'
+                textAlign: 'initial',
+                width: "100%"
             }}
             onClick={_=>navigate("/event/"+props.id)}>
                 <CardContent>
@@ -82,7 +104,7 @@ export default function EventCard(props){
                         Players:  {event.object.eventPlayers.length} / {event.object.eventPlayerCapacity}
                     </Typography>
                     <Typography variant="body2">
-                        Spectators:  {event.object.eventSpectators.length} / {event.object.eventSpectatorCapacity}
+                        Spectators:  {event.object.eventApplicantsAsSpectator.length} / {event.object.eventSpectatorCapacity}
                     </Typography>
                 </CardContent>
             </ButtonBase>
