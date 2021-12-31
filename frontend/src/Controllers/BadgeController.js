@@ -82,14 +82,11 @@ export async function getAllEventsAvailableForBadgeGift(target_user) {
     })
     const options = {
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'JWT ' + key},
-        method: 'POST',
-        body: JSON.stringify({
-            offerer: logged_user.username
-        })
+        method: 'GET',
     }
     let response
     try {
-        response = fetch("/api/users/" + String(target_user) + "/relatedEvents/", options)
+        response = fetch("/api/users/" + String(target_user) + "/related_events/", options)
             .then(response => response.json())
             .then(result => {
                     return result.items.map(element => ({
