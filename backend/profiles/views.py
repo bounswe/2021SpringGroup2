@@ -3,11 +3,17 @@ from django.shortcuts import render
 # Create your views here.
 from rest_framework import generics
 from authentication.models import User
+from eventposts.models import EventPost
 from .serializers import ProfileSerializer
+from eventposts.serializers import SimpleEventSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.http import JsonResponse
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
+from django.db.models import Q
+from rest_framework.decorators import action
+from django.core import serializers
+
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
@@ -38,6 +44,21 @@ class ProfileViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         else:
             return JsonResponse(status=401, data={'detail':'Unauthorized.'})
+
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated],
+            serializer_class=SimpleEventSerializer)
+    def relatedEvents(self, request, *args, **kwargs):
+        user, _ = self.JWTauth.authenticate(self.request)
+        event_queryset = EventPost.objects.all()
+        target_username = kwargs['username']
+        offerer_username = user.username
+        offerer_id = self.queryset.get(username=offerer_username).id
+        target_id = self.queryset.get(username=target_username).id
+        related_events = event_queryset.filter((Q(owner=offerer_id) & Q(players__contains=[target_id])) |
+                                               (Q(players__contains=[offerer_id]) & Q(players__contains=[target_id])))
+
+        serializer = self.get_serializer(related_events, many=True)
+        return Response(serializer.data)
 
 
 

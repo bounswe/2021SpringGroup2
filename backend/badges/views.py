@@ -9,6 +9,7 @@ from badges.serializers import BadgeSerializer
 from rest_framework.response import Response
 
 
+
 class BadgeViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     authentication_classes = [JWTAuthentication]
