@@ -5,10 +5,12 @@ from django.dispatch import receiver
 from django.db import models
 from django_rest_passwordreset.signals import reset_password_token_created
 from django.core.mail import send_mail
-import re
-from django.core import validators
-from django.utils.deconstruct import deconstructible
+from django.contrib.postgres.fields import ArrayField
 from django.utils.translation import gettext_lazy as _
+
+
+def empty_list():
+    return list([])
 
 
 @receiver(reset_password_token_created)
@@ -54,6 +56,8 @@ class User(AbstractUser):
     fav_sport_1 = models.TextField(default="")
     fav_sport_2 = models.TextField(default="")
     fav_sport_3 = models.TextField(default="")
+
+    badges = ArrayField(models.CharField(max_length=30), default=empty_list)
 
     privacy = models.BooleanField(default=True)
 

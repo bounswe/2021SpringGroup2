@@ -1,7 +1,6 @@
-from eventposts.models import EventPost, Post
+from eventposts.models import EventPost
 from authentication.models import User
 from eventposts.serializers import EventSerializer
-from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.http import JsonResponse
 from rest_framework import status

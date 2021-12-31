@@ -1,4 +1,4 @@
-from rest_framework import status, permissions
+from rest_framework import permissions
 from rest_framework import generics
 from .models import User
 
