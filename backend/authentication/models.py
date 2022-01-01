@@ -59,7 +59,7 @@ class User(AbstractUser):
 
     badges = ArrayField(models.CharField(max_length=30), default=empty_list)
 
-    privacy = models.BooleanField(default=True)
+    privacy = models.BooleanField(default=False)
 
     email = models.EmailField(_('email address'), blank=True, unique=True, error_messages={
             'unique': _("A user with that email address already exists."),

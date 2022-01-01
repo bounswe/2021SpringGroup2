@@ -1,6 +1,6 @@
 from authentication.models import User
 from eventposts.models import EventPost
-from .serializers import ProfileSerializer
+from .serializers import ProfileSerializer, PrivateProfileSerializer
 from eventposts.serializers import SimpleEventSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.http import JsonResponse
@@ -34,6 +34,27 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
     lookup_fields = ('username', 'id')
     JWTauth = JWTAuthentication()
 
+    def get_serializer_class(self):
+        target = self.kwargs['pk']
+        if target.isdigit():
+            target = self.queryset.get(id=target).username
+
+        if self.action == 'retrieve':
+            private = self.queryset.get(username=target).privacy
+            if "HTTP_AUTHORIZATION" not in self.request.META:
+                if private:
+                    return PrivateProfileSerializer
+                else:
+                    return ProfileSerializer
+            user, _ = self.JWTauth.authenticate(self.request)
+            if target == user.username:
+                return ProfileSerializer
+            else:
+                if private:
+                    return PrivateProfileSerializer
+
+        return ProfileSerializer
+
     def wrap_all(self, objects):
         response = \
             {
@@ -63,7 +84,10 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
 
     def authenticate(self):
         user, _ = self.JWTauth.authenticate(self.request)
-        return user.username == self.kwargs['username']
+        pk = self.kwargs['pk']
+        if pk.isdigit():
+            pk = self.queryset.get(id=pk).username
+        return user.username == pk
 
     def update(self, request, *args, **kwargs):
         if self.authenticate():
