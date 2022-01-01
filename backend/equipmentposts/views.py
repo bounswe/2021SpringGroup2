@@ -1,18 +1,15 @@
 from equipmentposts.models import EquipmentPost
 from authentication.models import User
 from equipmentposts.serializers import EquipmentSerializer
-from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework import permissions
-from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
-from django.db.models import Q, F, Func, IntegerField
-from datetime import datetime
-# Create your views here.
+from django.db.models import Q
+
 
 class EquipmentPostsPagination(PageNumberPagination):
     page_size = 10

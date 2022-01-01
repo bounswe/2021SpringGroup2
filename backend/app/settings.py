@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'equipmentposts',
     'eventposts',
     'profiles',
+    'badges',
     'frontend',
 ]
 

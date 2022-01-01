@@ -1,11 +1,7 @@
 from django.db import models
-from authentication.models import User
+from authentication.models import User, empty_list
 from django.contrib.postgres.fields import ArrayField
 from datetime import datetime
-
-
-def empty_list():
-    return list([])
 
 
 class Post(models.Model):
