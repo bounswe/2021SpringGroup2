@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { makeStyles, createStyles } from "@mui/styles";
 import Container from "@mui/material/Container";
@@ -25,6 +25,7 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import {useNavigate} from "react-router-dom";
+import EventCard from "./EventCard";
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -98,6 +99,7 @@ export default function SearchEvents() {
             .then(r=>console.log(r)||r.results)
             .then(setEvents)
     }
+    useEffect(search, [])
     return (
         <React.Fragment>
             <Container component="main" maxWidth={"lg"}>
@@ -199,41 +201,8 @@ export default function SearchEvents() {
                             value={filters.query}
                             onChange={e=>setValue("query")(e.target.value)}
                         />
-                        {events.map(e=>(
-                            <Card sx={{ minWidth: 275,  marginTop: 15}}>
-                                <CardContent>
-                                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                        {e.title}
-                                    </Typography>
-                                    <Typography variant="h5" component="div">
-                                        {e.content}
-                                    </Typography>
-                                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                        {new Date(e.date).toLocaleString()}
-                                    </Typography>
-                                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                        {e.duration} minutes
-                                    </Typography>
-                                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                        Coordinates: {e.latitude} - {e.longitude}
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        Skill Levels: {e.min_skill_level} - {e.max_skill_level}
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        Age:  {e.min_age} - {e.max_age}
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        Players:  {e.players.length} / {e.player_capacity}
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        Players:  {e.spectators.length} / {e.spec_capacity}
-                                    </Typography>
-                                </CardContent>
-                                <CardActions>
-                                    <Button size="small" onClick={_=>navigate("/profile/"+e.owmer+"/")}>See Owner</Button>
-                                </CardActions>
-                            </Card>
+                        {events.map((e, i)=>(
+                            <EventCard key={i} {...e}/>
                         ))}
                     </Grid>
                     <Grid item md={1}>
@@ -241,6 +210,7 @@ export default function SearchEvents() {
                         <Button
                             color="primary"
                             variant="outlined"
+                            style={{marginTop:15}}
                             onClick={search}
                         >
                             Search
