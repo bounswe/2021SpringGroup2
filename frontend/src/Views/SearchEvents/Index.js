@@ -25,6 +25,7 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import {useNavigate} from "react-router-dom";
+import SportType from "./FilterComponents/SportType";
 import EventCard from "./EventCard";
 
 
@@ -113,6 +114,12 @@ export default function SearchEvents() {
                             </Typography>
 
                             <div>  {space}  </div>
+                            <SportType
+                                text={"Sport Type"}
+                                {...filters}
+                                id={"sport"}
+                                setValue={setValue}
+                            />
                             <MinSkillLevel
                                 {...filters}
                                 id={"min_skill_level"}
