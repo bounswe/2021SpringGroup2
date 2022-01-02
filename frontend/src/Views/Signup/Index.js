@@ -12,6 +12,7 @@ import {useNavigate} from 'react-router-dom'
 import image from '../../logos/reb und(400 x 100 px).png'
 import SignUpFunction from "../../Controllers/SignUpController";
 import {useSnackbar} from "notistack";
+import DatePicker from "@mui/lab/DatePicker";
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -36,6 +37,9 @@ const useStyles = makeStyles(theme => createStyles({
     },
     submit: {
         margin: theme.spacing(3, 0, 2)
+    },
+    date: {
+        width:"100%"
     }
 }));
 
@@ -46,13 +50,13 @@ const schema = Joi.object({
         .max(30)
         .required(),
 
-    firstName: Joi.string()
+    first_name: Joi.string()
         .alphanum()
         .min(3)
         .max(30)
         .required(),
 
-    lastName: Joi.string()
+    last_name: Joi.string()
         .alphanum()
         .min(3)
         .max(30)
@@ -72,7 +76,9 @@ const schema = Joi.object({
     repeat_password: Joi.ref('password'),
 
     email: Joi.string()
-        .email({ minDomainSegments: 2 , tlds: { allow: ['com', 'net', "edu"] }})
+        .email({ minDomainSegments: 2 , tlds: { allow: ['com', 'net', "edu"] }}),
+
+    birthday: Joi.string()
 })
     .with('password', 'repeat_password');
 
@@ -84,13 +90,13 @@ const initialState = {
         error: undefined
     },
 
-    firstName: {
+    first_name: {
         value: "",
         changed: false,
         error: undefined
     },
 
-    lastName: {
+    last_name: {
         value: "",
         changed: false,
         error: undefined
@@ -123,6 +129,11 @@ const initialState = {
         changed: false,
         error: undefined
     },
+    birthday: {
+        value: new Date(),
+        changed: false,
+        error: undefined
+    },
 }
 
 export default function SignUp() {
@@ -135,9 +146,9 @@ export default function SignUp() {
     const getValue = state => ({
         username: state.username.value,
 
-        firstName: state.firstName.value,
+        first_name: state.first_name.value,
 
-        lastName: state.lastName.value,
+        last_name: state.last_name.value,
         bio: state.bio.value,
         location: state.location.value,
 
@@ -146,7 +157,7 @@ export default function SignUp() {
         repeat_password: state.repeat_password.value,
 
         email: state.email.value,
-
+        birthday: state.birthday.value
     })
     const handleChange = e=>{
         const newState = {...state}
@@ -169,6 +180,8 @@ export default function SignUp() {
     const submit = _=>{
         const value = getValue(state)
         const result = schema.validate(value, {abortEarly: false})
+        console.log(value.value)
+        console.log(result)
         if(result.error)return
         SignUpFunction(value).then(_=>{
                 navigate("/profile/"+value.username)
@@ -214,22 +227,22 @@ export default function SignUp() {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 autoComplete="fname"
-                                name="firstName"
+                                name="first_name"
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="firstName"
+                                id="first_name"
                                 label="First Name"
                                 autoFocus
-                                value={state.firstName.value||""}
+                                value={state.first_name.value||""}
                                 onChange={handleChange}
                             />
                             {
-                                state.firstName.error?
+                                state.first_name.error?
                                     <Alert
                                         style={{marginTop:5}}
                                         severity="error">
-                                        {state.firstName.error}
+                                        {state.first_name.error}
                                     </Alert>:null
                             }
                         </Grid>
@@ -238,19 +251,19 @@ export default function SignUp() {
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="lastName"
+                                id="last_name"
                                 label="Last Name"
-                                name="lastName"
+                                name="last_name"
                                 autoComplete="lname"
-                                value={state.lastName.value||""}
+                                value={state.last_name.value||""}
                                 onChange={handleChange}
                             />
                             {
-                                state.lastName.error?
+                                state.last_name.error?
                                     <Alert
                                         style={{marginTop:5}}
                                         severity="error">
-                                        {state.lastName.error}
+                                        {state.last_name.error}
                                     </Alert>:null
                             }
                         </Grid>
@@ -360,6 +373,21 @@ export default function SignUp() {
                                         {state.repeat_password.error}
                                     </Alert>:null
                             }
+                        </Grid>
+                        <Grid item xs={12}>
+                            <DatePicker
+                                className={classes.date}
+                                fullWidth
+                                PaperProps={{fullWidth:true}}
+                                label="Birthday"
+                                value={new Date(state.birthday.value)}
+                                onChange={(newValue) => {
+                                    const newState = {...state}
+                                    newState.birthday.value = newValue.toISOString().split("T")[0]
+                                    setState(newState)
+                                }}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
                         </Grid>
                         <Grid item xs={3}>
                         </Grid>

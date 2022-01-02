@@ -28,6 +28,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, './static'),
         filename: 'bundle.js',
+        publicPath: '/static/frontend/'
     },
     plugins: [
         new HtmlWebpackPlugin({

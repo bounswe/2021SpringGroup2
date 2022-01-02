@@ -39,7 +39,7 @@ export default function Comments(props){
     };
     const handlePostComment = () => {
         if (newComment.startsWith("@" + repliedUser + " ") && repliedComment !== null) {
-            const answer = postAnswer(0, 1, 1, "bdoner", newComment.substring(repliedUser.length + 2));
+            const answer = postAnswer(0, 1, newComment.substring(repliedUser.length + 2));
             let foundComment = false
             const handle_return = (d) => {
                 if(d.comment_id === repliedComment && !foundComment){
@@ -57,7 +57,7 @@ export default function Comments(props){
             //setComments(getCommentsAndAnswersOfEvent(0))
 
         } else {
-            const comment = postComment(0, 1, "bdoner", newComment);
+            const comment = postComment(0, newComment);
             setTimeout(() => {
                 setComments(comments.concat(comment))
             }, 400)

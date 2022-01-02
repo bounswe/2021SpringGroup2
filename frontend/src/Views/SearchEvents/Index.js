@@ -1,6 +1,5 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
 import { makeStyles, createStyles } from "@mui/styles";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
@@ -17,6 +16,16 @@ import MaxCreationDate from "./FilterComponents/MaxCreationDate";
 import MinDate from "./FilterComponents/MinDate"
 import MaxDate from "./FilterComponents/MaxDate"
 import { Fragment } from "react";
+import {searchEvents} from "../../Controllers/SearchController";
+
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import {useNavigate} from "react-router-dom";
+import EventCard from "./EventCard";
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -40,14 +49,14 @@ const useStyles = makeStyles(theme => createStyles({
     },
 }));
 
-const initialFilters = {
+export const initialFilters = {
     query: "",
     min_skill_level: 0,
     max_skill_level: 100,
-    min_creation_date: new Date().toGMTString(),
-    max_creation_date: new Date().toGMTString(),
-    min_date: new Date().toGMTString(),
-    max_date: new Date().toGMTString(),
+    min_creation_date: new Date(2021, 1, 1).toISOString().split("T")[0],
+    max_creation_date: new Date(2025, 1, 1).toISOString().split("T")[0],
+    min_date: new Date().toISOString().split("T")[0],
+    max_date: new Date().toISOString().split("T")[0],
     sport: "",
     min_age: 0,
     max_age: 150,
@@ -69,9 +78,9 @@ const initialFilters = {
 
 export default function SearchEvents() {
     const classes = useStyles()
-    //const navigate = useNavigate()
+    const navigate = useNavigate()
     //const { enqueueSnackbar } = useSnackbar();
-
+    const [events, setEvents] = useState([])
     const [filters, setFilters] = useState(initialFilters)
     const setValue = id => value => {
         const newFilters = {...filters}
@@ -84,7 +93,13 @@ export default function SearchEvents() {
             newFilters[ids[id]] = values[id]
         setFilters(newFilters)
     }
-    var space = <Fragment>&nbsp;&nbsp;&nbsp;&nbsp;</Fragment>
+    const space = <Fragment>&nbsp;&nbsp;&nbsp;&nbsp;</Fragment>
+    const search = _=>{
+        searchEvents(filters)
+            .then(r=>console.log(r)||r.results)
+            .then(setEvents)
+    }
+    useEffect(search, [])
     return (
         <React.Fragment>
             <Container component="main" maxWidth={"lg"}>
@@ -168,7 +183,7 @@ export default function SearchEvents() {
                             />
                         </Paper>
                     </Grid>
-                    <Grid item md={8}>
+                    <Grid item md={7}>
                         <TextField
                             style={{marginTop:15}}
                             fullWidth
@@ -186,8 +201,23 @@ export default function SearchEvents() {
                             value={filters.query}
                             onChange={e=>setValue("query")(e.target.value)}
                         />
+                        {events.map((e, i)=>(
+                            <EventCard key={i} {...e}/>
+                        ))}
+                    </Grid>
+                    <Grid item md={1}>
+
+                        <Button
+                            color="primary"
+                            variant="outlined"
+                            style={{marginTop:15}}
+                            onClick={search}
+                        >
+                            Search
+                        </Button>
                     </Grid>
                 </Grid>
+
             </Container>
         </React.Fragment>
     );
