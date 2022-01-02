@@ -1,10 +1,8 @@
 from django.db import models
-from authentication.models import User
+from authentication.models import User, empty_list
 from django.contrib.postgres.fields import ArrayField
 from datetime import datetime
 
-def empty_list():
-    return list([])
 
 class Post(models.Model):
 
@@ -15,6 +13,10 @@ class Post(models.Model):
 
     creation_date = models.DateTimeField(default=datetime.now())
     location = models.TextField(default="")
+    sport = models.CharField(max_length=30)
+
+    latitude = models.FloatField(default=1.0)
+    longitude = models.FloatField(default=1.0)
 
     class Meta:
         abstract = True
@@ -24,7 +26,6 @@ class EventPost(Post):
     date = models.DateTimeField(default=datetime.now())
     duration = models.IntegerField(default=60)
 
-    sport = models.CharField(max_length=30)
     min_age = models.IntegerField(default=18)
     max_age = models.IntegerField(default=75)
 
@@ -38,5 +39,5 @@ class EventPost(Post):
     min_skill_level = models.IntegerField(default=0)
     max_skill_level = models.IntegerField(default=0)
 
-    latitude = models.FloatField(default=1.0)
-    longitude = models.FloatField(default=1.0)
+    class Meta:
+        app_label = 'eventposts'

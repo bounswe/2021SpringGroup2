@@ -1,7 +1,6 @@
-from eventposts.models import EventPost, Post
+from eventposts.models import EventPost
 from authentication.models import User
 from eventposts.serializers import EventSerializer
-from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.http import JsonResponse
 from rest_framework import status
@@ -29,10 +28,12 @@ class EventViewSet(viewsets.ModelViewSet):
     lookup_field = "id"
 
     def wrap(self, request, data):
+        queryset = User.objects
+        owner = queryset.filter(id=data["owner"]).get().username
         response = \
-            {"@context": "https://www.w3.org/ns/activitystreams", "summary": str(request.user) + " created an event",
+            {"@context": "https://www.w3.org/ns/activitystreams", "summary": owner + " created an event",
              "type": "Create",
-             "actor": {"type": "Person", "name": str(request.user)}, "object": {"type": "Event",
+             "actor": {"type": "Person", "name": owner}, "object": {"type": "Event",
                                                                                 "name": "A Simple Event",
                                                                                 "postId": data["id"],
                                                                                 "ownerId": data["owner"],
