@@ -91,9 +91,6 @@ class EquipmentViewSet(viewsets.ModelViewSet):
         min_longitude = self.request.query_params.get('min_longitude')
         max_longitude = self.request.query_params.get('max_longitude')
 
-        min_skill = self.request.query_params.get('min_skill_level')
-        max_skill = self.request.query_params.get('max_skill_level')
-
         min_creation_date = self.request.query_params.get('min_creation_date')
         max_creation_date = self.request.query_params.get('max_creation_date')
 
@@ -123,12 +120,6 @@ class EquipmentViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(Q(latitude__lte=max_latitude) & Q(latitude__gte=min_latitude))
         if min_longitude is not None and max_longitude is not None:
             queryset = queryset.filter(Q(longitude__lte=max_longitude) & Q(longitude__gte=min_longitude))
-
-        # filter by skill levels
-        if min_skill is not None:
-            queryset = queryset.filter(min_skill_level__gte=min_skill)
-        if max_skill is not None:
-            queryset = queryset.filter(max_skill_level__lte=max_skill)
 
         # filter by creation date
         if min_creation_date is not None:

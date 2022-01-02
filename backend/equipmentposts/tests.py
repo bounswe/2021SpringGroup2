@@ -23,25 +23,25 @@ class EquipmentPostSearchTests(APITestCase):
         self.equipment_01 = EquipmentPost.objects.create(owner=self.user, title='Football for sale',
                                                  content='Selling WC 2010 Jabulani football',
                                                  location='Madrid', sport='Football', equipment_type="ball",
-                                                 min_skill_level=3, max_skill_level=4, latitude=40.43103333341609,
+                                                 latitude=40.43103333341609,
                                                  longitude=-3.705507357022727)
 
         self.equipment_02 = EquipmentPost.objects.create(owner=self.user, title='Basketball shoes for sale',
                                                  content='Selling my Air Jordans',
                                                  location='levent', sport='Basketball', equipment_type="shoes",
-                                                 min_skill_level=0, max_skill_level=5, latitude=41.08204996728227,
+                                                 latitude=41.08204996728227,
                                                  longitude=29.016445404346598)
 
         self.equipment_03 = EquipmentPost.objects.create(owner=self.user, title='NBA ball or something idk',
                                                  content='Selling basketball with NBA logo',
                                                  location='Washington', sport='Basketball', equipment_type="ball",
-                                                 min_skill_level=3, max_skill_level=5, latitude=38.90785448747658,
+                                                 latitude=38.90785448747658,
                                                  longitude=-77.04329853399994)
 
         self.equipment_04 = EquipmentPost.objects.create(owner=self.user, title='Vintage Nike mercurial football cleats',
                                                  content='worn only once',
                                                  location='etiler', sport='Football', equipment_type="shoes",
-                                                 min_skill_level=3, max_skill_level=4, latitude=41.13274943188016,
+                                                 latitude=41.13274943188016,
                                                  longitude=29.105688623416825)
 
         self.basketball_ads = EquipmentSerializer(EquipmentPost.objects.filter(sport="Basketball"), many=True).data
@@ -54,7 +54,6 @@ class EquipmentPostSearchTests(APITestCase):
         self.ads_created_by_user = EquipmentSerializer(EquipmentPost.objects.all(), many=True).data
         self.creation_date_today = EquipmentSerializer(EquipmentPost.objects.all(), many=True).data
 
-        self.skill_between_2_4 = self.football_ads
 
     def test_filter_by_query(self):
         response = self.client.get(reverse('equipmentpost-list'), {'query': 'basketball'}, HTTP_AUTHORIZATION=f'JWT {self.token}')
@@ -95,9 +94,4 @@ class EquipmentPostSearchTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.in_turkey_ads)
 
-    def test_filter_by_skill(self):
-        response = self.client.get(reverse('equipmentpost-list'), {'min_skill_level': 2, 'max_skill_level': 4},
-                                   HTTP_AUTHORIZATION=f'JWT {self.token}')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['results'], self.skill_between_2_4)
 
