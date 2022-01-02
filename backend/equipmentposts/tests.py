@@ -56,37 +56,37 @@ class EquipmentPostSearchTests(APITestCase):
 
 
     def test_filter_by_query(self):
-        response = self.client.get(reverse('equipmentpost-list'), {'query': 'basketball'}, HTTP_AUTHORIZATION=f'JWT {self.token}')
+        response = self.client.get(reverse('equipments-list'), {'query': 'basketball'}, HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.basketball_ads)
 
     def test_filter_by_creation_date(self):
-        response = self.client.get(reverse('equipmentpost-list'), {'min_creation_date': (datetime.today() - timedelta(3)),
+        response = self.client.get(reverse('equipments-list'), {'min_creation_date': (datetime.today() - timedelta(3)),
                                                                'max_creation_date': (datetime.today() + timedelta(1))},
                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.creation_date_today)
 
     def test_filter_by_location(self):
-        response = self.client.get(reverse('equipmentpost-list'), {'location': 'le'},
+        response = self.client.get(reverse('equipments-list'), {'location': 'le'},
                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.in_turkey_ads)
 
     def test_filter_by_sport(self):
-        response = self.client.get(reverse('equipmentpost-list'), {'sport': 'Basketball'},
+        response = self.client.get(reverse('equipments-list'), {'sport': 'Basketball'},
                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.basketball_ads)
 
     def test_filter_by_owner(self):
-        response = self.client.get(reverse('equipmentpost-list'), {'owner_id': self.user.id},
+        response = self.client.get(reverse('equipments-list'), {'owner_id': self.user.id},
                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.ads_created_by_user)
 
     def test_filter_by_coordinates(self):
-        response = self.client.get(reverse('equipmentpost-list'), {'min_latitude': 36.23763062438484,
+        response = self.client.get(reverse('equipments-list'), {'min_latitude': 36.23763062438484,
                                                                'max_latitude': 42.01901802424485,
                                                                'min_longitude': 26.732105369671633,
                                                                'max_longitude': 44.3513027746188},
