@@ -157,8 +157,7 @@ export default function SignUp() {
         repeat_password: state.repeat_password.value,
 
         email: state.email.value,
-        birthday: state.birthday.value.toISOString().split("T")[0],
-
+        birthday: state.birthday.value
     })
     const handleChange = e=>{
         const newState = {...state}
