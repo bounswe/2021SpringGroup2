@@ -1,6 +1,8 @@
-from equipmentposts.models import EquipmentPost
+from rest_framework_extensions.mixins import NestedViewSetMixin
+
+from equipmentposts.models import EquipmentPost, Comment, Answer
 from authentication.models import User
-from equipmentposts.serializers import EquipmentSerializer
+from equipmentposts.serializers import EquipmentSerializer, CommentSerializer, AnswerSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.http import JsonResponse
 from rest_framework import status
@@ -16,7 +18,8 @@ class EquipmentPostsPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
-class EquipmentViewSet(viewsets.ModelViewSet):
+
+class EquipmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     authentication_classes = [JWTAuthentication]
     pagination_class = EquipmentPostsPagination
@@ -143,3 +146,221 @@ class EquipmentViewSet(viewsets.ModelViewSet):
             return Response(self.wrap(request, serializer.data), status=status.HTTP_201_CREATED, headers=headers)
         else:
             return JsonResponse(status=401, data={'detail': 'Unauthorized.'})
+
+
+class CommentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    authentication_classes = [JWTAuthentication]
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    lookup_field = 'id'
+
+    def wrap(self, data):
+        response = \
+            {
+                "@context": "https://www.w3.org/ns/activitystreams",
+                "summary": data["owner_username"] + " created a comment",
+                "type": "Create",
+                "actor": {
+                    "type": "Person",
+                    "name": data["owner_username"]
+                },
+                "object":
+                    {
+                        "type": "Comment",
+                        "equipmentId": data["equipment_id"],
+                        "id": data["id"],
+                        "ownerId": data["owner_id"],
+                        "content": data["content"],
+                        "creationDate": data["creation_date"]
+                    }
+            }
+
+        return response
+
+    def wrap_all(self, objects):
+        response = \
+            {
+                "@context": "https://www.w3.org/ns/activitystreams",
+                "summary": "Object history",
+                "type": "Collection",
+                "totalItems": len(objects),
+                "items": objects
+            }
+
+        return response
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        data =\
+            {
+                "owner_username": self.request.user.username,
+                "equipment_id": self.kwargs["parent_lookup_parent_equipment_id"],
+                "owner_id": self.request.user.id,
+                "content": serializer.data["content"],
+                "creation_date": serializer.data["created_date"],
+                "id": serializer.data["id"]
+            }
+        return Response(self.wrap(data), status=status.HTTP_201_CREATED, headers=headers)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        owner_id = serializer.data["owner"]
+        owner_username = User.objects.get(id=owner_id).username
+        data =\
+            {
+                "owner_username": owner_username,
+                "equipment_id": serializer.data["parent_equipment"],
+                "owner_id": owner_id,
+                "content": serializer.data["content"],
+                "creation_date": serializer.data["created_date"],
+                "id": serializer.data["id"]
+            }
+        return Response(self.wrap(data))
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+
+        objects = []
+
+        for item in serializer.data:
+            owner_id = item["owner"]
+            owner_username = User.objects.get(id=owner_id).username
+            data = \
+                {
+                    "owner_username": owner_username,
+                    "equipment_id": item["parent_equipment"],
+                    "owner_id": owner_id,
+                    "content": item["content"],
+                    "creation_date": item["created_date"],
+                    "id": item["id"]
+                }
+            objects.append(self.wrap(data))
+
+        return Response(self.wrap_all(objects))
+
+    def perform_create(self, serializer):
+        serializer.save(parent_equipment_id=self.kwargs["parent_lookup_parent_equipment_id"], owner=self.request.user)
+
+
+class AnswerViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    authentication_classes = [JWTAuthentication]
+    queryset = Answer.objects.all()
+    serializer_class = AnswerSerializer
+    lookup_field = 'id'
+
+    def wrap(self, data):
+        response = \
+            {
+                "@context": "https://www.w3.org/ns/activitystreams",
+                "summary": data["owner_username"] + " created an answer",
+                "type": "Create",
+                "actor": {
+                    "type": "Person",
+                    "name": data["owner_username"]
+                },
+                "object":
+                    {
+                        "type": "Answer",
+                        "commentId": data["comment_id"],
+                        "equipmentId": data["equipment_id"],
+                        "id": data["id"],
+                        "ownerId": data["owner_id"],
+                        "content": data["content"],
+                        "creationDate": data["creation_date"]
+                    }
+            }
+
+        return response
+
+    def wrap_all(self, objects):
+        response = \
+            {
+                "@context": "https://www.w3.org/ns/activitystreams",
+                "summary": "Object history",
+                "type": "Collection",
+                "totalItems": len(objects),
+                "items": objects
+            }
+
+        return response
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        data =\
+            {
+                "owner_username": self.request.user.username,
+                "equipment_id": self.kwargs["parent_lookup_parent_comment_id__parent_equipment_id"],
+                "comment_id": self.kwargs["parent_lookup_parent_comment_id"],
+                "owner_id": self.request.user.id,
+                "content": serializer.data["content"],
+                "creation_date": serializer.data["created_date"],
+                "id": serializer.data["id"]
+            }
+        return Response(self.wrap(data), status=status.HTTP_201_CREATED, headers=headers)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        owner_id = serializer.data["owner"]
+        owner_username = User.objects.get(id=owner_id).username
+        equipment_id = Comment.objects.get(id=serializer.data["parent_comment"]).id
+        data =\
+            {
+                "owner_username": owner_username,
+                "comment_id": serializer.data["parent_comment"],
+                "equipment_id": equipment_id,
+                "owner_id": owner_id,
+                "content": serializer.data["content"],
+                "creation_date": serializer.data["created_date"],
+                "id": serializer.data["id"]
+            }
+        return Response(self.wrap(data))
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+
+        objects = []
+
+        for item in serializer.data:
+            owner_id = item["owner"]
+            owner_username = User.objects.get(id=owner_id).username
+            equipment_id = Comment.objects.get(id=item["parent_comment"]).id
+            data = \
+                {
+                    "owner_username": owner_username,
+                    "comment_id": item["parent_comment"],
+                    "equipment_id": equipment_id,
+                    "owner_id": owner_id,
+                    "content": item["content"],
+                    "creation_date": item["created_date"],
+                    "id": item["id"]
+                }
+            objects.append(self.wrap(data))
+
+        return Response(self.wrap_all(objects))
+
+    def perform_create(self, serializer):
+        serializer.save(parent_comment_id=self.kwargs["parent_lookup_parent_comment_id"], owner=self.request.user)
