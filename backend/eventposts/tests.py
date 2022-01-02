@@ -139,7 +139,7 @@ class EventPostSearchTests(APITestCase):
         self.assertEqual(response.data['results'], self.age_between_18_35_games)
 
     def test_filter_by_coordinates(self):
-        response = self.client.get(reverse('posts-list'), {'min_latitude': 36.23763062438484,
+        response = self.client.get(reverse('posts:list'), {'min_latitude': 36.23763062438484,
                                                                'max_latitude': 42.01901802424485,
                                                                'min_longitude': 26.732105369671633,
                                                                'max_longitude': 44.3513027746188},
