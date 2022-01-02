@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'profiles',
     'badges',
     'frontend',
+    'follow',
 ]
 
 SITE_ID = 1

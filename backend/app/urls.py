@@ -23,5 +23,6 @@ urlpatterns = [
     path('api/', include('profiles.urls')),
     path('api/', include('equipmentposts.urls')),
     path('api/', include('badges.urls')),
+    path('api/', include('follow.urls')),
     path('', include('frontend.urls'))
 ]
