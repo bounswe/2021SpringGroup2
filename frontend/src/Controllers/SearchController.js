@@ -10,7 +10,7 @@ export function  searchEvents(params={}){
         return params[k]===initialFilters[k]?"h=h": encodeURIComponent(k) + '=' + encodeURIComponent(params[k])
     }).join('&')
     console.log(url)
-    return fetch("http://34.68.66.109/api/posts/?"+url,options)
+    return fetch("/api/posts/?"+url,options)
         .then(response=>response.json())
         .then(r=>{console.log(r); return r})
 }
@@ -21,7 +21,7 @@ export function  getEvent(id){
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
     }
-    return fetch("http://34.68.66.109/api/posts/"+id+'/',options)
+    return fetch("/api/posts/"+id+'/',options)
         .then(response=>response.json())
         .then(r=>{console.log(r); return r})
 }
