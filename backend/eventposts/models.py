@@ -41,3 +41,17 @@ class EventPost(Post):
 
     class Meta:
         app_label = 'eventposts'
+
+
+class Comment(models.Model):
+    parent_post = models.ForeignKey(EventPost, on_delete=models.CASCADE)
+    content = models.TextField()
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="event_comment")
+    created_date = models.DateTimeField(default=datetime.now())
+
+
+class Answer(models.Model):
+    parent_comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    content = models.TextField()
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="event_answer")
+    created_date = models.DateTimeField(default=datetime.now())
