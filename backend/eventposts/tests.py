@@ -78,68 +78,68 @@ class EventPostSearchTests(APITestCase):
         self.skill_between_2_4 = self.football_games
 
     def test_filter_by_query(self):
-        response = self.client.get(reverse('posts:list'), {'query': 'basketball'}, HTTP_AUTHORIZATION=f'JWT {self.token}')
+        response = self.client.get(reverse('posts-list'), {'query': 'basketball'}, HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.basketball_games)
 
     def test_filter_by_date(self):
-        response = self.client.get(reverse('posts:list'), {'min_date': datetime(2021, 12, 12),
+        response = self.client.get(reverse('posts-list'), {'min_date': datetime(2021, 12, 12),
                                                                'max_date': datetime(2023, 1, 1)},
                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.date_inside_2022_games)
 
     def test_filter_by_creation_date(self):
-        response = self.client.get(reverse('posts:list'), {'min_creation_date': (datetime.today() - timedelta(3)),
+        response = self.client.get(reverse('posts-list'), {'min_creation_date': (datetime.today() - timedelta(3)),
                                                                'max_creation_date': (datetime.today() + timedelta(1))},
                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.creation_date_today)
 
     def test_filter_by_player_capacity(self):
-        response = self.client.get(reverse('posts:list'), {'min_player_capacity': 6, 'max_player_capacity': 10},
+        response = self.client.get(reverse('posts-list'), {'min_player_capacity': 6, 'max_player_capacity': 10},
                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.player_capacity_between_6_10_games)
 
     def test_filter_by_spec_capacity(self):
-        response = self.client.get(reverse('posts:list'), {'min_spectator_capacity': 15, 'max_spectator_capacity': 25},
+        response = self.client.get(reverse('posts-list'), {'min_spectator_capacity': 15, 'max_spectator_capacity': 25},
                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.spec_capacity_between_15_25_games)
 
     def test_filter_by_location(self):
-        response = self.client.get(reverse('posts:list'), {'location': 'le'},
+        response = self.client.get(reverse('posts-list'), {'location': 'le'},
                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.in_turkey_games)
 
     def test_filter_by_duration(self):
-        response = self.client.get(reverse('posts:list'), {'min_duration': 45, 'max_duration': 100},
+        response = self.client.get(reverse('posts-list'), {'min_duration': 45, 'max_duration': 100},
                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.duration_between_45_100_games)
 
     def test_filter_by_sport(self):
-        response = self.client.get(reverse('posts:list'), {'sport': 'Basketball'},
+        response = self.client.get(reverse('posts-list'), {'sport': 'Basketball'},
                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.basketball_games)
 
     def test_filter_by_owner(self):
-        response = self.client.get(reverse('posts:list'), {'owner_id': self.user.id},
+        response = self.client.get(reverse('posts-list'), {'owner_id': self.user.id},
                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.games_created_by_user)
 
     def test_filter_by_age(self):
-        response = self.client.get(reverse('posts:list'), {'min_age': 18, 'max_age': 35},
+        response = self.client.get(reverse('posts-list'), {'min_age': 18, 'max_age': 35},
                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.age_between_18_35_games)
 
     def test_filter_by_coordinates(self):
-        response = self.client.get(reverse('posts:list'), {'min_latitude': 36.23763062438484,
+        response = self.client.get(reverse('posts-list'), {'min_latitude': 36.23763062438484,
                                                                'max_latitude': 42.01901802424485,
                                                                'min_longitude': 26.732105369671633,
                                                                'max_longitude': 44.3513027746188},
@@ -148,19 +148,19 @@ class EventPostSearchTests(APITestCase):
         self.assertEqual(response.data['results'], self.in_turkey_games)
 
     def test_filter_by_player_numbers(self):
-        response = self.client.get(reverse('posts:list'), {'min_players': 1, 'max_players': 5},
+        response = self.client.get(reverse('posts-list'), {'min_players': 1, 'max_players': 5},
                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.num_players_between_1_5_games)
 
     def test_filter_by_spectator_numbers(self):
-        response = self.client.get(reverse('posts:list'), {'min_spectators': 3, 'max_spectators': 5},
+        response = self.client.get(reverse('posts-list'), {'min_spectators': 3, 'max_spectators': 5},
                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.num_spectators_between_3_5_games)
 
     def test_filter_by_skill(self):
-        response = self.client.get(reverse('posts:list'), {'min_skill_level': 2, 'max_skill_level': 4},
+        response = self.client.get(reverse('posts-list'), {'min_skill_level': 2, 'max_skill_level': 4},
                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['results'], self.skill_between_2_4)
@@ -223,14 +223,14 @@ class EventPostApplicationTests(APITestCase):
                                                  players=[self.user.id], spectators=[self.user3.id])
 
     def test_apply_as_spectator(self):
-        response = self.client.post(reverse('posts:apply', args=[str(self.event_01.id)]),
+        response = self.client.post(reverse('posts-apply', args=[str(self.event_01.id)]),
                                     {'type': 'spectator', 'user': self.user.id}, HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['summary'], f"{str(self.user.id)} applied to event {str(self.event_01.id)} as spectator")
         self.assertEqual(response.data['type'], 'Join')
 
     def test_apply_as_player(self):
-        response = self.client.post(reverse('posts:apply', args=[str(self.event_01.id)]),
+        response = self.client.post(reverse('posts-apply', args=[str(self.event_01.id)]),
                                     {'type': 'player', 'user': self.user.id},
                                     HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -239,14 +239,14 @@ class EventPostApplicationTests(APITestCase):
         self.assertEqual(response.data['type'], 'Join')
 
     def test_apply_as_player_at_full_capacity(self):
-        response = self.client.post(reverse('posts:apply', args=[str(self.event_02.id)]),
+        response = self.client.post(reverse('posts-apply', args=[str(self.event_02.id)]),
                                     {'type': 'player', 'user': self.user.id},
                                     HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
         self.assertEqual(response.data['detail'], "the event has reached its capacity for players.")
 
     def test_apply_as_spectator_at_full_capacity(self):
-        response = self.client.post(reverse('posts:apply', args=[str(self.event_03.id)]),
+        response = self.client.post(reverse('posts-apply', args=[str(self.event_03.id)]),
                                     {'type': 'spectator', 'user': self.user.id},
                                     HTTP_AUTHORIZATION=f'JWT {self.token}')
 
@@ -254,7 +254,7 @@ class EventPostApplicationTests(APITestCase):
         self.assertEqual(response.data['detail'], "the event has reached its capacity for spectators.")
 
     def test_apply_as_player_when_not_qualified(self):
-        response = self.client.post(reverse('posts:apply', args=[str(self.event_04.id)]),
+        response = self.client.post(reverse('posts-apply', args=[str(self.event_04.id)]),
                                     {'type': 'player', 'user': self.user.id},
                                     HTTP_AUTHORIZATION=f'JWT {self.token}')
 
@@ -262,7 +262,7 @@ class EventPostApplicationTests(APITestCase):
         self.assertEqual(response.data['detail'], "Applicant age is not appropriate for this event.")
 
     def test_accept_applicant_as_player(self):
-        response = self.client.post(reverse('posts:applicants', args=[str(self.event_04.id)]),
+        response = self.client.post(reverse('posts-applicants', args=[str(self.event_04.id)]),
                                     {'type': 'player', 'user': self.user4.id, 'owner': self.user.id, 'accept': True},
                                     HTTP_AUTHORIZATION=f'JWT {self.token}')
 
@@ -277,7 +277,7 @@ class EventPostApplicationTests(APITestCase):
         self.assertIn(self.user4.id, self.event_04.players)
 
     def test_accept_applicant_as_spectator(self):
-        response = self.client.post(reverse('posts:applicants', args=[str(self.event_04.id)]),
+        response = self.client.post(reverse('posts-applicants', args=[str(self.event_04.id)]),
                                     {'type': 'spectator', 'user': self.user2.id, 'owner': self.user.id, 'accept': True},
                                     HTTP_AUTHORIZATION=f'JWT {self.token}')
 
@@ -292,7 +292,7 @@ class EventPostApplicationTests(APITestCase):
         self.assertIn(self.user2.id, self.event_04.spectators)
 
     def test_accept_applicant_as_player_at_full_capacity(self):
-        response = self.client.post(reverse('posts:applicants', args=[str(self.event_05.id)]),
+        response = self.client.post(reverse('posts-applicants', args=[str(self.event_05.id)]),
                                     {'type': 'player', 'user': self.user4.id, 'owner': self.user.id, 'accept': True},
                                     HTTP_AUTHORIZATION=f'JWT {self.token}')
 
@@ -305,7 +305,7 @@ class EventPostApplicationTests(APITestCase):
         self.assertNotIn(self.user4.id, self.event_05.players)
 
     def test_accept_applicant_as_spectator_at_full_capacity(self):
-        response = self.client.post(reverse('posts:applicants', args=[str(self.event_05.id)]),
+        response = self.client.post(reverse('posts-applicants', args=[str(self.event_05.id)]),
                                     {'type': 'spectator', 'user': self.user2.id, 'owner': self.user.id, 'accept': True},
                                     HTTP_AUTHORIZATION=f'JWT {self.token}')
         # fetch the updated object
@@ -317,7 +317,7 @@ class EventPostApplicationTests(APITestCase):
         self.assertNotIn(self.user2.id, self.event_05.spectators)
 
     def test_reject_applicant_as_spectator(self):
-        response = self.client.post(reverse('posts:applicants', args=[str(self.event_04.id)]),
+        response = self.client.post(reverse('posts-applicants', args=[str(self.event_04.id)]),
                                     {'type': 'spectator', 'user': self.user2.id, 'owner': self.user.id, 'accept': False},
                                     HTTP_AUTHORIZATION=f'JWT {self.token}')
 
@@ -332,7 +332,7 @@ class EventPostApplicationTests(APITestCase):
         self.assertNotIn(self.user2.id, self.event_04.players)
 
     def test_reject_applicant_as_player(self):
-        response = self.client.post(reverse('posts:applicants', args=[str(self.event_04.id)]),
+        response = self.client.post(reverse('posts-applicants', args=[str(self.event_04.id)]),
                                     {'type': 'player', 'user': self.user4.id, 'owner': self.user.id, 'accept': False},
                                     HTTP_AUTHORIZATION=f'JWT {self.token}')
 
@@ -347,13 +347,13 @@ class EventPostApplicationTests(APITestCase):
         self.assertNotIn(self.user4.id, self.event_04.players)
 
     def test_get_spec_applicants(self):
-        response = self.client.get(reverse('posts:applicants', args=[str(self.event_04.id)]), {'type': 'spectator'},
+        response = self.client.get(reverse('posts-applicants', args=[str(self.event_04.id)]), {'type': 'spectator'},
                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['applicants'], self.event_04.spec_applicants)
 
     def test_get_player_applicants(self):
-        response = self.client.get(reverse('posts:applicants', args=[str(self.event_04.id)]), {'type': 'player'},
+        response = self.client.get(reverse('posts-applicants', args=[str(self.event_04.id)]), {'type': 'player'},
                                    HTTP_AUTHORIZATION=f'JWT {self.token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['applicants'], self.event_04.player_applicants)
