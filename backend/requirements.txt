@@ -7,3 +7,4 @@ djangorestframework-simplejwt==5.0.0
 django_rest_passwordreset
 django-cors-headers
 drf-extensions==0.7.1
+
