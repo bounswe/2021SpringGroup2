@@ -4,7 +4,6 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import {createStyles, makeStyles, styled} from "@mui/styles";
 import {ListItemText, TextField} from "@mui/material";
-import {getSports} from '../../Controllers/SportsController';
 
 const useStyles = makeStyles(theme => createStyles({
     "@global": {
@@ -53,27 +52,30 @@ const useStyles = makeStyles(theme => createStyles({
 
 const initialEquipment = {
     "@context": "https://www.w3.org/ns/activitystreams",
+    "summary": "egecky posted an equipment",
+    "type": "Create",
+    "actor": {
+        "type": "Person",
+        "name": "egecky"
+    },
     "object": {
         "type": "Equipment",
-        "postId": "",
-        "ownerId": "",
-        "content": "",
-        "title": "Beginner friendly tennis racket",
-        "creationDate": "2014-11-31T23:00:00-08:00",
-        "lastUpdateDate": "2014-11-31T23:00:00-08:00",
+        "postId": 1,
+        "ownerId": 2,
+        "content": "i can't drive my car so i'm selling it",
+        "title": "car for sale",
+        "creationDate": "2022-01-02T18:46:46.313518Z",
         "numberOfClicks": 0,
         "location": {
-            "name": "Etiler Tennis Club",
+            "name": "Monaco",
             "type": "Place",
-            "longitude": 12.34,
-            "latitude": 56.78,
-            "altitude": 90,
+            "longitude": 1.0,
+            "latitude": 1.0,
             "units": "m"
         },
-        "sport": "Tennis",
-        "minSkillLevel": 1,
-        "maxSkillLevel": 5,
-        "equipmentType": "racket"
+        "url": "www.google.com",
+        "sport": "f1",
+        "equipmentType": "car"
     }
 }
 
@@ -100,7 +102,7 @@ export default function Equipment (){
                         {equipment.object.title}
                     </Typography>
                     <Typography variant="subtitle1" component="div" align={"center"}>
-                        Type of Sport: {equipment.sport}
+                        Content: {equipment.object.content}
                     </Typography>
                     <Typography variant="subtitle1" component="div" align={"center"} >
                         Location: {equipment.object.location.type} {equipment.object.location.longitude} {equipment.object.location.latitude}
@@ -110,17 +112,16 @@ export default function Equipment (){
                 <Grid item xs={12} sm={12}>
                     <Grid container spacing={2} justifyContent={"space-between"} >
                         <Grid item xs={12} sm={6}>
-                            <ListItemText className={classes.fav} primary="Minimum Skill Level" secondary={equipment.object.minSkillLevel} />
+                            <ListItemText className={classes.fav} primary="Type of Sport" secondary={equipment.object.sport} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <ListItemText className={classes.fav} primary="Maximum Skill Level" secondary={equipment.object.maxSkillLevel} />
+                            <ListItemText className={classes.fav} primary="Type of Equipment" secondary={equipment.object.equipmentType} />
                         </Grid>
-                    </Grid>
-                </Grid>
-                <Grid item xs={12} sm={12}>
-                    <Grid container spacing={2} justifyContent={"space-between"}>
                         <Grid item xs={12} sm={6}>
                             <ListItemText className={classes.fav} primary="Creation Date" secondary={equipment.object.creationDate} />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <ListItemText className={classes.fav} primary="Location" secondary={equipment.object.location.type + " " + equipment.object.location.longitude + " " + equipment.object.location.latitude} />
                         </Grid>
                     </Grid>
                 </Grid>
