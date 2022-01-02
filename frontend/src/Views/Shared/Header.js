@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Outlet, Link, useLocation} from 'react-router-dom'
 import Button from "@mui/material/Button";
 import AppBar from "@mui/material/AppBar";
@@ -16,6 +16,8 @@ import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToApp';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Badge from "@mui/material/Badge"
 import {IconButton} from "@mui/material";
+import {logOut} from "../../Controllers/AuthInfo";
+import {useSnackbar} from "notistack";
 
 
 
@@ -62,6 +64,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 const Header = props => {
+    console.log(props.loggedIn)
+
+    // useEffect(_=>{
+    //
+    // },[props.loggedIn])
+    const { enqueueSnackbar } = useSnackbar();
+
     return (
         <React.Fragment>
             <nav>
@@ -94,6 +103,13 @@ const Header = props => {
                                     </Badge>
                                 </IconButton>
                                 <Button
+                                    component={Link} to="/createevent"
+                                    color="primary"
+                                    variant="outlined"
+                                    style={{marginRight:10}}>
+                                    Create a new event
+                                </Button>
+                                <Button
                                     component={Link} to="/home"
                                     color="primary"
                                     variant="outlined"
@@ -101,11 +117,22 @@ const Header = props => {
                                     Home
                                 </Button>
                                 <Button
-                                    component={Link} to="/profile"
+                                    component={Link} to={"/profile/" + props.loggedIn.username}
                                     color="primary"
                                     variant="outlined"
                                     startIcon={<AccountCircleOutlinedIcon />} >
                                     Profile
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        logOut()
+                                        enqueueSnackbar("Log out is successful.", {variant: "success"})
+
+                                    }}
+                                    color="primary"
+                                    variant="outlined"
+                                >
+                                    Log Out
                                 </Button>
                             </Toolbar>
                         </AppBar>:
@@ -119,13 +146,6 @@ const Header = props => {
                                     variant="outlined"
                                     style={{marginRight:10}}>
                                     Search
-                                </Button>
-                                <Button
-                                    component={Link} to="/createevent"
-                                    color="primary"
-                                    variant="outlined"
-                                    style={{marginRight:10}}>
-                                    Create a new event
                                 </Button>
                                 <Button
                                     component={Link} to="/home"
