@@ -1,3 +1,7 @@
 from django.shortcuts import render
+from follow.models import Follow
+from follow.serializers import FollowSerializer
 
-# Create your views here.
+
+class FollowViewSet(viewsets.ModelViewSet):
+    pass
