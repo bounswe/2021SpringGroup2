@@ -36,26 +36,65 @@ const initialState = {
     }
 
 }
+export function checkEmailValidity(email){
+    if(email.match(/\S+@\S+\.\S+/)||email.match(/\S+@\S+\.\S+\.\S+/)){
+        return true
+    }
+    return false
+}
+export function checkPasswordValidity(password){
+    if(password.length>=8&&password.match(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/)){
+        return true
+    }
+    return false
+}
 export default function ResetPasswordPage(props){
     const paperStyle = {padding:20, height: '60vh', width:300, margin:"20px auto", background: "#EFF1F3"};
     const textFieldStyle = {backgroundColor: 'white',marginTop:10,marginBottom:10}
     const inputStyle = {height:"10mm",fontSize:"5px"}
     const typographyStyle = {fontSize:14, marginBottom:2,marginTop:2, marginLeft: 1}
     const [state, setState] = useState(initialState)
-    const getValue = state => ({
-        email: state.email.value
-    })
+    const [alert, setAlert] = useState(null)
+
     const handleChange = e=>{
         const newState = {...state}
-        const value = getValue(newState)
-        value[e.target.id] = e.target.value
         newState[e.target.id] = {
             value: e.target.value,
-            changed: true
+            changed: true,
+            error: newState[e.target.id].error
         }
         setState(newState)
+        if(e.target.id==="email"){
+            if(!checkEmailValidity(e.target.value)){
+                setAlert("Please enter a valid email")
+            }
+            else{
+                setAlert(null)
+            }
+        }
+        if(e.target.id==="password"){
+            if(!checkPasswordValidity(e.target.value)){
+                setAlert("Your password must be at least 8 characters long with lowercase, uppercase characters and digits.")
+            }
+            else{
+                setAlert(null)
+            }
+        }
+        if(e.target.id==="repeat"){
+            console.log(state.password.value,state.repeat.value,e.target.value)
+            if(state.password.value!==e.target.value){
+                setAlert("Your passwords do not match")
+            }
+            else{
+                setAlert(null)
+            }
+        }
     }
     function handleClick() {
+        if(!checkEmailValidity(state.email.value)){
+            return
+        }
+        console.log(state.email.value)
         postResetPassword(state.email.value)
             .then(function(r){
                 if(r.status===undefined){
@@ -72,12 +111,16 @@ export default function ResetPasswordPage(props){
             })
     }
     function handleResetClick() {
+        if(!checkPasswordValidity(state.password.value)||(state.password.value!==state.repeat.value)){
+                return
+        }
+        console.log(state.password.value,state.token.value)
         postResetPasswordConfirmation(state.password.value,state.token.value)
             .then(function(r){
                 if(r.status===undefined){
                     const newState = {...state}
                     newState.status.value = 3
-                    newState.token.error = "Your token is incorrect"
+                    newState.token.error = r.password?r.password:"Please enter a valid token"
                     setState(newState)
                 }
                 else{
@@ -95,6 +138,11 @@ export default function ResetPasswordPage(props){
                     <form style={{width: "100%", marginTop: 3}} noValidate>
                         <TextField id="email" label="Enter your email address" fullWidth required size="small" variant="outlined" style={textFieldStyle}
                                    value={state.email.value||""} onChange={handleChange}  InputProps={inputStyle}></TextField>
+                        {alert!==null&&(state.status.value===0||state.status.value===1)?<Alert
+                            style={{marginTop:5}}
+                            severity="error">
+                            {alert}
+                        </Alert>:null}
                         {state.status.value===0?(
                                 <Box textAlign='center' style={{marginTop: 5,marginBottom:3}}>
                                     <Button variant="contained" align="center" onClick={handleClick}
@@ -127,6 +175,13 @@ export default function ResetPasswordPage(props){
                                     <Button variant="contained" align="center" onClick={handleResetClick}
                                             style={{margin:"8px 0",backgroundColor:"#41e5ff"}}>Reset Password</Button>
                                 </Box>
+                                {alert!==null?
+                                    <Alert
+                                        style={{marginTop:5}}
+                                        severity="error">
+                                        {alert}
+                                    </Alert> :
+                                    null}
                             </div>
                         ):state.status.value===3?(
                                 <div>
