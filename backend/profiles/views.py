@@ -35,6 +35,8 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
     JWTauth = JWTAuthentication()
 
     def get_serializer_class(self):
+        if self.action == 'related_events':
+            return SimpleEventSerializer
         if self.action == 'list':
             return PrivateProfileSerializer
         target = self.kwargs['pk']
