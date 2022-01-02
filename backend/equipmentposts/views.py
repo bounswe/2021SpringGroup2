@@ -60,10 +60,6 @@ class EquipmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
                             },
                         "url": data["url"],
                         "sport": data["sport"],
-                        "equipmentMinSkillLevel": data[
-                            "min_skill_level"],
-                        "equipmentMaxSkillLevel": data[
-                            "max_skill_level"],
                         "equipmentType": data["equipment_type"]
                     }
             }
