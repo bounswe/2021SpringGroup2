@@ -35,6 +35,8 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
     JWTauth = JWTAuthentication()
 
     def get_serializer_class(self):
+        if self.action == 'list':
+            return PrivateProfileSerializer
         target = self.kwargs['pk']
         if target.isdigit():
             target = self.queryset.get(id=target).username
