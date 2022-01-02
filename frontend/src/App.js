@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    Outlet,
     Route,
     Routes,
     useHistory
@@ -16,7 +17,9 @@ import ResetPasswordPage from "./Views/Login/ForgotPassword";
 import SearchEvents from "./Views/SearchEvents/Index";
 
 import NotFound from "./Views/Not Found/NotFound";
+import Event from "./Views/Event Page/Event";
 import CreateEventPage from "./Views/Create Event/CreateEventPage";
+
 
 
 const App = () => {
@@ -36,6 +39,7 @@ const App = () => {
                     <Route path="home" element={<Home />} />
                     <Route path="resetpassword" element={<ResetPasswordPage/>}/>
                     <Route path="search" element={<SearchEvents/>}/>
+                    <Route path='event/:eventid' element={<Event/>}/>
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>

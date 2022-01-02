@@ -1,6 +1,4 @@
-from django.test import TestCase
-from rest_framework.test import force_authenticate
-from rest_framework.test import APITestCase, APIRequestFactory
+from rest_framework.test import APITestCase
 from rest_framework import status
 from eventposts.models import EventPost
 from authentication.models import User
