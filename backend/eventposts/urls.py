@@ -2,7 +2,7 @@ from rest_framework_extensions.routers import ExtendedSimpleRouter
 from .views import EventViewSet, CommentViewSet, AnswerViewSet
 router = ExtendedSimpleRouter()
 (
-    router.register(r'posts', EventViewSet, basename='post')
+    router.register(r'posts', EventViewSet, basename='posts')
           .register(r'comments',
                     CommentViewSet,
                     basename='posts-comment',
