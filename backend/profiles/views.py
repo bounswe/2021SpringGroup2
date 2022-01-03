@@ -233,31 +233,31 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="followings")
     def followings(self, request, *args, **kwargs):
-        user, _ = self.JWTauth.authenticate(self.request)
-        user_name = user.username
+        username = self.kwargs["pk"]
+        user = self.queryset.get(username=username)
         followings = user.followings
-        following_users = self.queryset.filter(id__in=followings)
-        serializer = self.get_serializer(following_users, many=True)
+        followings_users = self.queryset.filter(id__in=followings)
+        serializer = self.get_serializer(followings_users, many=True)
         objects = []
         for data in serializer.data:
             followed_username = data["username"]
-            summary_msg = user_name + " followed " + followed_username
-            objects.append(self.wrap_follow_block(data, "Follow", user_name, followed_username, summary_msg))
-        return Response(self.wrap_all(objects, "Users " + user_name + " follows."))
+            summary_msg = username + " followed " + followed_username
+            objects.append(self.wrap_follow_block(data, "Follow", username, followed_username, summary_msg))
+        return Response(self.wrap_all(objects, "Users " + username + " follows."))
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="followers")
     def followers(self, request, *args, **kwargs):
-        user, _ = self.JWTauth.authenticate(self.request)
-        user_name = user.username
+        username = self.kwargs["pk"]
+        user = self.queryset.get(username=username)
         followers = user.followers
         follower_users = self.queryset.filter(id__in=followers)
         serializer = self.get_serializer(follower_users, many=True)
         objects = []
         for data in serializer.data:
             following_username = data["username"]
-            summary_msg = following_username + " followed " + user_name
-            objects.append(self.wrap_follow_block(data, "Follow", following_username, user_name, summary_msg))
-        return Response(self.wrap_all(objects, "Users following " + user_name + "."))
+            summary_msg = following_username + " followed " + username
+            objects.append(self.wrap_follow_block(data, "Follow", following_username, username, summary_msg))
+        return Response(self.wrap_all(objects, "Users following " + username + "."))
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def block(self, request, *args, **kwargs):
@@ -287,28 +287,28 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="blockings")
     def get_blockings(self, request, *args, **kwargs):
-        user, _ = self.JWTauth.authenticate(self.request)
-        user_name = user.username
+        username = self.kwargs["pk"]
+        user = self.queryset.get(username=username)
         blockings = user.blockings
-        blocking_users = self.queryset.filter(id__in=blockings)
-        serializer = self.get_serializer(blocking_users, many=True)
+        blockings_users = self.queryset.filter(id__in=blockings)
+        serializer = self.get_serializer(blockings_users, many=True)
         objects = []
         for data in serializer.data:
             blocked_username = data["username"]
-            summary_msg = user_name + " blocked " + blocked_username
-            objects.append(self.wrap_follow_block(data, "Block", user_name, blocked_username, summary_msg))
-        return Response(self.wrap_all(objects, "Users " + user_name + " blocked."))
+            summary_msg = username + " blocked " + blocked_username
+            objects.append(self.wrap_follow_block(data, "Block", username, blocked_username, summary_msg))
+        return Response(self.wrap_all(objects, "Users " + username + " blocked."))
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="blockers")
     def get_blockers(self, request, *args, **kwargs):
-        user, _ = self.JWTauth.authenticate(self.request)
-        user_name = user.username
-        blockers = user.blockings
-        blocker_users = self.queryset.filter(id__in=blockers)
-        serializer = self.get_serializer(blocker_users, many=True)
+        username = self.kwargs["pk"]
+        user = self.queryset.get(username=username)
+        blockers = user.blockers
+        blockers_users = self.queryset.filter(id__in=blockers)
+        serializer = self.get_serializer(blockers_users, many=True)
         objects = []
         for data in serializer.data:
             blocker_username = data["username"]
-            summary_msg = blocker_username + " blocked " + user_name
-            objects.append(self.wrap_follow_block(data, "Block", blocker_username, user_name, summary_msg))
-        return Response(self.wrap_all(objects, "Users blocked " + user_name + "."))
+            summary_msg = blocker_username + " blocked " + username
+            objects.append(self.wrap_follow_block(data, "Block", blocker_username, username, summary_msg))
+        return Response(self.wrap_all(objects, "Users blocked " + username + "."))
