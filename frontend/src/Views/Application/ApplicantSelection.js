@@ -17,9 +17,12 @@ export default function ApplicantSelection(props){
     const [detailsOpen,setDetailsOpen] = useState(false)
     return (
         <div>
-            <Button variant={"text"} onClick={()=>setDetailsOpen(true)}>
-                View Applications
-            </Button>
+            {props.show?
+                <Button variant={"text"} onClick={()=>setDetailsOpen(true)}>
+                    View Applications
+                </Button>
+                :null
+            }
             <Dialog open={detailsOpen} onClose={()=>setDetailsOpen(false)}>
                 <DialogTitle>
                     <Typography align={"center"}>

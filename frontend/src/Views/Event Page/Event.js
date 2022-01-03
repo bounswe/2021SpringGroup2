@@ -125,12 +125,12 @@ export default function Event (){
         console.log(event)
         if (!event.init) {
             if (event.object.eventPlayers) {
-                getUserListInfo(event.object.eventPlayers).then(d =>
+                await getUserListInfo(event.object.eventPlayers).then(d =>
                     setPlayers(d)
                 )
             }
             if (event.object.eventSpectators) {
-                getUserListInfo(event.object.eventSpectators).then(d =>
+                await getUserListInfo(event.object.eventSpectators).then(d =>
                     setSpectators(d)
                 )
             }
@@ -204,14 +204,16 @@ export default function Event (){
                         <Stack spacing={3}>
                             <Stack direction={"row"} spacing={1} justifyContent={"center"} alignItems={"center"}>
                                 <Typography className={classes.fav}>Players</Typography>
-                                <ApplicantSelection users={playerApplicants} isPlayer={true} event_id={event.object.postId}/>
+                                <ApplicantSelection users={playerApplicants} isPlayer={true} event_id={event.object.postId}
+                                show={viewerUser!==null&&viewerUser.user_id!==null&&viewerUser.user_id===event.object.ownerId}/>
                             </Stack>
-                            <ApplicantList users={players.concat(players).concat(players).concat(players)}/>
+                            <ApplicantList users={players}/>
                         </Stack>
                         <Stack spacing={3}>
                             <Stack direction={"row"} spacing={1} justifyContent={"center"} alignItems={"center"}>
                                 <Typography className={classes.fav}>Spectators</Typography>
-                                <ApplicantSelection users={spectatorApplicants} isPlayer={false} event_id={event.object.postId}/>
+                                <ApplicantSelection users={spectatorApplicants} isPlayer={false} event_id={event.object.postId}
+                                    show={viewerUser!==null&&viewerUser.user_id!==null&&viewerUser.user_id===event.object.ownerId}/>
                             </Stack>
                             <ApplicantList users={spectators}/>
                         </Stack>
