@@ -2,11 +2,16 @@ import React, {useState, useEffect} from 'react'
 import {useParams} from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import {createStyles, makeStyles, styled} from "@mui/styles";
+import {createStyles, makeStyles, styled} from "@material-ui/core/styles";
 import {ListItemText, TextField} from "@mui/material";
 import {getSports} from '../../Controllers/SportsController';
 import EventInfoCard from "../Home/EventInfoCard";
 import Capture from '../images/Capture.png'
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import {getUserListInfo} from "../../Controllers/ApplicationsController";
+import ApplicantList from "../Application/ApplicantList";
+import ApplicantSelection from "../Application/ApplicantSelection";
 
 const useStyles = makeStyles(theme => createStyles({
     "@global": {
@@ -56,6 +61,7 @@ const useStyles = makeStyles(theme => createStyles({
 const initialEvent = {
     "@context": "https://www.w3.org/ns/activitystreams",
     "summary": "Sally created an event",
+    "init": true,
     "type": "Create",
     "actor": {
         "type": "Person",
@@ -96,6 +102,10 @@ export default function Event (){
     const eventid = params.eventid
     const [event, setEvent] = useState(initialEvent)
     const [sport, setSport] = useState([{}])
+    const [players, setPlayers] = useState([])
+    const [spectators, setSpectators] = useState([])
+    const [playerApplicants, setPlayerApplicants] = useState([])
+    const [spectatorApplicants, setSpectatorApplicants] = useState([])
 
     const getSportInfo = sport => console.log(sport) || getSports()
         .then(sports=>sports.find(s=>s.title===sport))
@@ -108,7 +118,22 @@ export default function Event (){
             //.then(r=>getSportInfo("Tennis"))
             .then(setSport)
     }, []);
-
+    useEffect(async () => {
+        console.log(event)
+        if (!event.init) {
+            if (event.object.eventPlayers) {
+                getUserListInfo(event.object.eventPlayers).then(d =>
+                    setPlayers(d)
+                )
+            }
+            if (event.object.eventSpectators) {
+                getUserListInfo(event.object.eventSpectators).then(d =>
+                    setSpectators(d)
+                )
+            }
+            console.log(players, spectators)
+        }
+    },[event])
     return(
         <div style={{background:`url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}>
 
@@ -171,7 +196,31 @@ export default function Event (){
                         </Grid>
                     </Grid>
                 </Grid>
+                <Grid item xs={12} sm={12}>
+                    <Stack spacing={3} direction={"row"} justifyContent={"center"}>
+                        <Stack spacing={3}>
+                            <Stack direction={"row"} spacing={1} justifyContent={"center"} alignItems={"center"}>
+                                <Typography className={classes.fav}>Players</Typography>
+                                <ApplicantSelection users={playerApplicants} isPlayer={true} event_id={event.object.postId}/>
+                            </Stack>
+                            <ApplicantList users={players.concat(players).concat(players).concat(players)}/>
+                        </Stack>
+                        <Stack spacing={3}>
+                            <Stack direction={"row"} spacing={1} justifyContent={"center"} alignItems={"center"}>
+                                <Typography className={classes.fav}>Spectators</Typography>
+                                <ApplicantSelection users={spectatorApplicants} isPlayer={false} event_id={event.object.postId}/>
+                            </Stack>
+                            <ApplicantList users={spectators}/>
+                        </Stack>
+                    </Stack>
 
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                    <Stack direction={"row"} spacing={3} justifyContent={"center"}>
+                            <Button variant={"contained"} style={{backgroundColor:"green"}}>Player Application</Button>
+                            <Button variant={"contained"} style={{backgroundColor:"red"}}>Spectator Application</Button>
+                    </Stack>
+                </Grid>
             </Grid>
 
 

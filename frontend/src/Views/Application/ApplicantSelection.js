@@ -17,8 +17,8 @@ export default function ApplicantSelection(props){
     const [detailsOpen,setDetailsOpen] = useState(false)
     return (
         <div>
-            <Button onClick={()=>setDetailsOpen(true)}>
-                View Player Applications
+            <Button variant={"text"} onClick={()=>setDetailsOpen(true)}>
+                View Applications
             </Button>
             <Dialog open={detailsOpen} onClose={()=>setDetailsOpen(false)}>
                 <DialogTitle>
@@ -31,11 +31,11 @@ export default function ApplicantSelection(props){
                         {props.users.map(user=>(
                             <ListItem>
                                 <ListItemAvatar>
-                                    <Link to={"/users/"+user.username}>
+                                    <Link to={"/profile/"+user.username}>
                                         <Avatar src={user.avatar}/>
                                     </Link>
                                 </ListItemAvatar>
-                                <Link to={"/users/"+user.username} style={{color:'black', textDecoration: 'none'}}>
+                                <Link to={"/profile/"+user.username} style={{color:'black', textDecoration: 'none'}}>
                                     <ListItemText
                                         primary={ <Typography style={{fontWeight:"500"}}>{user.username}</Typography>}/>
                                 </Link>

@@ -11,7 +11,7 @@ export default function ApplicantList(props){
     const [detailsOpen,setDetailsOpen] = useState(false)
     return (
         <div>
-            <AvatarGroup onClick={()=>setDetailsOpen(true)} max={5}>
+            <AvatarGroup style={{"cursor":"pointer"}} onClick={()=>setDetailsOpen(true)} max={5}>
                 {props.users.map(user=>(
                     <Avatar src={user.avatar}/>
                 ))}
@@ -19,7 +19,7 @@ export default function ApplicantList(props){
             <Dialog open={detailsOpen} onClose={()=>setDetailsOpen(false)}>
                 <DialogTitle>
                     <Typography align={"center"}>
-                        Players
+                        Attendees
                     </Typography>
                 </DialogTitle>
                 <DialogContent>
@@ -27,11 +27,11 @@ export default function ApplicantList(props){
                         {props.users.map(user=>(
                                 <ListItem>
                                     <ListItemAvatar>
-                                        <Link to={"/users/"+user.username}>
+                                        <Link to={"/profile/"+user.username}>
                                             <Avatar src={user.avatar}/>
                                         </Link>
                                     </ListItemAvatar>
-                                    <Link to={"/users/"+user.username} style={{color:'black', textDecoration: 'none'}}>
+                                    <Link to={"/profile/"+user.username} style={{color:'black', textDecoration: 'none'}}>
                                         <ListItemText
                                             primary={ <Typography style={{fontWeight:"500"}}>{user.username}</Typography>}/>
                                     </Link>
