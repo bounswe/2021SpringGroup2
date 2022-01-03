@@ -122,7 +122,7 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
     private fun setClickListeners() {
             binding.btnEquipment.setOnClickListener{
                 val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-                transaction.add(R.id.container_main,FragmentEquipmentResults.newInstance(token,binding.tvEventTypeResult.text.toString())).addToBackStack("equipmentResults")
+                transaction.add(R.id.container_main,FragmentEquipmentResults.newInstance(token,username,binding.tvEventTypeResult.text.toString())).addToBackStack("equipmentResults")
                 transaction.commit()
             }
             binding.btnPostComment.setOnClickListener {
@@ -132,8 +132,8 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                 val request = CommentRequest(
                     username,
                     ownerId,
-                    binding.etComment.text.toString(),
-                    sdf.toString()
+                    binding.etMakeComment.text.toString(),
+                    sdf.format(pickedDateTime.time)
                 )
                 ReboundAPI.create().postComment(token,eventId,request).enqueue(object: Callback<CommentResponse>{
                     override fun onResponse(

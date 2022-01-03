@@ -28,5 +28,8 @@ data class EquipmentResponse2(
     val equipment_type: String
 )
 data class EquipmentbyIdResponse(
+    val summary : String,
+    val type : String,
+    val actor : ActorResponse,
     val `object` : EquipmentResponse
 )

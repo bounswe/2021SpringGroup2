@@ -34,6 +34,7 @@ class FragmentEquipmentResults : Fragment(), RecyclerAdapterEquipment.OnItemClic
     private var layoutManager: RecyclerView.LayoutManager?=null
     private var adapter: RecyclerView.Adapter<RecyclerAdapterEquipment.ViewHolder>?=null
     private var token = ""
+    private var username =""
     private var sport = ""
     private var dialog: LoadingDialog? = null
     var contents : MutableList<String> = mutableListOf()
@@ -54,6 +55,7 @@ class FragmentEquipmentResults : Fragment(), RecyclerAdapterEquipment.OnItemClic
         super.onCreate(savedInstanceState)
         equipmentResultsFragListener = requireActivity() as FragmentEquipmentResultsListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
+        username = requireArguments().getString(USER_KEY) ?: ""
         sport = requireArguments().getString(SPORT_KEY) ?: ""
         var page=1
         context?.run {
@@ -152,7 +154,7 @@ class FragmentEquipmentResults : Fragment(), RecyclerAdapterEquipment.OnItemClic
     }
     override fun onItemClick(position: Int) {
         val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.container_main,FragmentEquipmentDetailed.newInstance(token,equipmentIds[position])).addToBackStack("eqiupmentresult")
+        transaction.replace(R.id.container_main,FragmentEquipmentDetailed.newInstance(token,username,equipmentIds[position])).addToBackStack("eqiupmentresult")
         transaction.commit()
     }
 
@@ -163,11 +165,13 @@ class FragmentEquipmentResults : Fragment(), RecyclerAdapterEquipment.OnItemClic
         const val TAG = "view all events"
         private const val TOKEN_KEY = "token_key"
         private const val SPORT_KEY = "sport_key"
+        private const val USER_KEY = "user_key"
 
-        fun newInstance(token: String,sport: String) = FragmentEquipmentResults().also {
+        fun newInstance(token: String,username:String,sport: String) = FragmentEquipmentResults().also {
             it.arguments= Bundle().also {
                 it.putString(TOKEN_KEY,token)
                 it.putString(SPORT_KEY,sport)
+                it.putString(USER_KEY,username)
             }
         }
     }

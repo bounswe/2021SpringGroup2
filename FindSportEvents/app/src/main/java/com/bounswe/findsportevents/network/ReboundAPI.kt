@@ -94,6 +94,17 @@ interface ReboundAPI {
         @Path("postId") postId : Int,
         @Body request: CommentRequest
     ): Call<CommentResponse>
+    @POST("api/equipments/{postId}/comments/")
+    fun postEquipmentComment(
+        @Header("Authorization") token: String,
+        @Path("postId") postId : Int,
+        @Body request: CommentRequest
+    ): Call<CommentResponse>
+    @POST("api/equipments/")
+    fun createEquipment(
+        @Header("Authorization") token: String,
+        @Body request: CreateEquipmentRequest
+    ): Call<EquipmentbyIdResponse>
 
     @GET("api/posts/{eventId}/")
     fun getEventbyId(
@@ -102,6 +113,11 @@ interface ReboundAPI {
     ): Call<EventbyIdResponse>
     @GET("api/posts/{postId}/comments/")
     fun getAllComments(
+        @Header("Authorization") token : String,
+        @Path("postId") postId : Int,
+    ): Call<AllCommentsResponse>
+    @GET("api/equipments/{postId}/comments/")
+    fun getAllEquipmentComments(
         @Header("Authorization") token : String,
         @Path("postId") postId : Int,
     ): Call<AllCommentsResponse>

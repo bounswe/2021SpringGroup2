@@ -15,7 +15,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivity : AppCompatActivity(),FragmentUserResult.FragmentUserResultListener,FragmentEquipmentResults.FragmentEquipmentResultsListener,FragmentEquipmentDetailed.FragmentEquipmentDetailedListener, FragmentCreateEvent.FragmentCreateEventListener,FragmentSearchUser.FragmentSearchUserListener,FragmentSearchTransit.FragmentSearchTransitListener,FragmentMyEvents.FragmentMyEventsListener,FragmentViewAllEvents.FragmentViewAllEventsListener,FragmentMap.FragmentMapListener,FragmentSearchEvent.FragmentSearchEventListener, FragmentProfile.FragmentProfileListener,FragmentSearchResults.FragmentSearchResultsListener,FragmentViewEventDetailed.FragmentViewEventDetailedListener {
+class MainActivity : AppCompatActivity(),FragmentCreateEquipment.FragmentCreateEquipmentListener,FragmentUserResult.FragmentUserResultListener,FragmentEquipmentResults.FragmentEquipmentResultsListener,FragmentEquipmentDetailed.FragmentEquipmentDetailedListener, FragmentCreateEvent.FragmentCreateEventListener,FragmentSearchUser.FragmentSearchUserListener,FragmentSearchTransit.FragmentSearchTransitListener,FragmentMyEvents.FragmentMyEventsListener,FragmentViewAllEvents.FragmentViewAllEventsListener,FragmentMap.FragmentMapListener,FragmentSearchEvent.FragmentSearchEventListener, FragmentProfile.FragmentProfileListener,FragmentSearchResults.FragmentSearchResultsListener,FragmentViewEventDetailed.FragmentViewEventDetailedListener {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(),FragmentUserResult.FragmentUserResultLi
                         false
                     }
                     R.id.bottom_profile -> {
-                        displayProfileFragment(token,username)
+                        displayProfileFragment(token,username,testList)
                         false
                     }
                     R.id.bottom_event -> {
@@ -100,8 +100,8 @@ class MainActivity : AppCompatActivity(),FragmentUserResult.FragmentUserResultLi
         supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentCreateEvent.newInstance(token, username, testList), FragmentCreateEvent.TAG).commit()
     }
 
-    private fun displayProfileFragment(token: String, username: String) {
-        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentProfile.newInstance(token, username), FragmentProfile.TAG).commit()
+    private fun displayProfileFragment(token: String, username: String,testList: ArrayList<String>) {
+        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentProfile.newInstance(token, username,testList), FragmentProfile.TAG).commit()
     }
 
     private fun setObservers() {
