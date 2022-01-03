@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bounswe.findsportevents.R
 import com.bounswe.findsportevents.adapter.RecyclerAdapterDiscussion
 import com.bounswe.findsportevents.databinding.FragmentEquipmentDetailedBinding
 import com.bounswe.findsportevents.databinding.FragmentViewEventDetailedBinding
@@ -35,6 +37,8 @@ class FragmentEquipmentDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
     private var token = ""
     private var username= ""
     private var postId = 0
+    private var commentIds : MutableList<Int> = mutableListOf()
+
     private var comments : MutableList<String> = mutableListOf()
     private var users : MutableList<String> = mutableListOf()
     private var dates : MutableList<String> = mutableListOf()
@@ -75,6 +79,7 @@ class FragmentEquipmentDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                         comments.add(response.body()!!.items.get(i).`object`.content)
                         users.add(response.body()!!.items.get(i).actor.name)
                         dates.add(response.body()!!.items.get(i).`object`.creationDate)
+                        commentIds.add(response.body()!!.items.get(i).`object`.id)
                     }
                     layoutManager= LinearLayoutManager(context)
                     binding.rvDiscussion.layoutManager=layoutManager
@@ -198,6 +203,8 @@ class FragmentEquipmentDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
     }
 
     override fun onItemClick(position: Int) {
-        //
+        val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
+        transaction.add(R.id.container_main,FragmentAnswersEquipment.newInstance(token,username,postId,commentIds[position])).addToBackStack("searchUser")
+        transaction.commit()
     }
 }

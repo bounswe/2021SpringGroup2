@@ -156,12 +156,12 @@ interface ReboundAPI {
         @Path("commentId") commentId : Int,
         @Body content : MutableMap<String,String>
     ): Call<CommentResponse>
-    @POST("api/equipments/{eventId}/comments/{commentId}/answers/")
+    @POST("api/equipments/{equipmentId}/comments/{commentId}/answers/")
     fun postEquipmentAnswers(
         @Header("Authorization") token : String,
         @Path("equipmentId") equipmentId : Int,
         @Path("commentId") commentId : Int,
-        @Body content : String
+        @Body content : MutableMap<String,String>
     ): Call<CommentResponse>
     @POST("api/users/{username}/following/")
     fun followUser(
