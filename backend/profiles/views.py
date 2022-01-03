@@ -1,6 +1,7 @@
 from authentication.models import User
+from .models import FollowRecord, BlockRecord, UnfollowRecord, UnblockRecord
 from eventposts.models import EventPost
-from .serializers import ProfileSerializer, PrivateProfileSerializer
+from .serializers import ProfileSerializer, PrivateProfileSerializer, FollowRecordSerializer, BlockRecordSerializer, UnfollowRecordSerializer, UnblockRecordSerializer
 from eventposts.serializers import SimpleEventSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.http import JsonResponse
