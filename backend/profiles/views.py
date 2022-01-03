@@ -176,6 +176,7 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
         target = user_queryset.get(username=target_username)
         BadgeRecord.objects.create(badge_id=badge_id, offerer_id=offerer_id, receiver_id=target.id, event_id=event_id)
         target.badges.append(badge_name)
+        target.save()
         data = \
             {
                 "badge_name": badge_name,
