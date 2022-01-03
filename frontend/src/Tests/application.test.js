@@ -53,3 +53,27 @@ describe("Check applicant list fetching", () =>{
         expect(spy1).toHaveBeenCalledTimes(1)
     })
 })
+describe("Check application request", () =>{
+
+    let originalFetch;
+    let request;
+    beforeEach(() => {
+        localStorage.setItem('username', "berkaydoner")
+        localStorage.setItem('user_id', 1)
+        originalFetch = global.fetch;
+        global.fetch = jest.fn((x,options) => {request=options})
+    })
+    afterEach(() => {
+        global.fetch = originalFetch;
+    });
+    it("Check if the response is in the correct format.",async () => {
+        const response = await ApplicationsController.applyToEvent(0,"player")
+        expect(request.body).toEqual(
+            "{\"user\":\"1\",\"type\":\"player\"}"
+        )
+        expect(request.method).toEqual("POST")
+    })
+    localStorage.removeItem('username')
+    localStorage.removeItem('user_id')
+})
+
