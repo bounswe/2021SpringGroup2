@@ -7,21 +7,22 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import Paper from "@mui/material/Paper";
-import MinSkillLevel from "./FilterComponents/MinSkillLevel";
-import MaxSkillLevel from "./FilterComponents/MaxSkillLevel";
-import AgeGroups from "./FilterComponents/AgeGroups";
-import Players from "./FilterComponents/Players";
-import MinCreationDate from "./FilterComponents/MinCreationDate";
-import MaxCreationDate from "./FilterComponents/MaxCreationDate";
-import MinDate from "./FilterComponents/MinDate"
-import MaxDate from "./FilterComponents/MaxDate"
+import MinSkillLevel from "./EventSearch/FilterComponents/MinSkillLevel";
+import MaxSkillLevel from "./EventSearch/FilterComponents/MaxSkillLevel";
+import AgeGroups from "./EventSearch/FilterComponents/AgeGroups";
+import Players from "./EventSearch/FilterComponents/Players";
+import MinCreationDate from "./EventSearch/FilterComponents/MinCreationDate";
+import MaxCreationDate from "./EventSearch/FilterComponents/MaxCreationDate";
+import MinDate from "./EventSearch/FilterComponents/MinDate"
+import MaxDate from "./EventSearch/FilterComponents/MaxDate"
 import { Fragment } from "react";
 import {searchEvents} from "../../Controllers/SearchController";
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import {useNavigate, useSearchParams} from "react-router-dom";
-import SportType from "./FilterComponents/SportType";
+import SportType from "./EventSearch/FilterComponents/SportType";
 import EventCard from "./EventCard";
+import EventFilter from "./EventSearch/EventFilter";
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -117,88 +118,12 @@ export default function SearchEvents() {
                 <CssBaseline />
                 <Grid container spacing={5}>
                     <Grid item md={4}>
-                        <Paper
-                            className={classes.paper}>
-                            <Typography component="h1" variant="h5">
-                                Filters
-                            </Typography>
-
-                            <div>  {space}  </div>
-                            <SportType
-                                text={"Sport Type"}
-                                {...filters}
-                                id={"sport"}
-                                setValue={setValue}
-                            />
-                            <MinSkillLevel
-                                {...filters}
-                                id={"min_skill_level"}
-                                setValue={setValue}
-                            />
-                            <div>  {space}  </div>
-                            <MaxSkillLevel
-                                {...filters}
-                                id={"max_skill_level"}
-                                setValue={setValue}
-                            />
-                            <div>  {space}  </div>
-                            <AgeGroups
-                                {...filters}
-                                ids={["min_age","max_age"]}
-                                setValue={setValues}
-                            />
-                            <div>  {space}  </div>
-                            <Players
-                                text={"Players Range"}
-                                {...filters}
-                                ids={["min_players","max_players"]}
-                                setValue={setValues}
-                            />
-                            <div>  {space}  </div>
-                            <Players
-                                text={"Spectators Range"}
-                                {...filters}
-                                ids={["min_spectators","max_spectators"]}
-                                setValue={setValues}
-                            />
-                            <div>  {space}  </div>
-                            <Players
-                                text={"Player Capacity Range"}
-                                {...filters}
-                                ids={["min_player_capacity","max_player_capacity"]}
-                                setValue={setValues}
-                            />
-                            <div>  {space}  </div>
-                            <Players
-                                text={"Spectator Capacity Range"}
-                                {...filters}
-                                ids={["min_spectator_capacity","max_spectator_capacity"]}
-                                setValue={setValues}/>
-                            <div>  {space}  </div>
-                            <MinCreationDate
-                                {...filters}
-                                id={"min_creation_date"}
-                                setValue={setValue}
-                            />
-                            <div>  {space}  </div>
-                            <MaxCreationDate
-                                {...filters}
-                                id={"max_creation_date"}
-                                setValue={setValue}
-                            />
-                            <div>  {space}  </div>
-                            <MinDate
-                                {...filters}
-                                id={"min_date"}
-                                setValue={setValue}
-                            />
-                            <div>  {space}  </div>
-                            <MaxDate
-                                {...filters}
-                                id={"max_date"}
-                                setValue={setValue}
-                            />
-                        </Paper>
+                        <EventFilter
+                            setValue={setValue}
+                            filters={filters}
+                            space={space}
+                            classes={classes}
+                        />
                     </Grid>
                     <Grid item md={7}>
                         <TextField

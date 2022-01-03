@@ -11,7 +11,7 @@ import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import {Autocomplete} from "@mui/lab";
 import {TextField} from "@mui/material";
-import {getLocationBoundaryBoxes} from "../../../Controllers/GeocodingController";
+import {getLocationBoundaryBoxes} from "../../../../Controllers/GeocodingController";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
