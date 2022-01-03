@@ -34,6 +34,17 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
     lookup_fields = ('username', 'id')
     JWTauth = JWTAuthentication()
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({"results":serializer.data})
+
     def get_queryset(self):
         queryset = User.objects.all()
         query = self.request.query_params.get('query')
@@ -131,9 +142,12 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
         target_id = self.queryset.get(username=target_username).id
         given_events = record_queryset.filter(Q(receiver_id=target_id) & Q(offerer_id=offerer_id)).\
             values_list('event_id', flat=True)
-        related_events = event_queryset.filter((Q(owner=offerer_id) & Q(players__contains=[target_id])) |
-                                               (Q(players__contains=[offerer_id]) & Q(players__contains=[target_id]))).\
-            exclude(id__in=given_events)
+
+        related_events = event_queryset.none()
+        if target_id != offerer_id:
+            related_events = event_queryset.filter((Q(owner=offerer_id) & Q(players__contains=[target_id])) |
+                                                   (Q(players__contains=[offerer_id]) & Q(players__contains=[target_id]))).\
+                exclude(id__in=given_events)
 
         serializer = self.get_serializer(related_events, many=True)
         objects = []
