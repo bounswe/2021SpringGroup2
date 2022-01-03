@@ -12,6 +12,7 @@ import Stack from "@mui/material/Stack";
 import {getUserListInfo} from "../../Controllers/ApplicationsController";
 import ApplicantList from "../Application/ApplicantList";
 import ApplicantSelection from "../Application/ApplicantSelection";
+import {getUserInfoLoggedIn} from "../../Controllers/AuthInfo";
 
 const useStyles = makeStyles(theme => createStyles({
     "@global": {
@@ -106,6 +107,7 @@ export default function Event (){
     const [spectators, setSpectators] = useState([])
     const [playerApplicants, setPlayerApplicants] = useState([])
     const [spectatorApplicants, setSpectatorApplicants] = useState([])
+    const [viewerUser, setViewerUser] = useState(null)
 
     const getSportInfo = sport => console.log(sport) || getSports()
         .then(sports=>sports.find(s=>s.title===sport))
@@ -117,6 +119,7 @@ export default function Event (){
             .then(r=>getSportInfo(r.object.eventSport))
             //.then(r=>getSportInfo("Tennis"))
             .then(setSport)
+        setViewerUser(getUserInfoLoggedIn())
     }, []);
     useEffect(async () => {
         console.log(event)
@@ -217,8 +220,16 @@ export default function Event (){
                 </Grid>
                 <Grid item xs={12} sm={12}>
                     <Stack direction={"row"} spacing={3} justifyContent={"center"}>
-                            <Button variant={"contained"} style={{backgroundColor:"green"}}>Player Application</Button>
-                            <Button variant={"contained"} style={{backgroundColor:"red"}}>Spectator Application</Button>
+                            <Button disabled={viewerUser===null||viewerUser===false||viewerUser.user_id===null||
+                            players.length===event.object.eventPlayerCapacity||
+                            players.includes(viewerUser.user_id)||
+                            playerApplicants.includes(viewerUser.user_id)}
+                                    variant={"contained"} style={{backgroundColor:"green"}}>Player Application</Button>
+                            <Button disabled={viewerUser===null||viewerUser===false||viewerUser.user_id===null||
+                            spectators.length===event.object.eventSpectatorCapacity||
+                            spectators.includes(viewerUser.user_id)||
+                            spectatorApplicants.includes(viewerUser.user_id)}
+                                variant={"contained"} style={{backgroundColor:"red"}}>Spectator Application</Button>
                     </Stack>
                 </Grid>
             </Grid>
