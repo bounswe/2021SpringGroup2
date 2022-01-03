@@ -1,5 +1,6 @@
 package com.bounswe.findsportevents.main.fragments
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -11,16 +12,20 @@ import androidx.fragment.app.Fragment
 import com.bounswe.findsportevents.databinding.FragmentGiveABadgeBinding
 import com.bounswe.findsportevents.network.ReboundAPI
 import com.bounswe.findsportevents.network.modalz.responses.GetBadgesResponse
+import com.bounswe.findsportevents.util.DialogManager
+import com.bounswe.findsportevents.util.LoadingDialog
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Byte.decode
+import java.lang.Exception
 import java.util.*
 
 
-class FragmentGiveABadge: Fragment() {
+class FragmentGiveABadge: Fragment(), DialogManager {
     private var _binding: FragmentGiveABadgeBinding? = null
     private val binding get() = _binding!!
+    private var dialog: LoadingDialog? = null
     private var token = ""
     private var username = ""
 
@@ -42,25 +47,67 @@ class FragmentGiveABadge: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        ReboundAPI.create().getBadges(token).enqueue(object: Callback<GetBadgesResponse> {
+        context?.run {
+            showLoading(this)
+        }
+        ReboundAPI.create().getBadges(token).enqueue(object : Callback<GetBadgesResponse> {
             override fun onResponse(
                 call: Call<GetBadgesResponse>,
                 response: Response<GetBadgesResponse>
             ) {
-                if (response.isSuccessful){
-                    val base64String = response.body()?.items?.get(0)?.icon?.content
-                    if (!base64String.isNullOrEmpty()){
-                        val imageBytes = Base64.decode(base64String, Base64.DEFAULT)
-                        val decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-                        binding.ivMvp.setImageBitmap(decodedImage)
+                hideLoading()
+                if (response.isSuccessful) {
+                    val image1 = response.body()?.items?.get(0)?.icon?.content
+                    val image2 = response.body()?.items?.get(1)?.icon?.content
+                    val image3 = response.body()?.items?.get(2)?.icon?.content
+                    val image4 = response.body()?.items?.get(3)?.icon?.content
+                    val image5 = response.body()?.items?.get(4)?.icon?.content
+                    val image6 = response.body()?.items?.get(5)?.icon?.content
+                    if (!image1.isNullOrEmpty() || image2.isNullOrEmpty() || image3.isNullOrEmpty() || image4.isNullOrEmpty() || image5.isNullOrEmpty() || image6.isNullOrEmpty()) {
+                        val imageBytes1 = Base64.decode(image1, Base64.DEFAULT)
+                        val imageBytes2 = Base64.decode(image2, Base64.DEFAULT)
+                        val imageBytes3 = Base64.decode(image3, Base64.DEFAULT)
+                        val imageBytes4 = Base64.decode(image4, Base64.DEFAULT)
+                        val imageBytes5 = Base64.decode(image5, Base64.DEFAULT)
+                        val imageBytes6 = Base64.decode(image6, Base64.DEFAULT)
+                        val decodedImage1 =
+                            BitmapFactory.decodeByteArray(imageBytes1, 0, imageBytes1.size)
+                        val decodedImage2 =
+                            BitmapFactory.decodeByteArray(imageBytes2, 0, imageBytes2.size)
+                        val decodedImage3 =
+                            BitmapFactory.decodeByteArray(imageBytes3, 0, imageBytes3.size)
+                        val decodedImage4 =
+                            BitmapFactory.decodeByteArray(imageBytes4, 0, imageBytes4.size)
+                        val decodedImage5 =
+                            BitmapFactory.decodeByteArray(imageBytes5, 0, imageBytes5.size)
+                        val decodedImage6 =
+                            BitmapFactory.decodeByteArray(imageBytes6, 0, imageBytes6.size)
+                        binding.ivBadge1.setImageBitmap(decodedImage1)
+                        binding.ivBadge2.setImageBitmap(decodedImage2)
+                        binding.ivBadge3.setImageBitmap(decodedImage3)
+                        binding.ivBadge4.setImageBitmap(decodedImage4)
+                        binding.ivBadge5.setImageBitmap(decodedImage5)
+                        binding.ivBadge6.setImageBitmap(decodedImage6)
                     }
 
+                    binding.tvBadgeDesc1.text = response.body()?.items?.get(0)?.content
+                    binding.tvBadgeDesc2.text = response.body()?.items?.get(1)?.content
+                    binding.tvBadgeDesc3.text = response.body()?.items?.get(2)?.content
+                    binding.tvBadgeDesc4.text = response.body()?.items?.get(3)?.content
+                    binding.tvBadgeDesc5.text = response.body()?.items?.get(4)?.content
+                    binding.tvBadgeDesc6.text = response.body()?.items?.get(5)?.content
 
-                    binding.tvMvpDesc.text = response.body()?.items?.get(0)?.content
+                    binding.tvName1.text = response.body()?.items?.get(0)?.name
+                    binding.tvName2.text = response.body()?.items?.get(1)?.name
+                    binding.tvName3.text = response.body()?.items?.get(2)?.name
+                    binding.tvName4.text = response.body()?.items?.get(3)?.name
+                    binding.tvName5.text = response.body()?.items?.get(4)?.name
+                    binding.tvName6.text = response.body()?.items?.get(5)?.name
                 }
             }
 
             override fun onFailure(call: Call<GetBadgesResponse>, t: Throwable) {
+                hideLoading()
             }
 
         })
@@ -86,6 +133,26 @@ class FragmentGiveABadge: Fragment() {
             it.arguments = Bundle().also {
                 it.putString(TOKEN_KEY, token)
             }
+        }
+    }
+
+    override fun showLoading(context: Context) {
+        try {
+            hideLoading()
+            dialog = LoadingDialog(context)
+            dialog?.setCancelable(false)
+            dialog?.show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun hideLoading() {
+        try {
+            dialog?.dismiss()
+            dialog = null
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }
