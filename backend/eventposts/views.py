@@ -55,7 +55,8 @@ class EventViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
              "eventMinSkillLevel": data["min_skill_level"], "eventMaxSkillLevel": data["max_skill_level"],
              "eventPlayerCapacity": data["player_capacity"], "eventSpectatorCapacity": data["spec_capacity"],
              "eventApplicantsAsPlayer": data["player_applicants"],
-             "eventApplicantsAsSpectator": data["spec_applicants"], "eventPlayers": data["players"]}}
+             "eventApplicantsAsSpectator": data["spec_applicants"], "eventPlayers": data["players"],
+                                                                    "eventSpectators": data["spectators"]}}
 
         return response
 
