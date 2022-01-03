@@ -1,4 +1,13 @@
 import {getUserInfoLoggedIn} from "./AuthInfo";
+import {getProfile} from "./ProfileController";
+
+export async function getUserListInfo(list){
+    let details = []
+    list.forEach(id=>getProfile(id).then(res=>{
+        details.push({username:res.username,avatar:res.avatar})
+    }))
+    return details
+}
 
 /*export async function getApplicationsToAnEvent(post_id,playerApplications) {
     const options = {
@@ -7,8 +16,8 @@ import {getUserInfoLoggedIn} from "./AuthInfo";
     }
     let response
     try {
-        response = await fetch("/api/posts/" + String(post_id) + "/applicants" +
-            "&type=" + playerApplications?"player":"spectator" + "/", options)
+        response = await fetch("/api/posts/" + String(post_id) + "/applicants/" +
+            "?type=" + playerApplications?"player":"spectator", options)
             .then(response => response.json())
             .then((result) => {
                     return result.applicants.map(d =>
@@ -23,9 +32,10 @@ import {getUserInfoLoggedIn} from "./AuthInfo";
     }
     return response
 }*/
+
 export async function applyToEvent(post_id, type) {
     let logged_user = getUserInfoLoggedIn()
-    if(!logged_user){
+    if(!logged_user.username){
         return null
     }
     const options = {
@@ -35,7 +45,7 @@ export async function applyToEvent(post_id, type) {
     }
     let response
     try {
-        response = await fetch("/api/posts/" + String(post_id) + "/apply", options)
+        response = await fetch("/api/posts/" + String(post_id) + "/apply/", options)
             .then(response => {
                    return response.json()
                 }
@@ -48,7 +58,7 @@ export async function applyToEvent(post_id, type) {
 
 export async function evaluateApplication(post_id, user_id, type, accept, owner_id) {
     let logged_user = getUserInfoLoggedIn()
-    if(!logged_user || owner_id!==logged_user.user_id){
+    if(!logged_user.username || owner_id!==logged_user.user_id){
         return null
     }
     const options = {
@@ -58,7 +68,7 @@ export async function evaluateApplication(post_id, user_id, type, accept, owner_
     }
     let response
     try {
-        response = await fetch("/api/posts/" + String(post_id) + "/applicants", options)
+        response = await fetch("/api/posts/" + String(post_id) + "/applicants/", options)
             .then(response => {
                     return response.json()
                 }
