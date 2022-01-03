@@ -86,7 +86,7 @@ export async function getAllEventsAvailableForBadgeGift(target_user) {
     }
     let response
     try {
-        response = fetch("/api/users/" + String(target_user) + "/related_events/", options)
+        response = fetch("/api/users/" + String(target_user) + "/related-events/", options)
             .then(response => response.json())
             .then(result => {
                     return result.items.map(element => ({
