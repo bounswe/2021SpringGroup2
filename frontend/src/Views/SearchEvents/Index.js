@@ -6,24 +6,14 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
-import Paper from "@mui/material/Paper";
-import MinSkillLevel from "./EventSearch/FilterComponents/MinSkillLevel";
-import MaxSkillLevel from "./EventSearch/FilterComponents/MaxSkillLevel";
-import AgeGroups from "./EventSearch/FilterComponents/AgeGroups";
-import Players from "./EventSearch/FilterComponents/Players";
-import MinCreationDate from "./EventSearch/FilterComponents/MinCreationDate";
-import MaxCreationDate from "./EventSearch/FilterComponents/MaxCreationDate";
-import MinDate from "./EventSearch/FilterComponents/MinDate"
-import MaxDate from "./EventSearch/FilterComponents/MaxDate"
 import { Fragment } from "react";
 import {searchEvents} from "../../Controllers/SearchController";
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import {useNavigate, useSearchParams} from "react-router-dom";
-import SportType from "./EventSearch/FilterComponents/SportType";
-import EventCard from "./EventCard";
 import EventFilter from "./EventSearch/EventFilter";
-
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import EventTab from "./EventSearch/EventTab";
 
 const useStyles = makeStyles(theme => createStyles({
     "@global": {
@@ -81,6 +71,7 @@ export default function SearchEvents() {
     const searchFilters = {...initialFilters}
     searchParams.forEach((val, key)=>{searchFilters[key] = val})
     const [events, setEvents] = useState([])
+    const [tab, setTab] = useState(0)
     const [filters, setFilters] = useState(searchFilters)
     const setValue = id => value => {
         const newFilters = {...filters}
@@ -120,6 +111,7 @@ export default function SearchEvents() {
                     <Grid item md={4}>
                         <EventFilter
                             setValue={setValue}
+                            setValues={setValues}
                             filters={filters}
                             space={space}
                             classes={classes}
@@ -143,9 +135,20 @@ export default function SearchEvents() {
                             value={filters.query}
                             onChange={e=>setValue("query")(e.target.value)}
                         />
-                        {events.map((e, i)=>(
-                            <EventCard key={i} {...e}/>
-                        ))}
+                        <Tabs
+                            value={tab}
+                            onChange={(event, newValue) => setTab(newValue)}
+                            indicatorColor="secondary"
+                            textColor="inherit"
+                            variant="fullWidth"
+                            aria-label="full width tabs example"
+                        >
+                            <Tab label="Events" id={`full-width-tab-event`} aria-controls={"full-width-tabpanel-event"}/>
+                        </Tabs>
+                        <EventTab
+                            hidden={tab!==0}
+                            events={events}
+                        />
                     </Grid>
                     <Grid item md={1}>
 

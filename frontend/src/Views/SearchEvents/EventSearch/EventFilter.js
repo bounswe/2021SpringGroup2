@@ -31,72 +31,72 @@ export default  function EventFilter(props){
                 setValue={props.setValue}
             />
             <MinSkillLevel
-                {...filters}
+                {...props.filters}
                 id={"min_skill_level"}
-                setValue={setValue}
+                setValue={props.setValue}
             />
-            <div>  {space}  </div>
+            <div>  {props.space}  </div>
             <MaxSkillLevel
-                {...filters}
+                {...props.filters}
                 id={"max_skill_level"}
-                setValue={setValue}
+                setValue={props.setValue}
             />
-            <div>  {space}  </div>
+            <div>  {props.space}  </div>
             <AgeGroups
-                {...filters}
+                {...props.filters}
                 ids={["min_age","max_age"]}
-                setValue={setValues}
+                setValue={props.setValues}
             />
-            <div>  {space}  </div>
+            <div>  {props.space}  </div>
             <Players
                 text={"Players Range"}
-                {...filters}
+                {...props.filters}
                 ids={["min_players","max_players"]}
-                setValue={setValues}
+                setValue={props.setValues}
             />
-            <div>  {space}  </div>
+            <div>  {props.space}  </div>
             <Players
                 text={"Spectators Range"}
-                {...filters}
+                {...props.filters}
                 ids={["min_spectators","max_spectators"]}
-                setValue={setValues}
+                setValue={props.setValues}
             />
-            <div>  {space}  </div>
+            <div>  {props.space}  </div>
             <Players
                 text={"Player Capacity Range"}
-                {...filters}
+                {...props.filters}
                 ids={["min_player_capacity","max_player_capacity"]}
-                setValue={setValues}
+                setValue={props.setValues}
             />
-            <div>  {space}  </div>
+            <div>  {props.space}  </div>
             <Players
                 text={"Spectator Capacity Range"}
-                {...filters}
+                {...props.filters}
                 ids={["min_spectator_capacity","max_spectator_capacity"]}
-                setValue={setValues}/>
-            <div>  {space}  </div>
+                setValue={props.setValues}/>
+            <div>  {props.space}  </div>
             <MinCreationDate
-                {...filters}
+                {...props.filters}
                 id={"min_creation_date"}
-                setValue={setValue}
+                setValue={props.setValue}
             />
-            <div>  {space}  </div>
+            <div>  {props.space}  </div>
             <MaxCreationDate
-                {...filters}
+                {...props.filters}
                 id={"max_creation_date"}
-                setValue={setValue}
+                setValue={props.setValue}
             />
-            <div>  {space}  </div>
+            <div>  {props.space}  </div>
             <MinDate
-                {...filters}
+                {...props.filters}
                 id={"min_date"}
-                setValue={setValue}
+                setValue={props.setValue}
             />
-            <div>  {space}  </div>
+            <div>  {props.space}  </div>
             <MaxDate
-                {...filters}
+                {...props.filters}
                 id={"max_date"}
-                setValue={setValue}
+                setValue={props.setValue}
             />
         </Paper>
     )

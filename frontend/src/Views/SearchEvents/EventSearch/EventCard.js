@@ -5,7 +5,7 @@ import Card from "@mui/material/Card";
 import {useNavigate} from "react-router-dom";
 import ButtonBase from "@mui/material/ButtonBase";
 import Skeleton from "@mui/material/Skeleton";
-import {getEvent} from "../../Controllers/SearchController";
+import {getEvent} from "../../../Controllers/SearchController";
 
 const initialEvent = {
     "@context": "https://www.w3.org/ns/activitystreams",
