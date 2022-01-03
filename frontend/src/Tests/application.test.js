@@ -77,3 +77,26 @@ describe("Check application request", () =>{
     localStorage.removeItem('user_id')
 })
 
+describe("Check evaluation request", () =>{
+
+    let originalFetch;
+    let request;
+    beforeEach(() => {
+        localStorage.setItem('username', "berkaydoner")
+        localStorage.setItem('user_id', 1)
+        originalFetch = global.fetch;
+        global.fetch = jest.fn((x,options) => {request=options})
+    })
+    afterEach(() => {
+        global.fetch = originalFetch;
+    });
+    it("Check if the response is in the correct format.",async () => {
+        const response = await ApplicationsController.evaluateApplication(0,0,"player",true,1)
+        expect(request.body).toEqual(
+            "{\"user\":0,\"type\":\"player\",\"owner\":1,\"accept\":true}"
+        )
+        expect(request.method).toEqual("POST")
+    })
+    localStorage.removeItem('username')
+    localStorage.removeItem('user_id')
+})
