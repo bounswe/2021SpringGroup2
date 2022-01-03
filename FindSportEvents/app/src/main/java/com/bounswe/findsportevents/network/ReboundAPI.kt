@@ -105,6 +105,11 @@ interface ReboundAPI {
         @Query("sport") sport : String,
     ): Call<AllEquipmentsResponse>
 
+    @GET("api/badges/")
+    fun getBadges(
+        @Header("Authorization") token : String
+    ): Call<GetBadgesResponse>
+
 
     companion object {
 
