@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from authentication.models import User
-from .models import FollowRecord, BlockRecord, UnfollowRecord, UnblockRecord
+from .models import FollowRecord, BlockRecord
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -26,22 +26,8 @@ class FollowRecordSerializer(serializers.ModelSerializer):
         read_only_fields = ("following_user", "followed_user", "follow_date")
 
 
-class UnfollowRecordSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UnfollowRecord
-        field = "__all__"
-        read_only_fields = ("unfollowing_user", "unfollowed_user", "unfollow_date")
-
-
 class BlockRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlockRecord
         field = "__all__"
         read_only_fields = ("blocking_user", "blocked_user", "block_date")
-
-
-class UnblockRecordSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UnblockRecord
-        field = "__all__"
-        read_only_fields = ("unblocking_user", "unblocked_user", "unblock_date")

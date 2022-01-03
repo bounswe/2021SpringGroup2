@@ -1,7 +1,7 @@
 from authentication.models import User
-from .models import FollowRecord, BlockRecord, UnfollowRecord, UnblockRecord
+from .models import FollowRecord, BlockRecord
 from eventposts.models import EventPost
-from .serializers import ProfileSerializer, PrivateProfileSerializer, FollowRecordSerializer, BlockRecordSerializer, UnfollowRecordSerializer, UnblockRecordSerializer
+from .serializers import ProfileSerializer, PrivateProfileSerializer, FollowRecordSerializer, BlockRecordSerializer
 from eventposts.serializers import SimpleEventSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.http import JsonResponse
@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 from badges.models import BadgeRecord, Badge
 from django.db.models import Q
 from rest_framework.decorators import action
+from datetime import datetime
 
 
 class MultipleFieldsLookupMixin(object):
