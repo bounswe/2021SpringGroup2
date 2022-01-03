@@ -39,7 +39,7 @@ export default function RelatedEvents(props) {
                                             <Typography>{formatDate(event.date)}</Typography>
                                         </Grid>
                                         <Grid item md={2}>
-                                            <BadgeSelection badges={props.badges}/>
+                                            <BadgeSelection badges={props.badges} event_id={event.event_id} target={props.target}/>
                                         </Grid>
                                     </Grid>
                             </ListItem>
