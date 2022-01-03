@@ -53,6 +53,7 @@ export default function LoginPage(props){
                      setHeaders(r.access, r.refresh)
                      getUserInfo(state.username.value)
                      navigate("/")
+                     location.reload()
                  }
              })
 

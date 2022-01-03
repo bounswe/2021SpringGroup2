@@ -126,6 +126,7 @@ const Header = props => {
                                 <Button
                                     onClick={() => {
                                         logOut()
+                                        location.reload()
                                         enqueueSnackbar("Log out is successful.", {variant: "success"})
 
                                     }}
