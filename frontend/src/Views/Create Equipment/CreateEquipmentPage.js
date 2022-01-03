@@ -48,6 +48,12 @@ const initialState = {
         error: undefined
     }
 }
+export function linkFormatChecker(link){
+    if(link.match(/(http:\/\/|www\.|https:\/\/)\S+\.\S+/)){
+        return true
+    }
+    return false
+}
 export default function CreateEquipmentPage(props){
     const paperStyle = {padding:20, height: '85vh', width:500, margin:"20px auto", background: "#e4f2f7"};
     const textFieldStyle = {backgroundColor: 'white', marginTop: 10, marginBottom: 10}
@@ -91,6 +97,14 @@ export default function CreateEquipmentPage(props){
         newInputs[e.target.id] = {
             value: e.target.value,
             changed: true
+        }
+        if(e.target.id==="url"){
+            if(!linkFormatChecker(e.target.value)){
+                setUrlAlert("Please enter a valid URL")
+            }
+            else{
+                setUrlAlert(null)
+            }
         }
         setInputs(newInputs)
     }
