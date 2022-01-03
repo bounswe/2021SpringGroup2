@@ -14,6 +14,7 @@ data class ItemResponse(
 data class CommentResponse(
     val type : String,
     val postId : Int,
+    val id : Int,
     val ownerId : Int,
     val content : String,
     val creationDate : String

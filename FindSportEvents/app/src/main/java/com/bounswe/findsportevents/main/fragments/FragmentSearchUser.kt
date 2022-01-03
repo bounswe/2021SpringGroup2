@@ -30,6 +30,7 @@ class FragmentSearchUser : Fragment(), RecyclerAdapterUser.OnItemClickListener {
     private var favSports :MutableList<String> =mutableListOf()
     private var currentText = ""
     private var username=""
+    private var selectedUsername=""
     private var favSport=""
     var next = false
     private lateinit var searchUserFragListener: FragmentSearchUserListener
@@ -38,6 +39,8 @@ class FragmentSearchUser : Fragment(), RecyclerAdapterUser.OnItemClickListener {
         super.onCreate(savedInstanceState)
         searchUserFragListener = requireActivity() as FragmentSearchUserListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
+        username = requireArguments().getString(USER_KEY) ?: ""
+
         token= "$token"
         var page=1
 
@@ -126,18 +129,20 @@ class FragmentSearchUser : Fragment(), RecyclerAdapterUser.OnItemClickListener {
     companion object {
         const val TAG = "search user"
         private const val TOKEN_KEY = "token_key"
+        private const val USER_KEY = "user_key"
 
-        fun newInstance(token: String) = FragmentSearchUser().also {
+        fun newInstance(token: String,username : String) = FragmentSearchUser().also {
             it.arguments= Bundle().also {
                 it.putString(TOKEN_KEY,token)
+                it.putString(USER_KEY,username)
             }
         }
     }
 
     override fun onItemClick(position: Int) {
-        username=currentText
+        selectedUsername=currentText
         val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.container_main,FragmentUserResult.newInstance(token,username)).addToBackStack("userResult")
+        transaction.replace(R.id.container_main,FragmentUserResult.newInstance(token,username,selectedUsername)).addToBackStack("userResult")
         transaction.commit()
     }
 

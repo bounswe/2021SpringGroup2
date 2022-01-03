@@ -16,6 +16,7 @@ import com.bounswe.findsportevents.adapter.RecyclerAdapter
 import com.bounswe.findsportevents.adapter.RecyclerAdapterDiscussion
 import com.bounswe.findsportevents.databinding.FragmentViewEventDetailedBinding
 import com.bounswe.findsportevents.network.ReboundAPI
+import com.bounswe.findsportevents.network.modalz.requests.ApplyRequest
 import com.bounswe.findsportevents.network.modalz.requests.CommentRequest
 import com.bounswe.findsportevents.network.modalz.responses.*
 import retrofit2.Call
@@ -35,9 +36,10 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
     private var token = ""
     private var username = ""
     private var eventId = 0
-    private var comments : MutableList<String> = mutableListOf("bruh moment","falan filan")
-    private var users : MutableList<String> = mutableListOf("ali","veli")
-    private var dates : MutableList<String> = mutableListOf("bugun","yarin")
+    private var comments : MutableList<String> = mutableListOf()
+    private var commentIds : MutableList<Int> = mutableListOf()
+    private var users : MutableList<String> = mutableListOf()
+    private var dates : MutableList<String> = mutableListOf()
     private var name =""
     private var ownerId= 0
     private var content = ""
@@ -83,6 +85,7 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                         comments.add(response.body()!!.items.get(i).`object`.content)
                         users.add(response.body()!!.items.get(i).actor.name)
                         dates.add(response.body()!!.items.get(i).`object`.creationDate)
+                        commentIds.add(response.body()!!.items.get(i).`object`.id)
                     }
                     layoutManager= LinearLayoutManager(context)
                     binding.rvDiscussion.layoutManager=layoutManager
@@ -125,6 +128,98 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                 transaction.add(R.id.container_main,FragmentEquipmentResults.newInstance(token,username,binding.tvEventTypeResult.text.toString())).addToBackStack("equipmentResults")
                 transaction.commit()
             }
+            binding.btnApplyAsPlayer.setOnClickListener {
+
+                ReboundAPI.create().getUser(token,username).enqueue(object: Callback<UserResponse>{
+                    override fun onResponse(
+                        call: Call<UserResponse>,
+                        response: Response<UserResponse>
+                    ) {
+                        if(response.isSuccessful){
+                            val request = response.body()?.id?.let { it1 ->
+                                ApplyRequest(
+                                    it1.toInt(),
+                                "player"
+                                    )
+
+                            }
+                            if (request != null) {
+                                ReboundAPI.create().applyToEvent(token,eventId,request).enqueue(object: Callback<EventbyIdResponse>{
+                                    override fun onResponse(
+                                        call: Call<EventbyIdResponse>,
+                                        response: Response<EventbyIdResponse>
+                                    ) {
+                                        if (response.isSuccessful){
+                                            Toast.makeText(requireContext(), "SUCCESSFULLY APPLIED AS PLAYER!", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+
+                                    override fun onFailure(
+                                        call: Call<EventbyIdResponse>,
+                                        t: Throwable
+                                    ) {
+                                        Toast.makeText(requireContext(), "SOMETHING GONE WRONG, PLEASE TRY AGAIN LATER", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                })
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                        //
+                    }
+
+
+                })
+
+
+            }
+            binding.btnApplyAsSpectator.setOnClickListener {
+                ReboundAPI.create().getUser(token,username).enqueue(object: Callback<UserResponse>{
+                    override fun onResponse(
+                        call: Call<UserResponse>,
+                        response: Response<UserResponse>
+                    ) {
+                        if(response.isSuccessful){
+                            val request = response.body()?.id?.let { it1 ->
+                                ApplyRequest(
+                                    it1.toInt(),
+                                    "spectator"
+                                )
+
+                            }
+                            if (request != null) {
+                                ReboundAPI.create().applyToEvent(token,eventId,request).enqueue(object: Callback<EventbyIdResponse>{
+                                    override fun onResponse(
+                                        call: Call<EventbyIdResponse>,
+                                        response: Response<EventbyIdResponse>
+                                    ) {
+                                        if (response.isSuccessful){
+                                            Toast.makeText(requireContext(), "SUCCESSFULLY APPLIED AS SPECTATOR!", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+
+                                    override fun onFailure(
+                                        call: Call<EventbyIdResponse>,
+                                        t: Throwable
+                                    ) {
+                                        Toast.makeText(requireContext(), "SOMETHING GONE WRONG, PLEASE TRY AGAIN LATER", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                })
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                        //
+                    }
+
+
+                })
+
+            }
             binding.btnPostComment.setOnClickListener {
                 val pickedDateTime = Calendar.getInstance()
                 val tz= TimeZone.getTimeZone("UTC")
@@ -148,9 +243,9 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                                     response: Response<AllCommentsResponse>
                                 ) {
                                     if(response.isSuccessful){
-                                        comments = mutableListOf("bruh moment","falan filan")
-                                        users = mutableListOf("ali","veli")
-                                        dates = mutableListOf("bugun","yarin")
+                                        comments = mutableListOf()
+                                        users = mutableListOf()
+                                        dates = mutableListOf()
                                         for(i in 0 until response.body()?.items?.size!!) {
                                             comments.add(response.body()!!.items.get(i).`object`.content)
                                             users.add(response.body()!!.items.get(i).actor.name)
@@ -204,6 +299,8 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
     }
 
     override fun onItemClick(position: Int) {
-        //
+        val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
+        transaction.add(R.id.container_main,FragmentAnswers.newInstance(token,username,eventId,commentIds[position])).addToBackStack("searchUser")
+        transaction.commit()
     }
 }

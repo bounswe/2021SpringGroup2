@@ -72,7 +72,7 @@ class FragmentSearchTransit : Fragment() {
        }
         binding.btnSearchUser.setOnClickListener {
             val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.container_main,FragmentSearchUser.newInstance(token)).addToBackStack("searchUser")
+            transaction.replace(R.id.container_main,FragmentSearchUser.newInstance(token,username)).addToBackStack("searchUser")
             transaction.commit()
         }
     }
