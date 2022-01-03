@@ -4,7 +4,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import {createStyles, makeStyles, styled} from "@material-ui/core/styles";
 import {ListItemText, TextField} from "@mui/material";
-import {getSports} from '../../Controllers/SportsController';
+import {getSportsList} from '../../Controllers/SportsController';
 import EventInfoCard from "../Home/EventInfoCard";
 import Capture from '../images/Capture.png'
 import Button from "@mui/material/Button";
@@ -112,8 +112,8 @@ export default function Event (){
     const [spectatorApplicants, setSpectatorApplicants] = useState([])
     const [viewerUser, setViewerUser] = useState(null)
     const [successMessage,setSuccessMessage] = useState(null)
-    const getSportInfo = sport => console.log(sport) || getSports()
-        .then(sports=>sports.find(s=>s.title===sport))
+    const getSportInfo = sport => console.log(sport) || getSportsList()
+        .then(sports=>sports.find(s=>s.label===sport))
 
     useEffect(() => {
         fetch("http://34.68.66.109/api/posts/"+eventid+"/")
