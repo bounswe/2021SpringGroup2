@@ -11,7 +11,6 @@ from django.shortcuts import get_object_or_404
 from badges.models import BadgeRecord, Badge
 from django.db.models import Q
 from rest_framework.decorators import action
-from datetime import datetime
 
 
 class MultipleFieldsLookupMixin(object):
@@ -211,7 +210,7 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
         user, _ = self.JWTauth.authenticate(self.request)
         other_username = kwargs['pk']
         other_user = self.queryset.get(username=other_username)
-        FollowRecord.objects.create(following_user=user.id, followed_user=other_user.id, follow_date=datetime.now())
+        FollowRecord.objects.create(following_user=user.id, followed_user=other_user.id)
         other_users.followers.append(user)
         user.followings.append(other_user)
         return Response(data={"message": "Successfully followed user."}, status=200)
@@ -258,7 +257,7 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
         user, _ = self.JWTauth.authenticate(self.request)
         other_username = kwargs['pk']
         other_user = self.queryset.get(username=other_username)
-        BlockRecord.objects.create(blocking_user=user.id, blocked_user=other_user.id, block_date=datetime.now())
+        BlockRecord.objects.create(blocking_user=user.id, blocked_user=other_user.id)
         other_users.blocked_by.append(user)
         user.blocked.append(other_user)
         return Response(data={"message": "Successfully blocked user."}, status=200)
