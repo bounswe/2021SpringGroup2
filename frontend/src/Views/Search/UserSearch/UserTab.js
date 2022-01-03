@@ -1,7 +1,7 @@
 import React from 'react'
 import UserCard from "./UserCard";
 
-export default function EquipmentTab(props){
+export default function UserTab(props){
 
     return(
         <div
