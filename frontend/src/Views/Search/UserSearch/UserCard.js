@@ -8,6 +8,7 @@ import Skeleton from "@mui/material/Skeleton";
 import {getUser} from "../../../Controllers/SearchController";
 import Avatar from "@mui/material/Avatar";
 
+export const getUserAvatar = username=>username.charAt(0).toUpperCase()
 
 export default function UserCard(props){
     const [user, setUser] = useState({})
@@ -37,7 +38,7 @@ export default function UserCard(props){
                 <CardHeader
                     avatar={
                         <Avatar sx={{ bgcolor: "red" }} aria-label="recipe">
-                            {user.username.charAt(0).toUpperCase()}
+                            {getUserAvatar(user.username)}
                         </Avatar>
                     }
                     title={user.first_name +" " + user.last_name}
