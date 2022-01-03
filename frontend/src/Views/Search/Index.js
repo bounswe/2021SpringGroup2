@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import { Fragment } from "react";
-import {searchEquipments, searchEvents} from "../../Controllers/SearchController";
+import {searchEquipments, searchEvents, searchUsers} from "../../Controllers/SearchController";
 import Button from '@mui/material/Button';
 import {useSearchParams} from "react-router-dom";
 import EventFilter from "./EventSearch/EventFilter";
@@ -15,6 +15,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import EventTab from "./EventSearch/EventTab";
 import EquipmentTab from "./EquipmentSearch/EquipmentTab";
+import UserTab from "./UserSearch/UserTab";
 
 const useStyles = makeStyles(theme => createStyles({
     "@global": {
@@ -71,6 +72,7 @@ export default function SearchEvents() {
     const searchFilters = {...initialFilters}
     searchParams.forEach((val, key)=>{searchFilters[key] = val})
     const [events, setEvents] = useState([])
+    const [users, setUsers] = useState([])
     const [equipments, setEquipments] = useState([])
     const [tab, setTab] = useState(0)
     const [filters, setFilters] = useState(searchFilters)
@@ -105,6 +107,9 @@ export default function SearchEvents() {
             .then(_=>searchEquipments(filters))
             .then(r=>console.log(r)||r.results)
             .then(setEquipments)
+            .then(_=>searchUsers(filters))
+            .then(r=>console.log(r)||r.results)
+            .then(setUsers)
     }
     useEffect(search, Object.values(searchFilters))
     return (
@@ -149,6 +154,7 @@ export default function SearchEvents() {
                         >
                             <Tab label="Events" id={`full-width-tab-event`} aria-controls={"full-width-tabpanel-event"}/>
                             <Tab label="Equipments" id={`full-width-tab-equipment`} aria-controls={"full-width-tabpanel-equipment"}/>
+                            <Tab label="Users" id={`full-width-tab-user`} aria-controls={"full-width-tabpanel-user"}/>
                         </Tabs>
                         <EventTab
                             hidden={tab!==0}
@@ -157,6 +163,10 @@ export default function SearchEvents() {
                         <EquipmentTab
                             hidden={tab!==1}
                             equipments={equipments}
+                        />
+                        <UserTab
+                            hidden={tab!==2}
+                            users={users}
                         />
                     </Grid>
                     <Grid item md={1}>

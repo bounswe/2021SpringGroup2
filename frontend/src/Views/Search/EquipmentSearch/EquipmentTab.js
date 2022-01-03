@@ -10,7 +10,6 @@ export default function EquipmentTab(props){
             id={`full-width-tabpanel-equipment`}
             aria-labelledby={`full-width-tab-equipment`}
             >
-            <h1>Equipments</h1>
             {props.equipments.map((e, i)=>(
                 <EquipmentCard key={i} {...e}/>
             ))}

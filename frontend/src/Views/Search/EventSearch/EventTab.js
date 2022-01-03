@@ -10,7 +10,6 @@ export default  function EventTab(props){
             id={`full-width-tabpanel-event`}
             aria-labelledby={`full-width-tab-event`}
             >
-            <h1>Events</h1>
             {props.events.map((e, i)=>(
                 <EventCard key={i} {...e}/>
             ))}

@@ -65,3 +65,29 @@ export function  getEquipment(id){
         .then(response=>response.json())
         .then(r=>{console.log(r); return r})
 }
+
+export function  searchUsers(params={}){
+
+    const options = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    }
+    const url = Object.keys(params).map(function(k) {
+        return params[k]===initialFilters[k]?"h=h": encodeURIComponent(k) + '=' + encodeURIComponent(params[k])
+    }).join('&')
+    console.log(url)
+    return fetch("/api/users/?"+url,options)
+        .then(response=>response.json())
+        .then(r=>{console.log(r); return r})
+}
+export function  getUser(id={}){
+
+    const options = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    }
+    const url = id+'/'
+    return fetch("/api/users/"+url,options)
+        .then(response=>response.json())
+        .then(r=>{console.log(r); return r})
+}
