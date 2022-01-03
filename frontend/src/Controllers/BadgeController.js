@@ -1,4 +1,5 @@
 import {getToken, getUserInfoLoggedIn} from "./AuthInfo";
+import * as BadgeController from "./BadgeController"
 
 export async function getBadgeDetails(badge_name) {
     const options = {
@@ -61,7 +62,7 @@ export async function getAllBadgesOfAUser(username) {
             .then(r=>{console.log(r);return r.badges})
 
         return await Promise.all(response.map(async element=>
-                 await getBadgeDetails(element)
+                 await BadgeController.getBadgeDetails(element)
              ))
     } catch (err) {
         console.log(err);
