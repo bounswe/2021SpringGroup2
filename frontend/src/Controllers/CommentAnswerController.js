@@ -102,11 +102,16 @@ export async function postComment(post_id, content, isEvent) {
     comment.creationDate = date;
     comment.isAnswer = false;
     comment.answers = [];
-    fetch("/api/" + isEvent + "/" + String(post_id) + "/comments/", options)
-        .then(response => response.json())
-        .then(d => {
-            comment.comment_id = d.object.id
-        });
+    try{
+        await fetch("/api/" + isEvent + "/" + String(post_id) + "/comments/", options)
+            .then(response => response.json())
+            .then(d => {
+                comment.comment_id = d.object.id
+            });
+    }  catch(err){
+        console.log(err)
+    }
+
     return comment
 }
 export async function postAnswer(post_id, comment_id, content, isEvent) {
