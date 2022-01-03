@@ -18,7 +18,7 @@ class RecyclerAdapterEquipment(val titles : MutableList<String>,
     }
 
     override fun onBindViewHolder(holder: RecyclerAdapterEquipment.ViewHolder, position: Int) {
-
+            holder.title.text=titles[position]
     }
 
     override fun getItemCount(): Int {
@@ -29,6 +29,7 @@ class RecyclerAdapterEquipment(val titles : MutableList<String>,
 
         init{
             title=itemView.findViewById(R.id.tv_title_card)
+            itemView.setOnClickListener(this)
         }
 
         override fun onClick(p0: View?) {

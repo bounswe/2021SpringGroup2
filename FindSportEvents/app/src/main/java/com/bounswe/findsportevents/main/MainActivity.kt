@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity(),FragmentUserResult.FragmentUserResultLi
     private var login = false
     private var token = ""
     private var username = ""
-    private var testList= arrayListOf("","Football","Sumo Wrestling")
+    private var testList= arrayListOf("f1","Football","Sumo Wrestling")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,14 +57,14 @@ class MainActivity : AppCompatActivity(),FragmentUserResult.FragmentUserResultLi
 
         if (savedInstanceState == null && supportFragmentManager.findFragmentById(binding.containerMain.id) == null) {
             supportFragmentManager.beginTransaction()
-                .add(binding.containerMain.id, FragmentViewAllEvents.newInstance(token), FragmentViewAllEvents.TAG).commit()
+                .add(binding.containerMain.id, FragmentViewAllEvents.newInstance(token,username), FragmentViewAllEvents.TAG).commit()
         }
 
         binding.bottomNav.apply {
             setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.bottom_home -> {
-                        displayViewAllEventsFragment(token)
+                        displayViewAllEventsFragment(token,username)
                         false
                     }
                     R.id.bottom_profile -> {
@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity(),FragmentUserResult.FragmentUserResultLi
                         false
                     }
                     R.id.bottom_search -> {
-                        displaySearchTransitFragment(token,testList)
+                        displaySearchTransitFragment(token,username,testList)
                         false
                     }
                     else -> false
@@ -87,14 +87,14 @@ class MainActivity : AppCompatActivity(),FragmentUserResult.FragmentUserResultLi
         initListeners()
         setObservers()
     }
-    private fun displaySearchTransitFragment(token: String,testList: ArrayList<String>){
-        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentSearchTransit.newInstance(token,testList), FragmentSearchTransit.TAG).commit()
+    private fun displaySearchTransitFragment(token: String,username:String,testList: ArrayList<String>){
+        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentSearchTransit.newInstance(token,username,testList), FragmentSearchTransit.TAG).commit()
     }
-    private fun displaySearchEventFragment(token: String,testList: ArrayList<String>){
-        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentSearchEvent.newInstance(token,testList), FragmentSearchEvent.TAG).commit()
+    private fun displaySearchEventFragment(token: String,username:String,testList: ArrayList<String>){
+        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentSearchEvent.newInstance(token,username,testList), FragmentSearchEvent.TAG).commit()
     }
-    private fun displayViewAllEventsFragment(token: String){
-        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentViewAllEvents.newInstance(token), FragmentViewAllEvents.TAG).commit()
+    private fun displayViewAllEventsFragment(token: String,username:String){
+        supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentViewAllEvents.newInstance(token,username), FragmentViewAllEvents.TAG).commit()
     }
     private fun displayHomeFragment(token: String, testList: ArrayList<String>) {
         supportFragmentManager.beginTransaction().replace(binding.containerMain.id, FragmentCreateEvent.newInstance(token, username, testList), FragmentCreateEvent.TAG).commit()

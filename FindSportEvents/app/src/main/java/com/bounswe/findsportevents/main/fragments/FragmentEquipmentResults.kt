@@ -5,15 +5,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe.findsportevents.R
 import com.bounswe.findsportevents.adapter.RecyclerAdapter
+import com.bounswe.findsportevents.adapter.RecyclerAdapter2
 import com.bounswe.findsportevents.adapter.RecyclerAdapterEquipment
 import com.bounswe.findsportevents.databinding.FragmentEquipmentResultsBinding
+import com.bounswe.findsportevents.network.ReboundAPI
+import com.bounswe.findsportevents.network.modalz.responses.AllEquipmentsResponse
+import com.bounswe.findsportevents.network.modalz.responses.AllEventsResponse
+import com.bounswe.findsportevents.network.modalz.responses.EquipmentResponse
+import com.bounswe.findsportevents.network.modalz.responses.EquipmentbyIdResponse
 import com.bounswe.findsportevents.util.DialogManager
 import com.bounswe.findsportevents.util.LoadingDialog
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.lang.Exception
 
 class FragmentEquipmentResults : Fragment(), RecyclerAdapterEquipment.OnItemClickListener, DialogManager {
@@ -27,7 +38,7 @@ class FragmentEquipmentResults : Fragment(), RecyclerAdapterEquipment.OnItemClic
     private var dialog: LoadingDialog? = null
     var contents : MutableList<String> = mutableListOf()
     var titles : MutableList<String> = mutableListOf()
-    var eventIds: MutableList<Int> = mutableListOf()
+    var equipmentIds: MutableList<Int> = mutableListOf()
     var events : MutableList<String> = mutableListOf()
     var creators:MutableList<Int> = mutableListOf()
     var fields:MutableList<String> = mutableListOf()
@@ -48,6 +59,61 @@ class FragmentEquipmentResults : Fragment(), RecyclerAdapterEquipment.OnItemClic
         context?.run {
             showLoading(this)
         }
+        ReboundAPI.create().getEquipments(token,sport).enqueue(object :
+            Callback<AllEquipmentsResponse> {
+
+            override fun onResponse(
+                call: Call<AllEquipmentsResponse>,
+                response: Response<AllEquipmentsResponse>
+            ) {
+                hideLoading()
+                if (response.isSuccessful) {
+
+                    for(i in 0 until (response.body()?.results?.size!!)){
+                        equipmentIds.add(response.body()!!.results.get(i).id)
+                        titles.add(response.body()!!.results.get(i).title)
+                    }
+                    layoutManager= LinearLayoutManager(context)
+                    binding.recyclerViewEquipment.layoutManager=layoutManager
+                    adapter = RecyclerAdapterEquipment(titles,listener)
+                    binding.recyclerViewEquipment.adapter = adapter
+                    if(page*1.0 < response.body()?.count!!/10.0){
+                        page++
+                        ReboundAPI.create().getEquipments(token,sport).enqueue(object :
+                            Callback<AllEquipmentsResponse> {
+
+                            override fun onResponse(
+                                call: Call<AllEquipmentsResponse>,
+                                response: Response<AllEquipmentsResponse>
+                            ) {
+                                hideLoading()
+                                if (response.isSuccessful) {
+
+                                    for(i in 0 until (response.body()?.results?.size!!)){
+
+                                    }
+                                    layoutManager= LinearLayoutManager(context)
+                                    binding.recyclerViewEquipment.layoutManager=layoutManager
+                                    adapter = RecyclerAdapterEquipment(titles,listener)
+                                    binding.recyclerViewEquipment.adapter = adapter
+
+                                }
+                            }
+
+                            override fun onFailure(call: Call<AllEquipmentsResponse>, t: Throwable) {
+                                //
+                            }
+                        }
+                        )
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<AllEquipmentsResponse>, t: Throwable) {
+                //
+            }
+        }
+        )
 
 
 
@@ -58,6 +124,7 @@ class FragmentEquipmentResults : Fragment(), RecyclerAdapterEquipment.OnItemClic
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
 
         _binding = FragmentEquipmentResultsBinding.inflate(inflater, container, false)
         return binding.root
@@ -83,6 +150,11 @@ class FragmentEquipmentResults : Fragment(), RecyclerAdapterEquipment.OnItemClic
         super.onDestroyView()
         _binding = null
     }
+    override fun onItemClick(position: Int) {
+        val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.container_main,FragmentEquipmentDetailed.newInstance(token,equipmentIds[position])).addToBackStack("eqiupmentresult")
+        transaction.commit()
+    }
 
     interface FragmentEquipmentResultsListener{
         //        TODO("Not yet implemented")
@@ -100,11 +172,7 @@ class FragmentEquipmentResults : Fragment(), RecyclerAdapterEquipment.OnItemClic
         }
     }
 
-    override fun onItemClick(position: Int) {
-        val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.container_main,FragmentViewEventDetailed.newInstance(token,eventIds[position])).addToBackStack("searchUser")
-        transaction.commit()
-    }
+
     override fun showLoading(context: Context) {
         try {
             hideLoading()

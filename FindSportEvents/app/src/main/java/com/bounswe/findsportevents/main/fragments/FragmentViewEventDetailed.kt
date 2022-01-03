@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,10 +16,13 @@ import com.bounswe.findsportevents.adapter.RecyclerAdapter
 import com.bounswe.findsportevents.adapter.RecyclerAdapterDiscussion
 import com.bounswe.findsportevents.databinding.FragmentViewEventDetailedBinding
 import com.bounswe.findsportevents.network.ReboundAPI
+import com.bounswe.findsportevents.network.modalz.requests.CommentRequest
 import com.bounswe.findsportevents.network.modalz.responses.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.*
 
 class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemClickListener {
 
@@ -29,15 +33,21 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
     private var adapter: RecyclerView.Adapter<RecyclerAdapterDiscussion.ViewHolder>?=null
     private lateinit var viewEventDetailedFragListener: FragmentViewEventDetailedListener
     private var token = ""
+    private var username = ""
     private var eventId = 0
     private var comments : MutableList<String> = mutableListOf("bruh moment","falan filan")
     private var users : MutableList<String> = mutableListOf("ali","veli")
     private var dates : MutableList<String> = mutableListOf("bugun","yarin")
+    private var name =""
+    private var ownerId= 0
+    private var content = ""
+    private var creationDate = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewEventDetailedFragListener = requireActivity() as FragmentViewEventDetailedListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
+        username = requireArguments().getString(USER_KEY) ?: ""
         eventId = requireArguments().getInt(EVENT_KEY) ?: 0
         ReboundAPI.create().getEventbyId(token,eventId).enqueue(object : Callback<EventbyIdResponse>{
             @SuppressLint("SetTextI18n")
@@ -63,6 +73,31 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
             }
 
         })
+        ReboundAPI.create().getAllComments(token,eventId).enqueue(object :Callback<AllCommentsResponse>{
+            override fun onResponse(
+                call: Call<AllCommentsResponse>,
+                response: Response<AllCommentsResponse>
+            ) {
+                if(response.isSuccessful){
+                    for(i in 0 until response.body()?.items?.size!!) {
+                        comments.add(response.body()!!.items.get(i).`object`.content)
+                        users.add(response.body()!!.items.get(i).actor.name)
+                        dates.add(response.body()!!.items.get(i).`object`.creationDate)
+                    }
+                    layoutManager= LinearLayoutManager(context)
+                    binding.rvDiscussion.layoutManager=layoutManager
+                    adapter = RecyclerAdapterDiscussion(users,comments,dates, listener)
+                    binding.rvDiscussion.adapter = adapter
+                }
+            }
+
+            override fun onFailure(call: Call<AllCommentsResponse>, t: Throwable) {
+                //
+            }
+
+        })
+
+
     }
 
     override fun onCreateView(
@@ -87,8 +122,62 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
     private fun setClickListeners() {
             binding.btnEquipment.setOnClickListener{
                 val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-                transaction.replace(R.id.container_main,FragmentEquipmentDetailed.newInstance(token,0)).addToBackStack("equipmentDetailed")
+                transaction.add(R.id.container_main,FragmentEquipmentResults.newInstance(token,binding.tvEventTypeResult.text.toString())).addToBackStack("equipmentResults")
                 transaction.commit()
+            }
+            binding.btnPostComment.setOnClickListener {
+                val pickedDateTime = Calendar.getInstance()
+                val tz= TimeZone.getTimeZone("UTC")
+                val sdf= SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                val request = CommentRequest(
+                    username,
+                    ownerId,
+                    binding.etComment.text.toString(),
+                    sdf.toString()
+                )
+                ReboundAPI.create().postComment(token,eventId,request).enqueue(object: Callback<CommentResponse>{
+                    override fun onResponse(
+                        call: Call<CommentResponse>,
+                        response: Response<CommentResponse>
+                    ) {
+                        if(response.isSuccessful){
+                            Toast.makeText(requireContext(), "COMMENT SUCCESSFULLY POSTED", Toast.LENGTH_SHORT).show()
+                            ReboundAPI.create().getAllComments(token,eventId).enqueue(object :Callback<AllCommentsResponse>{
+                                override fun onResponse(
+                                    call: Call<AllCommentsResponse>,
+                                    response: Response<AllCommentsResponse>
+                                ) {
+                                    if(response.isSuccessful){
+                                        comments = mutableListOf("bruh moment","falan filan")
+                                        users = mutableListOf("ali","veli")
+                                        dates = mutableListOf("bugun","yarin")
+                                        for(i in 0 until response.body()?.items?.size!!) {
+                                            comments.add(response.body()!!.items.get(i).`object`.content)
+                                            users.add(response.body()!!.items.get(i).actor.name)
+                                            dates.add(response.body()!!.items.get(i).`object`.creationDate)
+                                        }
+                                        layoutManager= LinearLayoutManager(context)
+                                        binding.rvDiscussion.layoutManager=layoutManager
+                                        adapter = RecyclerAdapterDiscussion(users,comments,dates, listener)
+                                        binding.rvDiscussion.adapter = adapter
+                                    }
+                                }
+
+                                override fun onFailure(call: Call<AllCommentsResponse>, t: Throwable) {
+                                    //
+                                }
+
+                            })
+
+                        }
+                    }
+
+                    override fun onFailure(call: Call<CommentResponse>, t: Throwable) {
+                        Toast.makeText(requireContext(), "AN ERROR OCCURRED, PLEASE TRY AGAIN", Toast.LENGTH_SHORT).show()
+                    }
+
+                })
+
             }
     }
 
@@ -103,9 +192,11 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
         val TAG = "FragmentViewEventDetailed"
         private const val TOKEN_KEY = "token_key"
         private const val EVENT_KEY = "event_key"
-        fun newInstance(token: String,eventId: Int) = FragmentViewEventDetailed().also {
+        private const val USER_KEY = "user_key"
+        fun newInstance(token: String,username:String,eventId: Int) = FragmentViewEventDetailed().also {
             it.arguments=Bundle().also {
                 it.putString(TOKEN_KEY,token)
+                it.putString(USER_KEY,username)
                 it.putInt(EVENT_KEY,eventId)
             }
         }

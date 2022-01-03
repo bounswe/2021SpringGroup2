@@ -88,6 +88,12 @@ interface ReboundAPI {
         @Header("Authorization") token: String,
         @Body request: CreateEventRequest
     ): Call<CreateEventResponse>
+    @POST("api/posts/{postId}/comments/")
+    fun postComment(
+        @Header("Authorization") token: String,
+        @Path("postId") postId : Int,
+        @Body request: CommentRequest
+    ): Call<CommentResponse>
 
     @GET("api/posts/{eventId}/")
     fun getEventbyId(
@@ -104,6 +110,11 @@ interface ReboundAPI {
         @Header("Authorization") token : String,
         @Query("sport") sport : String,
     ): Call<AllEquipmentsResponse>
+    @GET("api/equipments/{equipmentId}/")
+    fun getEquipmentbyId(
+        @Header("Authorization") token : String,
+        @Path("equipmentId") equipmentId : Int,
+    ): Call<EquipmentbyIdResponse>
 
 
     companion object {

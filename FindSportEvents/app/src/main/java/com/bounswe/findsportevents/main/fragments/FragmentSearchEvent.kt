@@ -38,6 +38,7 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
     private var token = ""
     private var layoutManager: RecyclerView.LayoutManager?=null
     private var adapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>?=null
+    private var username= ""
     private var sports = mutableListOf(0)
     private var testList= arrayListOf("")
     private var sport =""
@@ -69,6 +70,7 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
 
         searchEventFragListener = requireActivity() as FragmentSearchEventListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
+        username = requireArguments().getString(USER_KEY) ?: ""
         testList = requireArguments().getStringArrayList(TEST_KEY) ?: arrayListOf("")
         token = "$token"//Adding JWT at the beginning of the token
 
@@ -266,7 +268,7 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
 
             }
             val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.container_main,FragmentSearchResults.newInstance(token,sport,minSkillLevel.toInt(),maxSkillLevel.toInt(),minAge,maxAge,startTime,endTime,minDuration
+            transaction.replace(R.id.container_main,FragmentSearchResults.newInstance(token,username,sport,minSkillLevel.toInt(),maxSkillLevel.toInt(),minAge,maxAge,startTime,endTime,minDuration
             ,maxDuration,minLatitude,maxLatitude,minLongitude,maxLongitude))
             transaction.commit()
         }
@@ -285,14 +287,16 @@ class FragmentSearchEvent : Fragment() ,AdapterView.OnItemSelectedListener, Frag
     companion object {
         const val TAG = "Search Event"
         private const val TOKEN_KEY = "token_key"
+        private const val USER_KEY = "user_key"
         private const val TEST_KEY = "test_key"
         const val REQUEST_KEY ="request_key"
         const val BUNDLE_KEY ="bundle_key"
 
-        fun newInstance(token: String,testList : ArrayList<String>) = FragmentSearchEvent().apply {
+        fun newInstance(token: String,username:String,testList : ArrayList<String>) = FragmentSearchEvent().apply {
             arguments=Bundle().apply {
                 putStringArrayList(TEST_KEY,testList)
                 putString(TOKEN_KEY,token)
+                putString(USER_KEY,username)
             }
         }
     }

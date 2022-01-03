@@ -12,6 +12,7 @@ import com.bounswe.findsportevents.adapter.RecyclerAdapterDiscussion
 import com.bounswe.findsportevents.databinding.FragmentEquipmentDetailedBinding
 import com.bounswe.findsportevents.databinding.FragmentViewEventDetailedBinding
 import com.bounswe.findsportevents.network.ReboundAPI
+import com.bounswe.findsportevents.network.modalz.responses.EquipmentbyIdResponse
 import com.bounswe.findsportevents.network.modalz.responses.EventbyIdResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,6 +37,23 @@ class FragmentEquipmentDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
         equipmentDetailedFragListener = requireActivity() as FragmentEquipmentDetailedListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
         postId = requireArguments().getInt(POST_KEY) ?: 0
+        ReboundAPI.create().getEquipmentbyId(token,postId).enqueue(object : Callback<EquipmentbyIdResponse>{
+            override fun onResponse(
+                call: Call<EquipmentbyIdResponse>,
+                response: Response<EquipmentbyIdResponse>
+            ) {
+                if(response.isSuccessful){
+                    binding.tvTitle.text= response.body()?.`object`?.title ?: ""
+                    binding.tvDescription.text = response.body()?.`object`?.content?: ""
+
+                }
+            }
+
+            override fun onFailure(call: Call<EquipmentbyIdResponse>, t: Throwable) {
+               // TODO("Not yet implemented")
+            }
+
+        })
 
 
     }
