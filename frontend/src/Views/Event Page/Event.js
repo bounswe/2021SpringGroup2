@@ -9,10 +9,11 @@ import EventInfoCard from "../Home/EventInfoCard";
 import Capture from '../images/Capture.png'
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import {getApplicationsToAnEvent, getUserListInfo} from "../../Controllers/ApplicationsController";
+import {applyToEvent, getApplicationsToAnEvent, getUserListInfo} from "../../Controllers/ApplicationsController";
 import ApplicantList from "../Application/ApplicantList";
 import ApplicantSelection from "../Application/ApplicantSelection";
 import {getUserInfoLoggedIn} from "../../Controllers/AuthInfo";
+import {Alert} from "@mui/lab";
 
 const useStyles = makeStyles(theme => createStyles({
     "@global": {
@@ -92,8 +93,10 @@ const initialEvent = {
         "eventMaxSkillLevel": 5,
         "eventPlayerCapacity": 12,
         "eventSpectatorCapacity": 12,
-        "eventApplicants": [1,2,3],
-        "eventPlayers": [1,2,3]
+        "eventApplicantsAsPlayer": [1,2,3],
+        "eventPlayers": [1,2,3],
+        "eventSpectators": [1,2],
+        "eventApplicantsAsSpectator":[1,2]
     }
 }
 
@@ -108,7 +111,7 @@ export default function Event (){
     const [playerApplicants, setPlayerApplicants] = useState([])
     const [spectatorApplicants, setSpectatorApplicants] = useState([])
     const [viewerUser, setViewerUser] = useState(null)
-
+    const [successMessage,setSuccessMessage] = useState(null)
     const getSportInfo = sport => console.log(sport) || getSports()
         .then(sports=>sports.find(s=>s.title===sport))
 
@@ -151,6 +154,14 @@ export default function Event (){
             console.log(players, spectators)
         }
     },[event])
+    const handleApplication = (type) => {
+        applyToEvent(eventid, type).then(r => {
+            if(r.ok){
+                setSuccessMessage("You have successfully applied as a "+type)
+            }
+        })
+    }
+
     return(
         <div style={{background:`url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}>
 
@@ -218,7 +229,7 @@ export default function Event (){
                         <Stack spacing={3}>
                             <Stack direction={"row"} spacing={1} justifyContent={"center"} alignItems={"center"}>
                                 <Typography className={classes.fav}>Players</Typography>
-                                <ApplicantSelection users={playerApplicants} isPlayer={true} event_id={event.object.postId}
+                                <ApplicantSelection users={playerApplicants} type={"player"} event_id={event.object.postId} owner_id={event.object.ownerId}
                                 show={viewerUser!==null&&viewerUser.user_id!==null&&Number(viewerUser.user_id)===event.object.ownerId}/>
                             </Stack>
                             <ApplicantList users={players}/>
@@ -226,7 +237,7 @@ export default function Event (){
                         <Stack spacing={3}>
                             <Stack direction={"row"} spacing={1} justifyContent={"center"} alignItems={"center"}>
                                 <Typography className={classes.fav}>Spectators</Typography>
-                                <ApplicantSelection users={spectatorApplicants} isPlayer={false} event_id={event.object.postId}
+                                <ApplicantSelection users={spectatorApplicants} type={"spectator"} event_id={event.object.postId} owner_id={event.object.ownerId}
                                     show={viewerUser!==null&&viewerUser.user_id!==null&&Number(viewerUser.user_id)===event.object.ownerId}/>
                             </Stack>
                             <ApplicantList users={spectators}/>
@@ -236,20 +247,17 @@ export default function Event (){
                 </Grid>
                 <Grid item xs={12} sm={12}>
                     <Stack direction={"row"} spacing={3} justifyContent={"center"}>
-                            <Button disabled={viewerUser===null||viewerUser===false||viewerUser.user_id===null||
+                            <Button onClick={()=>{handleApplication("player")}} disabled={viewerUser===null||viewerUser===false||viewerUser.user_id===null||
                             players.length===event.object.eventPlayerCapacity||
-                            players.includes(viewerUser.user_id)||
-                            playerApplicants.includes(viewerUser.user_id)}
+                            event.object.eventPlayers.includes(Number(viewerUser.user_id))||
+                            event.object.eventApplicantsAsPlayer.includes(Number(viewerUser.user_id))}
                                     variant={"contained"} style={{backgroundColor:"green"}}>Player Application</Button>
-                            <Button disabled={viewerUser===null||viewerUser===false||viewerUser.user_id===null||
-                            spectators.length===event.object.eventSpectatorCapacity||
-                            spectators.includes(viewerUser.user_id)||
-                            spectatorApplicants.includes(viewerUser.user_id)}
+                            <Button onClick={()=>{handleApplication("spectator")}} disabled={viewerUser===null||viewerUser===false||viewerUser.user_id===null||
+                            event.object.eventApplicantsAsSpectator.includes(Number(viewerUser.user_id))}
                                 variant={"contained"} style={{backgroundColor:"red"}}>Spectator Application</Button>
                     </Stack>
                 </Grid>
             </Grid>
-
 
         </div>
 

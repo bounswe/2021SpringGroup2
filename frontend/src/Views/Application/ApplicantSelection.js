@@ -12,9 +12,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
+import {evaluateApplication} from "../../Controllers/ApplicationsController";
 
 export default function ApplicantSelection(props){
     const [detailsOpen,setDetailsOpen] = useState(false)
+    const handleEvaluation = (user,accept)=> {
+        evaluateApplication(props.event_id, user.user_id, props.type, accept, Number(props.owner_id)).then(
+            r => {console.log(r)})
+    }
     return (
         <div>
             {props.show?
@@ -44,10 +49,10 @@ export default function ApplicantSelection(props){
                                 </Link>
                                 <Box style={{display:"flex",justifyContent:"flex-end"}}>
                                     <Stack direction={"row"}>
-                                        <IconButton>
+                                        <IconButton onClick={()=>{handleEvaluation(user,true)}}>
                                             <CheckIcon style={{fill:"green"}}/>
                                         </IconButton>
-                                        <IconButton>
+                                        <IconButton onClick={()=>{handleEvaluation(user,false)}}>
                                             <CloseIcon style={{fill:"red"}}/>
                                         </IconButton>
                                     </Stack>
