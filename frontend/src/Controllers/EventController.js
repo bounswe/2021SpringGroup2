@@ -5,11 +5,15 @@ export async function postEvent(params) {
     await getToken().then(d => {
         key = d
     })
+    let logged_user = getUserInfoLoggedIn()
+    if(logged_user.username===undefined||logged_user.username===null){
+        return
+    }
     const options = {
         headers: {'Content-Type': 'application/json', 'Authorization': 'JWT ' + key},
         method: 'POST',
         body: JSON.stringify({
-            owner: getUserInfoLoggedIn().user_id,
+            owner: logged_user.user_id,
             content: params.content ? params.content : "",
             title: params.title,
             location: params.location,
