@@ -1,6 +1,7 @@
 from authentication.models import User
+from .models import FollowRecord, BlockRecord
 from eventposts.models import EventPost
-from .serializers import ProfileSerializer, PrivateProfileSerializer
+from .serializers import ProfileSerializer, PrivateProfileSerializer, FollowRecordSerializer, BlockRecordSerializer
 from eventposts.serializers import SimpleEventSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.http import JsonResponse
@@ -79,11 +80,11 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
 
         return ProfileSerializer
 
-    def wrap_all(self, objects):
+    def wrap_all(self, objects, summary_msg="Event list"):
         response = \
             {
                 "@context": "https://www.w3.org/ns/activitystreams",
-                "summary": "Event list",
+                "summary": summary_msg,
                 "type": "Collection",
                 "totalItems": len(objects),
                 "items": objects
@@ -211,3 +212,129 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
             }
 
         return Response(self.wrap_offer(data))
+
+    def wrap_follow_block(self, data, type, actor_name, object_name, summary_msg):
+        response = \
+            {
+                "@context": "https://www.w3.org/ns/activitystreams",
+                "summary": summary_msg,
+                "type": type,
+                "actor": {
+                    "type": "Person",
+                    "name": actor_name
+                },
+                "object":
+                    {
+                        "type": "Person",
+                        "identifier": object_name
+                    }
+            }
+        return response
+
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
+    def follow(self, request, *args, **kwargs):
+        user, _ = self.JWTauth.authenticate(self.request)
+        other_username = kwargs['pk']
+        other_user = self.queryset.get(username=other_username)
+        FollowRecord.objects.create(following_user_id=user.id, followed_user_id=other_user.id)
+        other_user.followers.append(user.id)
+        other_user.save()
+        user.followings.append(other_user.id)
+        user.save()
+        return Response(data={"message": "Successfully followed user."}, status=200)
+
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
+    def unfollow(self, request, *args, **kwargs):
+        user, _ = self.JWTauth.authenticate(self.request)
+        other_username = kwargs['pk']
+        follow_queryset = FollowRecord.objects.all()
+        other_user = self.queryset.get(username=other_username)
+        follow_record_instance = follow_queryset.get(Q(following_user_id=user.id) & Q(followed_user_id=other_user.id))
+        follow_record_instance.delete()
+        other_user.followers.remove(user.id)
+        other_user.save()
+        user.followings.remove(other_user.id)
+        user.save()
+        return Response(data={"message": "Successfully unfollowed user."}, status=200)
+
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="followings")
+    def followings(self, request, *args, **kwargs):
+        username = self.kwargs["pk"]
+        user = self.queryset.get(username=username)
+        followings = user.followings
+        followings_users = self.queryset.filter(id__in=followings)
+        serializer = self.get_serializer(followings_users, many=True)
+        objects = []
+        for data in serializer.data:
+            followed_username = data["username"]
+            summary_msg = username + " followed " + followed_username
+            objects.append(self.wrap_follow_block(data, "Follow", username, followed_username, summary_msg))
+        return Response(self.wrap_all(objects, "Users " + username + " follows."))
+
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="followers")
+    def followers(self, request, *args, **kwargs):
+        username = self.kwargs["pk"]
+        user = self.queryset.get(username=username)
+        followers = user.followers
+        follower_users = self.queryset.filter(id__in=followers)
+        serializer = self.get_serializer(follower_users, many=True)
+        objects = []
+        for data in serializer.data:
+            following_username = data["username"]
+            summary_msg = following_username + " followed " + username
+            objects.append(self.wrap_follow_block(data, "Follow", following_username, username, summary_msg))
+        return Response(self.wrap_all(objects, "Users following " + username + "."))
+
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
+    def block(self, request, *args, **kwargs):
+        user, _ = self.JWTauth.authenticate(self.request)
+        other_username = kwargs['pk']
+        other_user = self.queryset.get(username=other_username)
+        BlockRecord.objects.create(blocking_user_id=user.id, blocked_user_id=other_user.id)
+        other_user.blockers.append(user.id)
+        other_user.save()
+        user.blockings.append(other_user.id)
+        user.save()
+        return Response(data={"message": "Successfully blocked user."}, status=200)
+
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
+    def unblock(self, request, *args, **kwargs):
+        user, _ = self.JWTauth.authenticate(self.request)
+        other_username = kwargs['pk']
+        block_queryset = BlockRecord.objects.all()
+        other_user = self.queryset.get(username=other_username)
+        block_record_instance = block_queryset.filter(Q(blocking_user_id=user.id) & Q(blocked_user_id=other_user.id))
+        block_record_instance.delete()
+        other_user.blockers.remove(user.id)
+        other_user.save()
+        user.blockings.remove(other_user.id)
+        user.save()
+        return Response(data={"message": "Successfully unblocked user."}, status=200)
+
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="blockings")
+    def get_blockings(self, request, *args, **kwargs):
+        username = self.kwargs["pk"]
+        user = self.queryset.get(username=username)
+        blockings = user.blockings
+        blockings_users = self.queryset.filter(id__in=blockings)
+        serializer = self.get_serializer(blockings_users, many=True)
+        objects = []
+        for data in serializer.data:
+            blocked_username = data["username"]
+            summary_msg = username + " blocked " + blocked_username
+            objects.append(self.wrap_follow_block(data, "Block", username, blocked_username, summary_msg))
+        return Response(self.wrap_all(objects, "Users " + username + " blocked."))
+
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="blockers")
+    def get_blockers(self, request, *args, **kwargs):
+        username = self.kwargs["pk"]
+        user = self.queryset.get(username=username)
+        blockers = user.blockers
+        blockers_users = self.queryset.filter(id__in=blockers)
+        serializer = self.get_serializer(blockers_users, many=True)
+        objects = []
+        for data in serializer.data:
+            blocker_username = data["username"]
+            summary_msg = blocker_username + " blocked " + username
+            objects.append(self.wrap_follow_block(data, "Block", blocker_username, username, summary_msg))
+        return Response(self.wrap_all(objects, "Users blocked " + username + "."))
