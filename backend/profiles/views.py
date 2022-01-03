@@ -36,9 +36,6 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
     JWTauth = JWTAuthentication()
 
     def get_serializer_class(self):
-        if self.action in ['related_events', 'get_blockings', 'get_blockers', 'block', 'unblock', 'get_followers',
-                           'get_followings', 'follow', 'unfollow']:
-            return SimpleEventSerializer
         if self.action == 'list':
             return PrivateProfileSerializer
         target = self.kwargs['pk']
@@ -214,9 +211,9 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
         other_username = kwargs['pk']
         other_user = self.queryset.get(username=other_username)
         FollowRecord.objects.create(following_user_id=user.id, followed_user_id=other_user.id)
-        other_user.followers.append(user)
+        other_user.followers.append(user.id)
         other_user.save()
-        user.followings.append(other_user)
+        user.followings.append(other_user.id)
         user.save()
         return Response(data={"message": "Successfully followed user."}, status=200)
 
@@ -228,26 +225,27 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
         other_user = self.queryset.get(username=other_username)
         follow_record_instance = follow_queryset.get(Q(following_user_id=user.id) & Q(followed_user_id=other_user.id))
         follow_record_instance.delete()
-        other_user.followers.remove(user)
+        other_user.followers.remove(user.id)
         other_user.save()
-        user.followings.remove(other_user)
+        user.followings.remove(other_user.id)
         user.save()
         return Response(data={"message": "Successfully unfollowed user."}, status=200)
 
-    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="get-followings")
-    def get_followings(self, request, *args, **kwargs):
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="followings")
+    def followings(self, request, *args, **kwargs):
         user, _ = self.JWTauth.authenticate(self.request)
         user_name = user.username
-        followings = user.followings.all()
-        serializer = self.get_serializer(followings, many=True)
+        followings = user.followings
+        following_users = self.queryset.filter(id__in=followings)
+        serializer = self.get_serializer(following_users, many=True)
         objects = []
         for data in serializer.data:
-            followed_username = data["following_user"]
+            followed_username = data["username"]
             summary_msg = user_name + " followed " + followed_username
             objects.append(self.wrap_follow_block(data, "Follow", user_name, followed_username, summary_msg))
         return Response(self.wrap_all(objects, "Users " + user_name + " follows."))
 
-    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="get-followers")
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="followers")
     def get_followers(self, request, *args, **kwargs):
         user, _ = self.JWTauth.authenticate(self.request)
         user_name = user.username
@@ -266,9 +264,9 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
         other_username = kwargs['pk']
         other_user = self.queryset.get(username=other_username)
         BlockRecord.objects.create(blocking_user_id=user.id, blocked_user_id=other_user.id)
-        other_user.blocked_by.append(user)
+        other_user.blocked_by.append(user.id)
         other_user.save()
-        user.blocked.append(other_user)
+        user.blocked.append(other_user.id)
         user.save()
         return Response(data={"message": "Successfully blocked user."}, status=200)
 
@@ -280,17 +278,17 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
         other_user = self.queryset.get(username=other_username)
         block_record_instance = block_queryset.filter(Q(blocking_user_id=user.id) & Q(blocked_user_id=other_user.id))
         block_record_instance.delete()
-        other_user.blocked_by.remove(user)
+        other_user.blocked_by.remove(user.id)
         other_user.save()
-        user.blocked.remove(other_user)
+        user.blocked.remove(other_user.id)
         user.save()
         return Response(data={"message": "Successfully unblocked user."}, status=200)
 
-    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="get-blockings")
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="blockings")
     def get_blockings(self, request, *args, **kwargs):
         user, _ = self.JWTauth.authenticate(self.request)
         user_name = user.username
-        blocked = user.blocked.all()
+        blocked = user.blocked
         serializer = self.get_serializer(blocked, many=True)
         objects = []
         for data in serializer.data:
@@ -299,7 +297,7 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
             objects.append(self.wrap_follow_block(data, "Block", user_name, blocked_username, summary_msg))
         return Response(self.wrap_all(objects, "Users " + user_name + " blocked."))
 
-    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="get-blockings")
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="blockers")
     def get_blockers(self, request, *args, **kwargs):
         user, _ = self.JWTauth.authenticate(self.request)
         user_name = user.username
