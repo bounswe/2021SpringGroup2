@@ -9,29 +9,26 @@ export async function getUserListInfo(list){
     return details
 }
 
-/*export async function getApplicationsToAnEvent(post_id,playerApplications) {
+export async function getApplicationsToAnEvent(post_id,playerApplications) {
     const options = {
         method: 'GET',
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
     }
     let response
     try {
-        response = await fetch("/api/posts/" + String(post_id) + "/applicants/" +
-            "?type=" + playerApplications?"player":"spectator", options)
+        response =  fetch("http://34.68.66.109/api/posts/" + String(post_id) + "/applicants/" +
+            "?type=" + playerApplications, options)
             .then(response => response.json())
-            .then((result) => {
-                    return result.applicants.map(d =>
-                            ({
-                                user: {username: d.actor.name}, content: d.object.answer,
-                                creationDate: d.object.creationDate, isAnswer: true
-                            }))
+            .then(async (result) => {
+                    return await getUserListInfo(result.applicants)
                 }
             )
+            .then(d=>{console.log(d);return d})
     } catch (err) {
         console.log(err);
     }
     return response
-}*/
+}
 
 export async function applyToEvent(post_id, type) {
     let logged_user = getUserInfoLoggedIn()
@@ -45,7 +42,7 @@ export async function applyToEvent(post_id, type) {
     }
     let response
     try {
-        response = await fetch("/api/posts/" + String(post_id) + "/apply/", options)
+        response = await fetch("http://34.68.66.109/api/posts/" + String(post_id) + "/apply/", options)
             .then(response => {
                    return response.json()
                 }
@@ -68,7 +65,7 @@ export async function evaluateApplication(post_id, user_id, type, accept, owner_
     }
     let response
     try {
-        response = await fetch("/api/posts/" + String(post_id) + "/applicants/", options)
+        response = await fetch("http://34.68.66.109/api/posts/" + String(post_id) + "/applicants/", options)
             .then(response => {
                     return response.json()
                 }

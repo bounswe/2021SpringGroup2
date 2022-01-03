@@ -9,7 +9,7 @@ import EventInfoCard from "../Home/EventInfoCard";
 import Capture from '../images/Capture.png'
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import {getUserListInfo} from "../../Controllers/ApplicationsController";
+import {getApplicationsToAnEvent, getUserListInfo} from "../../Controllers/ApplicationsController";
 import ApplicantList from "../Application/ApplicantList";
 import ApplicantSelection from "../Application/ApplicantSelection";
 import {getUserInfoLoggedIn} from "../../Controllers/AuthInfo";
@@ -134,6 +134,20 @@ export default function Event (){
                     setSpectators(d)
                 )
             }
+            await getApplicationsToAnEvent(eventid,"player").then(
+                res=>{
+                    if(res!==null&&res!==undefined){
+                        setPlayerApplicants(res)
+                    }
+                }
+            )
+            await getApplicationsToAnEvent(eventid,"spectator").then(
+                res=>{
+                    if(res!==null&&res!==undefined){
+                        setSpectatorApplicants(res)
+                    }
+                }
+            )
             console.log(players, spectators)
         }
     },[event])
@@ -205,7 +219,7 @@ export default function Event (){
                             <Stack direction={"row"} spacing={1} justifyContent={"center"} alignItems={"center"}>
                                 <Typography className={classes.fav}>Players</Typography>
                                 <ApplicantSelection users={playerApplicants} isPlayer={true} event_id={event.object.postId}
-                                show={viewerUser!==null&&viewerUser.user_id!==null&&viewerUser.user_id===event.object.ownerId}/>
+                                show={viewerUser!==null&&viewerUser.user_id!==null&&Number(viewerUser.user_id)===event.object.ownerId}/>
                             </Stack>
                             <ApplicantList users={players}/>
                         </Stack>
@@ -213,7 +227,7 @@ export default function Event (){
                             <Stack direction={"row"} spacing={1} justifyContent={"center"} alignItems={"center"}>
                                 <Typography className={classes.fav}>Spectators</Typography>
                                 <ApplicantSelection users={spectatorApplicants} isPlayer={false} event_id={event.object.postId}
-                                    show={viewerUser!==null&&viewerUser.user_id!==null&&viewerUser.user_id===event.object.ownerId}/>
+                                    show={viewerUser!==null&&viewerUser.user_id!==null&&Number(viewerUser.user_id)===event.object.ownerId}/>
                             </Stack>
                             <ApplicantList users={spectators}/>
                         </Stack>
