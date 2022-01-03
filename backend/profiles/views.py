@@ -252,3 +252,50 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
             summary_msg = following_username + " followed " + user_name
             objects.append(self.wrap_follow_block(data, "Follow", followed_username, user_name, summary_msg))
         return Response(self.wrap_all(objects, "Users following " + user_name + "."))
+
+    @action(detail=True, methods=['post'], permission_classes=[permission.IsAuthenticated])
+    def block_user(self, request, *args, **kwargs):
+        user, _ = self.JWTauth.authenticate(self.request)
+        other_username = kwargs['pk']
+        other_user = self.queryset.get(username=other_username)
+        BlockRecord.objects.create(blocking_user=user.id, blocked_user=other_user.id, block_date=datetime.now())
+        other_users.blocked_by.append(user)
+        user.blocked.append(other_user)
+        return Response(data={"message": "Successfully blocked user."}, status=200)
+
+    @action(detail=True, methods=['delete'], permission_classes=[permission.IsAuthenticated])
+    def unblock_user(self, request, *args, **kwargs):
+        user, _ = self.JWTauth.authenticate(self.request)
+        other_username = kwargs['pk']
+        block_queryset = BlockRecord.objects.all()
+        other_user = self.queryset.get(username=other_username)
+        block_record_instance = block_queryset.filter(blocking_user=user.id, blocked_user=other_user.id)[0]
+        block_record_instance.delete()
+        other_users.blocked_by.remove(user)
+        user.blocked.remove(other_user)
+        return Response(data={"message": "Successfully unblocked user."}, status=200)
+
+    @action(detail=True, methods=['get'], permission_classes=[permission.IsAuthenticated])
+    def get_blockings(self, request, *args, **kwargs):
+        user, _ = self.JWTauth.authenticate(self.request)
+        user_name = user.username
+        blocked = user.blocked.all()
+        serializer = self.get_serializer(blocked, many=True)
+        objects = []
+        for data in serializer.data:
+            blocked_username = data["blocking_user"]
+            summary_msg = user_name + " blocked " + blocked_username
+            objects.append(self.wrap_follow_block(data, "Block", user_name, blocked_username, summary_msg))
+        return Response(self.wrap_all(objects, "Users " + user_name + " blocked."))
+
+    @action(detail=True, methods=['get'], permission_classes=[permission.IsAuthenticated])
+    def get_blockers(self, request, *args, **kwargs):
+        user, _ = self.JWTauth.authenticate(self.request)
+        blockers = user.blocked_by.all()
+        serializer = self.get_serializer(blockers, many=True)
+        objects = []
+        for data in serializer.data:
+            blocking_username = data["blocked_user"]
+            summary_msg = blocking_username + " blocked " + user_name
+            objects.append(self.wrap_follow_block(data, "Block", blocking_username, user_name, summary_msg))
+        return Response(self.wrap_all(objects, "Users blocked " + user_name + "."))
