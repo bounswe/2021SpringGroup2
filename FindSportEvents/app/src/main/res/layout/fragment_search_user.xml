@@ -5,13 +5,14 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     app:elevation="4dp"
+    android:background="@color/white"
     >
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView2"
-        android:layout_width="412dp"
-        android:layout_height="672dp"
+        android:layout_width="395dp"
+        android:layout_height="596dp"
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

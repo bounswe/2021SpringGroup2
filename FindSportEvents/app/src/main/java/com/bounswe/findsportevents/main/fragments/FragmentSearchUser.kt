@@ -14,6 +14,7 @@ import com.bounswe.findsportevents.R
 import com.bounswe.findsportevents.adapter.RecyclerAdapterUser
 import com.bounswe.findsportevents.databinding.FragmentSearchUserBinding
 import com.bounswe.findsportevents.network.ReboundAPI
+import com.bounswe.findsportevents.network.modalz.responses.AllUserResponse
 import com.bounswe.findsportevents.network.modalz.responses.UserResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -43,6 +44,44 @@ class FragmentSearchUser : Fragment(), RecyclerAdapterUser.OnItemClickListener {
 
         token= "$token"
         var page=1
+
+        ReboundAPI.create().searchUser(token,"").enqueue(object: Callback<AllUserResponse>{
+            override fun onResponse(
+                call: Call<AllUserResponse>,
+                response: Response<AllUserResponse>
+            ) {
+                if (response.isSuccessful) {
+                    for (i in 0 until ((response.body()?.results?.size) ?: 0))
+                    {
+                        usernames.add(response.body()?.results!!.get(i).username)
+                        ReboundAPI.create().getUser(token, response.body()?.results!!.get(i).username).enqueue(object : Callback<UserResponse>{
+                            override fun onResponse(
+                                call: Call<UserResponse>,
+                                response: Response<UserResponse>
+                            ) {
+                                if (response.isSuccessful){
+                                    favSports.add(response.body()?.fav_sport_1.toString())
+                                    layoutManager=LinearLayoutManager(context)
+                                    binding.recyclerView2.layoutManager=layoutManager
+                                    adapter = RecyclerAdapterUser(usernames,favSports, listener)
+                                    binding.recyclerView2.adapter = adapter
+                                }}
+
+                            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                                //
+                            }
+
+                        })
+                    }
+
+                }
+            }
+
+            override fun onFailure(call: Call<AllUserResponse>, t: Throwable) {
+                // TODO("Not yet implemented")
+            }
+
+        })
 
 
     }
@@ -81,27 +120,41 @@ class FragmentSearchUser : Fragment(), RecyclerAdapterUser.OnItemClickListener {
                 layoutManager=LinearLayoutManager(context)
                 binding.recyclerView2.layoutManager=layoutManager
                 adapter = RecyclerAdapterUser(usernames,favSports, listener)
-
-
                 binding.recyclerView2.adapter = adapter
-                ReboundAPI.create().getUser(token,currentText).enqueue(object: Callback<UserResponse>{
+
+                ReboundAPI.create().searchUser(token,currentText).enqueue(object: Callback<AllUserResponse>{
                     override fun onResponse(
-                        call: Call<UserResponse>,
-                        response: Response<UserResponse>
+                        call: Call<AllUserResponse>,
+                        response: Response<AllUserResponse>
                     ) {
                         if (response.isSuccessful) {
-                            usernames.add(currentText)
-                            response.body()?.fav_sport_1?.let { favSports.add(it) }
-                            layoutManager=LinearLayoutManager(context)
-                            binding.recyclerView2.layoutManager=layoutManager
-                            adapter = RecyclerAdapterUser(usernames,favSports, listener)
+                            for (i in 0 until ((response.body()?.results?.size) ?: 0))
+                            {
+                                usernames.add(response.body()?.results!!.get(i).username)
+                                ReboundAPI.create().getUser(token, response.body()?.results!!.get(i).username).enqueue(object : Callback<UserResponse>{
+                                    override fun onResponse(
+                                        call: Call<UserResponse>,
+                                        response: Response<UserResponse>
+                                    ) {
+                                        if (response.isSuccessful){
+                                            favSports.add(response.body()?.fav_sport_1.toString())
+                                            layoutManager=LinearLayoutManager(context)
+                                            binding.recyclerView2.layoutManager=layoutManager
+                                            adapter = RecyclerAdapterUser(usernames,favSports, listener)
+                                            binding.recyclerView2.adapter = adapter
+                                    }}
 
+                                    override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                                       //
+                                    }
 
-                            binding.recyclerView2.adapter = adapter
+                                })
+                            }
+
                         }
                     }
 
-                    override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                    override fun onFailure(call: Call<AllUserResponse>, t: Throwable) {
                        // TODO("Not yet implemented")
                     }
 
@@ -142,7 +195,7 @@ class FragmentSearchUser : Fragment(), RecyclerAdapterUser.OnItemClickListener {
     override fun onItemClick(position: Int) {
         selectedUsername=currentText
         val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.container_main,FragmentUserResult.newInstance(token,username,selectedUsername)).addToBackStack("userResult")
+        transaction.replace(R.id.container_main,FragmentUserResult.newInstance(token,username,usernames[position])).addToBackStack("userResult")
         transaction.commit()
     }
 

@@ -198,6 +198,16 @@ interface ReboundAPI {
         @Header("Authorization") token : String,
         @Path("username") username : String,
     ): Call<GetFollowingsResponse>
+    @GET("api/users/")
+    fun searchUser(
+        @Header("Authorization") token : String,
+        @Query("query") query : String,
+    ): Call<AllUserResponse>
+    @GET("api/posts/")
+    fun getPlayedEvents(
+        @Header("Authorization") token : String,
+        @Query("player") player : Int,
+    ): Call<PlayedEventsResponse>
 
 
 

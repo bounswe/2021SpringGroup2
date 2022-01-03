@@ -10,3 +10,12 @@ data class UserResponse(
     val fav_sport_3: String?,
     val location: String?
 )
+data class AllUserResponse(
+    val results: List<UserResponse2>
+)
+data class UserResponse2(
+    val id: Long,
+    val username :String,
+    val avatar : String,
+    val privacy : Boolean
+)
