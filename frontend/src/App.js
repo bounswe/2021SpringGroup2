@@ -14,7 +14,7 @@ import EditProfile from "./Views/Profile/EditProfile";
 import ViewProfile from "./Views/Profile/ViewProfile";
 import Profile from "./Views/Profile/Index";
 import ResetPasswordPage from "./Views/Login/ForgotPassword";
-import SearchEvents from "./Views/SearchEvents/Index";
+import SearchEvents from "./Views/Search/Index";
 
 import NotFound from "./Views/Not Found/NotFound";
 import Event from "./Views/Event Page/Event";

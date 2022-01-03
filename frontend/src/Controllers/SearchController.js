@@ -1,4 +1,4 @@
-import {initialFilters} from "../Views/SearchEvents/Index";
+import {initialFilters} from "../Views/Search/Index";
 
 export function  searchEvents(params={}){
 
