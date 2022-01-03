@@ -5,7 +5,7 @@ import CardHeader from "@mui/material/CardHeader";
 import {useNavigate} from "react-router-dom";
 import ButtonBase from "@mui/material/ButtonBase";
 import Skeleton from "@mui/material/Skeleton";
-import {getEquipment} from "../../../Controllers/SearchController";
+import {getUser} from "../../../Controllers/SearchController";
 import Avatar from "@mui/material/Avatar";
 
 
@@ -14,7 +14,7 @@ export default function UserCard(props){
     const [loading, setLoading] = useState(true)
     const navigate = useNavigate()
     useEffect(_=>{
-        getEquipment(props.id)
+        getUser(props.id)
             .then(e=>setUser(e))
             .then(_=>setLoading(false))
     }, [])
@@ -26,7 +26,7 @@ export default function UserCard(props){
             </CardContent>
         </Card>
     ):(
-        <Card sx={{ maxWidth: 345 }}>
+        <Card sx={{ maxWidth: 345, marginTop:1 }}>
             <ButtonBase
                 style={{
                     display: 'block',
