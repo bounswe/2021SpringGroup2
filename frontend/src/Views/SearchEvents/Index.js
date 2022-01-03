@@ -17,14 +17,9 @@ import MinDate from "./FilterComponents/MinDate"
 import MaxDate from "./FilterComponents/MaxDate"
 import { Fragment } from "react";
 import {searchEvents} from "../../Controllers/SearchController";
-
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import SportType from "./FilterComponents/SportType";
 import EventCard from "./EventCard";
 
@@ -81,8 +76,11 @@ export default function SearchEvents() {
     const classes = useStyles()
     const navigate = useNavigate()
     //const { enqueueSnackbar } = useSnackbar();
+    let [searchParams, setSearchParams] = useSearchParams();
+    const searchFilters = {...initialFilters}
+    searchParams.forEach((val, key)=>{searchFilters[key] = val})
     const [events, setEvents] = useState([])
-    const [filters, setFilters] = useState(initialFilters)
+    const [filters, setFilters] = useState(searchFilters)
     const setValue = id => value => {
         const newFilters = {...filters}
         newFilters[id] = value
@@ -95,12 +93,24 @@ export default function SearchEvents() {
         setFilters(newFilters)
     }
     const space = <Fragment>&nbsp;&nbsp;&nbsp;&nbsp;</Fragment>
+    const handleClick = _=>{
+        const newParams = {}
+        for(let key in initialFilters){
+            if(filters[key] !== initialFilters[key]){
+                newParams[key] = filters[key]
+            }
+        }
+        setSearchParams(newParams)
+
+    }
     const search = _=>{
+        const filters = {}
+        searchParams.forEach((val, key)=>{filters[key] = val})
         searchEvents(filters)
             .then(r=>console.log(r)||r.results)
             .then(setEvents)
     }
-    useEffect(search, [])
+    useEffect(search, Object.values(searchFilters))
     return (
         <React.Fragment>
             <Container component="main" maxWidth={"lg"}>
@@ -218,7 +228,7 @@ export default function SearchEvents() {
                             color="primary"
                             variant="outlined"
                             style={{marginTop:15}}
-                            onClick={search}
+                            onClick={handleClick}
                         >
                             Search
                         </Button>
