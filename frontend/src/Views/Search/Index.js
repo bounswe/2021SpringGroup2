@@ -7,9 +7,9 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import { Fragment } from "react";
-import {searchEvents} from "../../Controllers/SearchController";
+import {searchEquipments, searchEvents} from "../../Controllers/SearchController";
 import Button from '@mui/material/Button';
-import {useNavigate, useSearchParams} from "react-router-dom";
+import {useSearchParams} from "react-router-dom";
 import EventFilter from "./EventSearch/EventFilter";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -66,12 +66,12 @@ export const initialFilters = {
 
 export default function SearchEvents() {
     const classes = useStyles()
-    const navigate = useNavigate()
     //const { enqueueSnackbar } = useSnackbar();
     let [searchParams, setSearchParams] = useSearchParams();
     const searchFilters = {...initialFilters}
     searchParams.forEach((val, key)=>{searchFilters[key] = val})
     const [events, setEvents] = useState([])
+    const [equipments, setEquipments] = useState([])
     const [tab, setTab] = useState(0)
     const [filters, setFilters] = useState(searchFilters)
     const setValue = id => value => {
@@ -102,6 +102,9 @@ export default function SearchEvents() {
         searchEvents(filters)
             .then(r=>console.log(r)||r.results)
             .then(setEvents)
+            .then(_=>searchEquipments(filters))
+            .then(r=>console.log(r)||r.results)
+            .then(setEquipments)
     }
     useEffect(search, Object.values(searchFilters))
     return (
@@ -153,7 +156,7 @@ export default function SearchEvents() {
                         />
                         <EquipmentTab
                             hidden={tab!==1}
-                            equipments={events}
+                            equipments={equipments}
                         />
                     </Grid>
                     <Grid item md={1}>
