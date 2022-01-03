@@ -11,7 +11,7 @@ export default function MaxSkillLevel(props){
             </Typography>
             <Rating
                 name="maxSkillLevel"
-                value={props[props.id]}
+                value={parseInt(props[props.id])}
                 onChange={(event, newValue) => {
                     props.setValue(props.id)(newValue)
                 }}

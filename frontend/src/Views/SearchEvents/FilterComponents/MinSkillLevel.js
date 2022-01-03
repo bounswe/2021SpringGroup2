@@ -11,7 +11,7 @@ export default function MinSkillLevel(props){
             </Typography>
             <Rating
                 name="minSkillLevel"
-                value={props[props.id]}
+                value={parseInt(props[props.id])}
                 onChange={(event, newValue) => {
                     props.setValue(props.id)(newValue)
                 }}
