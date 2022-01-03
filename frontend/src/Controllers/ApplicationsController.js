@@ -16,7 +16,7 @@ export async function getApplicationsToAnEvent(post_id,playerApplications) {
     }
     let response
     try {
-        response =  fetch("http://34.68.66.109/api/posts/" + String(post_id) + "/applicants/" +
+        response =  fetch("/api/posts/" + String(post_id) + "/applicants/" +
             "?type=" + playerApplications, options)
             .then(response => response.json())
             .then(async (result) => {
@@ -46,7 +46,7 @@ export async function applyToEvent(post_id, type) {
     }
     let response
     try {
-        response = await fetch("http://34.68.66.109/api/posts/" + String(post_id) + "/apply/", options)
+        response = await fetch("/api/posts/" + String(post_id) + "/apply/", options)
             .then(response => {
                    return response.json()
                 }
@@ -73,7 +73,7 @@ export async function evaluateApplication(post_id, user_id, type, accept, owner_
     }
     let response
     try {
-        response = await fetch("http://34.68.66.109/api/posts/" + String(post_id) + "/applicants/", options)
+        response = await fetch("/api/posts/" + String(post_id) + "/applicants/", options)
             .then(response => {
                     return response.json()
                 }
