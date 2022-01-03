@@ -13,6 +13,6 @@ export function getSportsList(){
         {headers: {'Accept-Language': 'en-US'}})
         .then(response=>response.json())
         .then(r=>{console.log(r); return r})
-        .then(r=>r.data.map(d=>({label:d.attributes.name})))
+        .then(r=>r.data.map(d=>({img:d.relationships.images.data[0].url, label:d.attributes.name})))
 }
 
