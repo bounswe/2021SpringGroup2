@@ -7,12 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bounswe.findsportevents.R
 import com.bounswe.findsportevents.adapter.RecyclerAdapter
-import com.bounswe.findsportevents.adapter.RecyclerAdapterBadges
 import com.bounswe.findsportevents.databinding.FragmentMyEventsBinding
 import com.bounswe.findsportevents.network.ReboundAPI
 import com.bounswe.findsportevents.network.modalz.responses.AllEventsResponse
@@ -23,12 +20,12 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Exception
 
-class FragmentMyEvents : Fragment(), RecyclerAdapterBadges.OnItemClickListener , DialogManager{
+class FragmentMyEvents : Fragment(), RecyclerAdapter.OnItemClickListener , DialogManager{
     private var _binding: FragmentMyEventsBinding? = null
     private val binding get() = _binding!!
-    private var listener: RecyclerAdapterBadges.OnItemClickListener = this
+    private var listener: RecyclerAdapter.OnItemClickListener = this
     private var layoutManager: RecyclerView.LayoutManager? = null
-    private var adapter: RecyclerView.Adapter<RecyclerAdapterBadges.ViewHolder>? = null
+    private var adapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>? = null
     private var token = ""
     private var dialog: LoadingDialog? = null
     var ownerId : Long=0
@@ -76,7 +73,7 @@ class FragmentMyEvents : Fragment(), RecyclerAdapterBadges.OnItemClickListener ,
                     }
                     layoutManager = LinearLayoutManager(context)
                     binding.recyclerView.layoutManager = layoutManager
-                    adapter = RecyclerAdapterBadges(
+                    adapter = RecyclerAdapter(
                         events,
                         creators,
                         fields,
@@ -117,7 +114,7 @@ class FragmentMyEvents : Fragment(), RecyclerAdapterBadges.OnItemClickListener ,
                                     }
                                     layoutManager = LinearLayoutManager(context)
                                     binding.recyclerView.layoutManager = layoutManager
-                                    adapter = RecyclerAdapterBadges(
+                                    adapter = RecyclerAdapter(
                                         events,
                                         creators,
                                         fields,
@@ -202,12 +199,8 @@ class FragmentMyEvents : Fragment(), RecyclerAdapterBadges.OnItemClickListener ,
             }
         }
     }
-
-    override fun onItemClick() {
-//        Toast.makeText(context, "Give a badge clicked", Toast.LENGTH_SHORT).show()
-        val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.container_main,FragmentGiveABadge.newInstance(token)).addToBackStack("myEvents")
-        transaction.commit()
+    override fun onItemClick(position: Int) {
+        Toast.makeText(context, "Item ${events[position]}", Toast.LENGTH_SHORT).show()
     }
     override fun showLoading(context: Context) {
         try {

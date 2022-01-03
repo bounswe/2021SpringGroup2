@@ -33,6 +33,26 @@
             android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@id/event_type_tv1"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/event_title_tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Title:  "
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/event_type_tv1" />
+
+        <TextView
+            android:id="@+id/event_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Title"
+            android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@id/creator_tv1"
+            app:layout_constraintTop_toBottomOf="@+id/event_type_tv1" />
         <TextView
             android:id="@+id/creator_tv1"
             android:layout_width="wrap_content"
@@ -41,7 +61,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/event_type_tv1" />
+            app:layout_constraintTop_toBottomOf="@+id/event_title_tv1" />
 
         <TextView
             android:id="@+id/creator_tv"
@@ -51,86 +71,32 @@
             android:text="Creator"
             android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@id/creator_tv1"
-            app:layout_constraintTop_toBottomOf="@+id/event_type_tv1" />
-
-        <TextView
-            android:id="@+id/field_tv1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Field:  "
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/creator_tv" />
-        <TextView
-            android:id="@+id/field_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Field"
-            android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@id/field_tv1"
-            app:layout_constraintTop_toBottomOf="@+id/creator_tv" />
-        <TextView
-            android:id="@+id/players_tv1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Players:  "
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/field_tv" />
-        <TextView
-            android:id="@+id/players_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Players"
-            android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@id/players_tv1"
-            app:layout_constraintTop_toBottomOf="@id/field_tv" />
+            app:layout_constraintTop_toBottomOf="@+id/event_title_tv1" />
 
         <TextView
             android:id="@+id/date_tv1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="date:  "
+            android:text="Date:  "
 
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/players_tv1" />
+            app:layout_constraintTop_toBottomOf="@+id/creator_tv" />
 
         <TextView
             android:id="@+id/date_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="date"
+            android:text="Date"
             android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@+id/date_tv1"
-            app:layout_constraintTop_toBottomOf="@+id/players_tv" />
-
-        <TextView
-            android:id="@+id/spectators_tv1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="spectators:  "
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/date_tv1" />
-
-        <TextView
-            android:id="@+id/spectators_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="spectators"
-            android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@+id/spectators_tv1"
-            app:layout_constraintTop_toBottomOf="@+id/date_tv" />
+            app:layout_constraintTop_toBottomOf="@+id/creator_tv" />
         <Button
             android:id="@+id/bt_give_a_badge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/spectators_tv"
+            app:layout_constraintTop_toBottomOf="@+id/date_tv"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="5dp"
             app:layout_constraintEnd_toEndOf="parent"

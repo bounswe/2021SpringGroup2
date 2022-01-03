@@ -1,5 +1,6 @@
 package com.bounswe.findsportevents.adapter
 
+import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bounswe.findsportevents.R
 
 
-class RecyclerAdapterBadges(val events : MutableList<String>,val creators : MutableList<Int>
-                      ,val fields : MutableList<String>,val players : MutableList<Int>,val spectators : MutableList<Int>,
+class RecyclerAdapterBadges(val events : MutableList<String>,val eventTitles : MutableList<String> ,val creators : MutableList<Int>,
                       val date : MutableList<String>, private val listener: OnItemClickListener) : RecyclerView.Adapter<RecyclerAdapterBadges.ViewHolder>() {
 
 
@@ -21,10 +21,8 @@ class RecyclerAdapterBadges(val events : MutableList<String>,val creators : Muta
 
     override fun onBindViewHolder(holder: RecyclerAdapterBadges.ViewHolder, position: Int) {
         holder.eventType.text=events[position]
+        holder.eventTitle.text=eventTitles[position]
         holder.eventCreator.text=creators[position].toString()
-        holder.field.text=fields[position]
-        holder.players.text=players[position].toString()
-        holder.spectators.text=spectators[position].toString()
         holder.date.text=date[position]
 
     }
@@ -34,19 +32,15 @@ class RecyclerAdapterBadges(val events : MutableList<String>,val creators : Muta
     }
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView), View.OnClickListener{
         var eventType: TextView
+        var eventTitle: TextView
         var eventCreator: TextView
-        var field: TextView
-        var players: TextView
         var date: TextView
-        var spectators: TextView
         var badgeButton: Button
         init{
             eventType=itemView.findViewById(R.id.event_type_tv)
+            eventTitle=itemView.findViewById(R.id.event_title_tv)
             eventCreator=itemView.findViewById(R.id.creator_tv)
-            field=itemView.findViewById(R.id.field_tv)
-            players=itemView.findViewById(R.id.players_tv)
             date=itemView.findViewById(R.id.date_tv)
-            spectators=itemView.findViewById(R.id.spectators_tv)
             badgeButton=itemView.findViewById(R.id.bt_give_a_badge)
             badgeButton.setOnClickListener {
                 listener.onItemClick()

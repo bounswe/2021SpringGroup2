@@ -10,7 +10,6 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -105,11 +104,23 @@ interface ReboundAPI {
         @Query("sport") sport : String,
     ): Call<AllEquipmentsResponse>
 
+    @GET("api/users/{username}/related-events/")
+    fun getRelatedEvents(
+        @Header("Authorization") token : String,
+        @Path("username") target: String
+    ): Call<RelatedEventResponse>
+
     @GET("api/badges/")
     fun getBadges(
         @Header("Authorization") token : String
     ): Call<GetBadgesResponse>
 
+    @POST("api/users/{username}/badges/")
+    fun giveABadge(
+        @Header("Authorization") token : String,
+        @Path("username") target: String,
+        @Body request: GiveBadgeRequest,
+    ): Call<GiveBadgeResponse>
 
     companion object {
 
