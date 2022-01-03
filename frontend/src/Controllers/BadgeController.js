@@ -11,10 +11,10 @@ export async function getBadgeDetails(badge_name) {
             .then(response => response.json())
             .then((result) => {
                     return {
-                                name: badge_name,
-                                icon: result.icon.content,
-                                description: result.content
-                            }
+                        name: badge_name,
+                        icon: result.icon.content,
+                        description: result.content
+                    }
                 }
             )
     } catch (err) {
@@ -36,9 +36,9 @@ export async function getAllBadges() {
             .then((result) => {
                 return result.items.map(element=>(
                         {
-                            name: element.object.name,
-                            icon: element.object.icon.content,
-                            description: element.object.content
+                            name: element.name,
+                            icon: element.icon.content,
+                            description: element.content
                         }
                 )
                 )})
@@ -58,11 +58,11 @@ export async function getAllBadgesOfAUser(username) {
     try {
         response = await fetch("/api/users/"+String(username)+"/" , options)
             .then(response => response.json())
-            .then((result) => {
-                return result.badges.map(element=>(
-                        getBadgeDetails(element)
-                    )
-                )})
+            .then(r=>{console.log(r);return r.badges})
+
+        return await Promise.all(response.map(async element=>
+                 await getBadgeDetails(element)
+             ))
     } catch (err) {
         console.log(err);
     }
@@ -73,7 +73,7 @@ export async function getAllBadgesOfAUser(username) {
 
 export async function getAllEventsAvailableForBadgeGift(target_user) {
     let logged_user = getUserInfoLoggedIn()
-    if (!logged_user) {
+    if (!logged_user.username) {
         return null
     }
     let key;
@@ -90,13 +90,13 @@ export async function getAllEventsAvailableForBadgeGift(target_user) {
             .then(response => response.json())
             .then(result => {
                     return result.items.map(element => ({
-                        title: element.title,
-                        sport: element.eventSport,
-                        date: element.eventDate,
-                        event_id: element.postId
+                        title: element.object.title,
+                        sport: element.object.eventSport,
+                        date: element.object.eventDate,
+                        event_id: element.object.postId
                     }))
                 }
-            );
+            ).then(result=>result);
     } catch (err) {
         console.log(err)
     }
@@ -106,7 +106,7 @@ export async function getAllEventsAvailableForBadgeGift(target_user) {
 
 export async function giveBadgeToUser(target_user, badge_name, event_id) {
     let logged_user = getUserInfoLoggedIn()
-    if (!logged_user) {
+    if (!logged_user.username) {
         return null
     }
     let key;
