@@ -49,6 +49,7 @@ jobs:
         python manage.py makemigrations eventposts
         python manage.py makemigrations equipmentposts
         python manage.py makemigrations badges
+        python manage.py makemigrations profiles
         python manage.py migrate
         python manage.py loaddata badges
     - name: Run tests

@@ -59,6 +59,11 @@ class User(AbstractUser):
 
     badges = ArrayField(models.CharField(max_length=30), default=empty_list)
 
+    followings = ArrayField(models.IntegerField(), default=empty_list)
+    followers = ArrayField(models.IntegerField(), default=empty_list)
+    blockings = ArrayField(models.IntegerField(), default=empty_list)
+    blockers = ArrayField(models.IntegerField(), default=empty_list)
+
     privacy = models.BooleanField(default=False)
 
     email = models.EmailField(_('email address'), blank=True, unique=True, error_messages={
