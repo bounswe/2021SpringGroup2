@@ -66,3 +66,65 @@ describe("Check if badge information of a user is displayed correctly", () =>{
 
     })
 })
+describe("Check if related events available for badge gift of a user is displayed correctly", () =>{
+    let originalFetch;
+    beforeEach(() => {
+        localStorage.setItem('username', "berkaydoner")
+        localStorage.setItem('user_id', 1)
+        originalFetch = global.fetch;
+        global.fetch = jest.fn(() => Promise.resolve({
+            json: () => Promise.resolve(
+                {
+                    "@context": "https://www.w3.org/ns/activitystreams",
+                    "summary": "Event list",
+                    "type": "Collection",
+                    "totalItems": 1,
+                    "items": [
+                        {
+                            "object": {
+                                "type": "Event",
+                                "postId": 3,
+                                "title": "Tennis match",
+                                "eventSport": "Tennis",
+                                "eventDate": "2022-01-05T09:00:00Z"
+                            }
+                        },
+                        {
+                            "object": {
+                                "type": "Event",
+                                "postId": 4,
+                                "title": "Soccer match",
+                                "eventSport": "Soccer",
+                                "eventDate": "2022-01-05T09:00:00Z"
+                            }
+                        }
+                    ]
+                }
+
+            )}));})
+    afterEach(() => {
+        global.fetch = originalFetch;
+    });
+    it("Check if the response is in the correct format.",async () => {
+        const response = await BadgeController.getAllEventsAvailableForBadgeGift("berkaydoner")
+        expect(response).toHaveLength(2)
+        expect(response).toEqual([
+            {
+                 "date": "2022-01-05T09:00:00Z",
+                 "event_id": 3,
+                 "sport": "Tennis",
+                 "title": "Tennis match",
+              },
+            {
+             "date": "2022-01-05T09:00:00Z",
+                 "event_id": 4,
+                 "sport": "Soccer",
+                 "title": "Soccer match",
+               }
+            ])
+
+    })
+    localStorage.removeItem('username')
+    localStorage.removeItem('user_id')
+})
+
