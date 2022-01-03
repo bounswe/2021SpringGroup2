@@ -88,6 +88,29 @@ interface ReboundAPI {
         @Header("Authorization") token: String,
         @Body request: CreateEventRequest
     ): Call<CreateEventResponse>
+    @POST("api/posts/{postId}/comments/")
+    fun postComment(
+        @Header("Authorization") token: String,
+        @Path("postId") postId : Int,
+        @Body request: CommentRequest
+    ): Call<CommentResponse>
+    @POST("api/equipments/{postId}/comments/")
+    fun postEquipmentComment(
+        @Header("Authorization") token: String,
+        @Path("postId") postId : Int,
+        @Body request: CommentRequest
+    ): Call<CommentResponse>
+    @POST("api/equipments/")
+    fun createEquipment(
+        @Header("Authorization") token: String,
+        @Body request: CreateEquipmentRequest
+    ): Call<EquipmentbyIdResponse>
+    @POST("api/posts/{eventId}/apply/")
+    fun applyToEvent(
+        @Header("Authorization") token: String,
+        @Path("eventId") eventId : Int,
+        @Body request: ApplyRequest
+    ): Call<EventbyIdResponse>
 
     @GET("api/posts/{eventId}/")
     fun getEventbyId(
@@ -99,11 +122,84 @@ interface ReboundAPI {
         @Header("Authorization") token : String,
         @Path("postId") postId : Int,
     ): Call<AllCommentsResponse>
+    @GET("api/equipments/{postId}/comments/")
+    fun getAllEquipmentComments(
+        @Header("Authorization") token : String,
+        @Path("postId") postId : Int,
+    ): Call<AllCommentsResponse>
     @GET("api/equipments/")
     fun getEquipments(
         @Header("Authorization") token : String,
         @Query("sport") sport : String,
     ): Call<AllEquipmentsResponse>
+    @GET("api/equipments/{equipmentId}/")
+    fun getEquipmentbyId(
+        @Header("Authorization") token : String,
+        @Path("equipmentId") equipmentId : Int,
+    ): Call<EquipmentbyIdResponse>
+    @GET("api/equipments/{equipmentId}/comments/{commentId}/answers/")
+    fun getEquipmentAnswers(
+        @Header("Authorization") token : String,
+        @Path("equipmentId") equipmentId : Int,
+        @Path("commentId") commentId : Int,
+    ): Call<AllCommentsResponse>
+    @GET("api/posts/{eventId}/comments/{commentId}/answers/")
+    fun getEventAnswers(
+        @Header("Authorization") token : String,
+        @Path("eventId") eventId : Int,
+        @Path("commentId") commentId : Int,
+    ): Call<AllCommentsResponse>
+    @POST("api/posts/{eventId}/comments/{commentId}/answers/")
+    fun postEventAnswers(
+        @Header("Authorization") token : String,
+        @Path("eventId") eventId : Int,
+        @Path("commentId") commentId : Int,
+        @Body content : MutableMap<String,String>
+    ): Call<CommentResponse>
+    @POST("api/equipments/{equipmentId}/comments/{commentId}/answers/")
+    fun postEquipmentAnswers(
+        @Header("Authorization") token : String,
+        @Path("equipmentId") equipmentId : Int,
+        @Path("commentId") commentId : Int,
+        @Body content : MutableMap<String,String>
+    ): Call<CommentResponse>
+    @POST("api/users/{username}/following/")
+    fun followUser(
+        @Header("Authorization") token : String,
+        @Path("username") username : String,
+    ): Call<FollowResponse>
+    @DELETE("api/users/{username}/following/")
+    fun unfollowUser(
+        @Header("Authorization") token : String,
+        @Path("username") username : String,
+    ): Call<UnfollowResponse>
+    @GET("api/users/{username}/following/")
+    fun getFollowings(
+        @Header("Authorization") token : String,
+        @Path("username") username : String,
+    ): Call<GetFollowingsResponse>
+    @GET("api/users/{username}/followers/")
+    fun getFollowers(
+        @Header("Authorization") token : String,
+        @Path("username") username : String,
+    ): Call<GetFollowingsResponse>
+    @POST("api/users/{username}/blocked/")
+    fun blockUser(
+        @Header("Authorization") token : String,
+        @Path("username") username : String,
+    ): Call<BlockResponse>
+    @DELETE("api/users/{username}/blocked/")
+    fun unblockUser(
+        @Header("Authorization") token : String,
+        @Path("username") username : String,
+    ): Call<BlockResponse>
+    @GET("api/users/{username}/blocking/")
+    fun getBlockings(
+        @Header("Authorization") token : String,
+        @Path("username") username : String,
+    ): Call<GetFollowingsResponse>
+
+
 
 
     companion object {

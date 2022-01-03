@@ -124,74 +124,43 @@
 
 
             <TextView
-                android:id="@+id/tv_players"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="20dp"
-                android:text="Players"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_age_interval" />
-
-            <TextView
-                android:id="@+id/tv_players_result"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="20dp"
-                android:text="TextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_age_interval_result" />
-
-
-            <TextView
-                android:id="@+id/tv_spectators"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="20dp"
-                android:text="Spectators"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_players" />
-
-            <TextView
-                android:id="@+id/tv_spectators_result"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="20dp"
-                android:text="TextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_players_result" />
-
-            <TextView
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="DISCUSSION"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button2" />
+                app:layout_constraintTop_toBottomOf="@+id/btn_apply_as_player" />
 
             <Button
-                android:id="@+id/button2"
-                android:layout_width="212dp"
+                android:id="@+id/btn_apply_as_player"
+                android:layout_width="123dp"
                 android:layout_height="50dp"
-                android:layout_marginTop="30dp"
-                android:text="APPLY"
+                android:text="APPLY AS PLAYER"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.475"
+                app:layout_constraintHorizontal_bias="0.257"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_spectators_result" />
+                app:layout_constraintTop_toBottomOf="@+id/btn_equipment" />
+
+
+            <Button
+                android:id="@+id/btn_apply_as_spectator"
+                android:layout_width="123dp"
+                android:layout_height="50dp"
+                android:text="APPLY AS SPECTATOR"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.75"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_equipment" />
 
             <Button
                 android:id="@+id/btn_equipment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="SEE RELATED EQUIPMENT"
-                app:layout_constraintBottom_toTopOf="@+id/button2"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_age_interval_result" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_discussion"
@@ -199,8 +168,28 @@
                 android:layout_height="500dp"
                 android:layout_marginTop="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+            <Button
+                android:id="@+id/btn_post_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Post Comment"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.519"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_make_comment" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_make_comment"
+                android:layout_width="154dp"
+                android:layout_height="44dp"
+                android:hint="Make a comment"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rv_discussion" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

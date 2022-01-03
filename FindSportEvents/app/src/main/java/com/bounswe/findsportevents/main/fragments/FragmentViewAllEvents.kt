@@ -32,6 +32,7 @@ class FragmentViewAllEvents : Fragment(), RecyclerAdapter.OnItemClickListener, D
     private var layoutManager: RecyclerView.LayoutManager?=null
     private var adapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>?=null
     private var token = ""
+    private var username = ""
     private var dialog: LoadingDialog? = null
     var contents : MutableList<String> = mutableListOf()
     var titles : MutableList<String> = mutableListOf()
@@ -51,6 +52,7 @@ class FragmentViewAllEvents : Fragment(), RecyclerAdapter.OnItemClickListener, D
         super.onCreate(savedInstanceState)
         viewAllEventsFragListener = requireActivity() as FragmentViewAllEventsListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
+        username = requireArguments().getString(USER_KEY) ?: ""
         token= "JWT $token"
         var page=1
         context?.run {
@@ -171,17 +173,19 @@ class FragmentViewAllEvents : Fragment(), RecyclerAdapter.OnItemClickListener, D
     companion object {
         const val TAG = "view all events"
         private const val TOKEN_KEY = "token_key"
+        private const val USER_KEY = "user_key"
 
-        fun newInstance(token: String) = FragmentViewAllEvents().also {
+        fun newInstance(token: String,username: String) = FragmentViewAllEvents().also {
             it.arguments=Bundle().also {
                 it.putString(TOKEN_KEY,token)
+                it.putString(USER_KEY,username)
             }
         }
     }
 
     override fun onItemClick(position: Int) {
         val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.container_main,FragmentViewEventDetailed.newInstance(token,eventIds[position])).addToBackStack("searchUser")
+        transaction.replace(R.id.container_main,FragmentViewEventDetailed.newInstance(token,username,eventIds[position])).addToBackStack("searchUser")
         transaction.commit()
     }
     override fun showLoading(context: Context) {
