@@ -7,7 +7,7 @@ export const getProfile = username =>{
             'Content-Type': 'application/json',
         },
     }
-    return fetch("api/users/"+username+"/",/*options*/)
+    return fetch("/api/users/"+username+"/",/*options*/)
         .then(response=>response.json())
         .then(r=>{console.log(r); return r})
 }

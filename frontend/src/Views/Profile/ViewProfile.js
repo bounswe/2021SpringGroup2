@@ -50,6 +50,7 @@ const useStyles = makeStyles(theme => createStyles({
 }));
 
 const initialProfile = {
+    loading: true,
     id: {
         value: 0,
         changed: false,
@@ -92,6 +93,11 @@ const initialProfile = {
         changed: false,
         error: undefined
     },
+    privacy: {
+        value: "",
+        changed: false,
+        error: undefined
+    },
     fav_sport_1: {
         value: "",
         changed: false,
@@ -113,7 +119,6 @@ const Index = _ =>{
     const classes = useStyles()
     const params = useParams()
     const userid = params.userid
-    const [loading, setLoading] = useState(true)
     const [profile, setProfile] = useState(initialProfile)
     const [badges, setBadges] = useState([])
     const [loggedUser, setLoggedUser] = useState(null)
@@ -125,10 +130,18 @@ const Index = _ =>{
                 .then(p => {
                     const newProfile = {...profile}
                     for (let i in p) {
+    useEffect(function(){
+        if(profile.loading){
+            getProfile(userid)
+                .then(p=>{
+                    const newProfile = {...profile}
+                    for(let i in p){
+                        if(newProfile[i] === undefined)continue
                         console.log(i)
                         newProfile[i].value = p[i]
                     }
                     newProfile.username.value = userid
+                    newProfile.loading = false
                     setProfile(newProfile)
                 })
                 .catch(console.log)
@@ -148,7 +161,7 @@ const Index = _ =>{
     }, [])
 
 
-    return loading? <CircularProgress />
+    return profile.loading? <CircularProgress />
         :
     (
         <div className={classes.paper}>
