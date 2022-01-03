@@ -44,7 +44,7 @@ export default function LoginPage(props){
     function handleLogin() {
          obtainToken(state.username.value,state.password.value)
              .then(function(r){
-                 if(r.detail!==undefined){
+                 if(r.detail!==undefined||r.password!==undefined||r.username!==undefined){
                      const newState = {...state}
                      newState.username.error = "Check your credentials"
                      setState(newState)
@@ -64,7 +64,7 @@ export default function LoginPage(props){
                     Username
                 </Typography>
                 <TextField fullWidth required id="username"  size="small" style={textFieldStyle}
-                InputProps={inputStyle} value={state.username.value||""} onChange={handleChange}></TextField>
+                 InputProps={inputStyle} value={state.username.value||""} onChange={handleChange}></TextField>
                 <Typography style = {typographyStyle}>
                     Password
                 </Typography>
