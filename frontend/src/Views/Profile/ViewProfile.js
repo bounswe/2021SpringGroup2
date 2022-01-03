@@ -125,12 +125,6 @@ const Index = _ =>{
     const [relatedEvents, setRelatedEvents] = useState([])
     const [allBadges, setAllBadges] = useState([])
     useEffect(async function () {
-        if (loading) {
-            getProfile(userid)
-                .then(p => {
-                    const newProfile = {...profile}
-                    for (let i in p) {
-    useEffect(function(){
         if(profile.loading){
             getProfile(userid)
                 .then(p=>{
@@ -156,7 +150,6 @@ const Index = _ =>{
             getAllBadges().then(allBadges =>
                 setAllBadges(allBadges))
                 .catch(console.log)
-            setLoading(false)
         }
     }, [])
 
