@@ -128,11 +128,6 @@ class FragmentProfile : Fragment(), DialogManager {
             transaction.replace(R.id.container_main,FragmentMyEvents.newInstance(token,ownerId)).addToBackStack("myEvents")
             transaction.commit()
         }
-        binding.btnGiveABadge.setOnClickListener {
-            val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.container_main,FragmentRelatedEvents.newInstance(token,ownerId,username)).addToBackStack("myEvents")
-            transaction.commit()
-        }
     }
 
     interface FragmentProfileListener {
