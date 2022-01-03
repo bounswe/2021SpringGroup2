@@ -59,11 +59,11 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
 
         return ProfileSerializer
 
-    def wrap_all(self, objects):
+    def wrap_all(self, objects, summary_msg="Event list"):
         response = \
             {
                 "@context": "https://www.w3.org/ns/activitystreams",
-                "summary": "Event list",
+                "summary": summary_msg,
                 "type": "Collection",
                 "totalItems": len(objects),
                 "items": objects
@@ -187,3 +187,68 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
             }
 
         return Response(self.wrap_offer(data))
+
+    def wrap_follow_block(self, data, type, actor_name, object_name, summary_msg):
+        response = \
+            {
+                "@context": "https://www.w3.org/ns/activitystreams",
+                "summary": summary_msg,
+                "type": type,
+                "actor": {
+                    "type": "Person",
+                    "name": actor_name
+                },
+                "object":
+                    {
+                        "type": "Person",
+                        "identifier": object_name
+                    }
+            }
+        return response
+
+    @action(detail=True, methods=['post'], permission_classes=[permission.IsAuthenticated])
+    def follow_user(self, request, *args, **kwargs):
+        user, _ = self.JWTauth.authenticate(self.request)
+        other_username = kwargs['pk']
+        other_user = self.queryset.get(username=other_username)
+        FollowRecord.objects.create(following_user=user.id, followed_user=other_user.id, follow_date=datetime.now())
+        other_users.followers.append(user)
+        user.followings.append(other_user)
+        return Response(data={"message": "Successfully followed user."}, status=200)
+
+    @action(detail=True, methods=['delete'], permission_classes=[permission.IsAuthenticated])
+    def unfollow_user(self, request, *args, **kwargs):
+        user, _ = self.JWTauth.authenticate(self.request)
+        other_username = kwargs['pk']
+        follow_queryset = FollowRecord.objects.all()
+        other_user = self.queryset.get(username=other_username)
+        follow_record_instance = follow_queryset.filter(following_user=user.id, followed_user=other_user.id)[0]
+        follow_record_instance.delete()
+        other_users.followers.remove(user)
+        user.followings.remove(other_user)
+        return Response(data={"message": "Successfully unfollowed user."}, status=200)
+
+    @action(detail=True, methods=['get'], permission_classes=[permission.IsAuthenticated])
+    def get_followings(self, request, *args, **kwargs):
+        user, _ = self.JWTauth.authenticate(self.request)
+        user_name = user.username
+        followings = user.followings.all()
+        serializer = self.get_serializer(followings, many=True)
+        objects = []
+        for data in serializer.data:
+            followed_username = data["following_user"]
+            summary_msg = user_name + " followed " + followed_username
+            objects.append(self.wrap_follow_block(data, "Follow", user_name, followed_username, summary_msg))
+        return Response(self.wrap_all(objects, "Users " + user_name + " follows."))
+
+    @action(detail=True, methods=['get'], permission_classes=[permission.IsAuthenticated])
+    def get_followers(self, request, *args, **kwargs):
+        user, _ = self.JWTauth.authenticate(self.request)
+        followers = user.followers.all()
+        serializer = self.get_serializer(followers, many=True)
+        objects = []
+        for data in serializer.data:
+            following_username = data["followed_user"]
+            summary_msg = following_username + " followed " + user_name
+            objects.append(self.wrap_follow_block(data, "Follow", followed_username, user_name, summary_msg))
+        return Response(self.wrap_all(objects, "Users following " + user_name + "."))
