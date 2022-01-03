@@ -81,17 +81,13 @@ const Header = props => {
                                 <img src={image} alt={"logo"} />
                                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                                 </Typography>
-                                <Toolbar>
-                                    <Search>
-                                        <SearchIconWrapper>
-                                            <SearchIcon />
-                                        </SearchIconWrapper>
-                                        <StyledInputBase
-                                            placeholder="Search"
-                                            inputProps={{ 'aria-label': 'search' }}
-                                        />
-                                    </Search>
-                                </Toolbar>
+                                <Button
+                                    component={Link} to="/search"
+                                    color="primary"
+                                    variant="outlined"
+                                    style={{marginRight:10}}>
+                                    Search
+                                </Button>
                                 <IconButton
                                     size="large"
                                     aria-label="show 17 new notifications"
