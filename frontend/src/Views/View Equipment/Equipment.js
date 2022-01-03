@@ -84,13 +84,11 @@ export default function Equipment (){
     const params = useParams()
     const equipmentid = params.equipmentid
     const [equipment, setEquipment] = useState(initialEquipment)
-
     useEffect(() => {
         fetch("http://34.68.66.109/api/equipments/"+equipmentid+"/")
             .then(r=>r.json())
             .then(r=>setEquipment(r))
     }, []);
-
     return(
         //style={{background:`url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}
         <div >
@@ -103,9 +101,6 @@ export default function Equipment (){
                     </Typography>
                     <Typography variant="subtitle1" component="div" align={"center"}>
                         Content: {equipment.object.content}
-                    </Typography>
-                    <Typography variant="subtitle1" component="div" align={"center"} >
-                        Location: {equipment.object.location.type} {equipment.object.location.longitude} {equipment.object.location.latitude}
                     </Typography>
                 </Grid>
 
