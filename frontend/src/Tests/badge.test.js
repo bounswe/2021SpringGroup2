@@ -30,3 +30,39 @@ describe("Check if badge information is displayed correctly", () =>{
     })
 })
 
+describe("Check if badge information of a user is displayed correctly", () =>{
+    let originalFetch;
+    beforeEach(() => {
+        originalFetch = global.fetch;
+        global.fetch = jest.fn(() => Promise.resolve({
+            json: () => Promise.resolve(
+                {
+                    "id": 7,
+                    "first_name": "Berkay",
+                    "last_name": "Doner",
+                    "username": "berkaydoner",
+                    "bio": "",
+                    "fav_sport_1": "",
+                    "fav_sport_2": "",
+                    "fav_sport_3": "",
+                    "location": "Istanbul",
+                    "avatar": "",
+                    "privacy": false,
+                    "badges": ["Friendly","MVP","Cheater"],
+                    "birthday": "1999-11-13"
+                }
+
+            )}));})
+    afterEach(() => {
+        global.fetch = originalFetch;
+    });
+    it("Check if the response is in the correct format.",async () => {
+        const spy1 = jest.spyOn(BadgeController,"getBadgeDetails")
+        const response = await BadgeController.getAllBadgesOfAUser("berkaydoner")
+        expect(spy1).toHaveBeenCalledTimes(3)
+        expect(spy1).toHaveBeenCalledWith("Friendly")
+        expect(spy1).toHaveBeenCalledWith("MVP")
+        expect(spy1).toHaveBeenCalledWith("Cheater")
+
+    })
+})
