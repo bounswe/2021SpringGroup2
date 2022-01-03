@@ -4,6 +4,9 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import {createStyles, makeStyles, styled} from "@mui/styles";
 import {ListItemText, TextField} from "@mui/material";
+import EventCard from "../Search/EventSearch/EventCard";
+import {searchEventBySport} from "../../Controllers/SearchController";
+import Container from "@mui/material/Container";
 
 const useStyles = makeStyles(theme => createStyles({
     "@global": {
@@ -84,10 +87,14 @@ export default function Equipment (){
     const params = useParams()
     const equipmentid = params.equipmentid
     const [equipment, setEquipment] = useState(initialEquipment)
+    const [events, setEvents] = useState([])
+
     useEffect(() => {
         fetch("http://34.68.66.109/api/equipments/"+equipmentid+"/")
             .then(r=>r.json())
-            .then(r=>setEquipment(r))
+            .then(r=>setEquipment(r)||r)
+            .then(r=>searchEventBySport(r.object.sport))
+            .then(setEvents)
     }, []);
     return(
         //style={{background:`url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}
@@ -122,6 +129,13 @@ export default function Equipment (){
                 </Grid>
 
             </Grid>
+
+            <Container style={{marginTop:100}}>
+                <h2>Related Events</h2>
+                {events.map((e, i)=>(
+                    <EventCard key={i} {...e}/>
+                ))}
+            </Container>
 
 
         </div>

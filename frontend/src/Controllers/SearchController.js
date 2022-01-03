@@ -1,4 +1,5 @@
 import {initialFilters} from "../Views/Search/Index";
+import {useState} from "react";
 
 export function  searchEvents(params={}){
 
@@ -21,7 +22,7 @@ export function  getEvent(id){
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
     }
-    return fetch("/api/posts/"+id+'/',options)
+    return fetch("http://34.68.66.109/api/posts/"+id+'/',options)
         .then(response=>response.json())
         .then(r=>{console.log(r); return r})
 }
@@ -32,8 +33,23 @@ export function searchEventBySport(sport){
         headers: { 'Content-Type': 'application/json' },
     }
     const url = "sport="+sport
-    return fetch("/api/posts/?"+url,options)
+    return fetch("http://34.68.66.109/api/posts/?"+url,options)
         .then(response=>response.json())
+        .then(r=>r.results)
+        .then(r=>r.length>3?r.slice(0, 3):r)
+        .then(r=>{console.log(r); return r})
+}
+
+export function searchEquipmentBySport(sport){
+    const options = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    }
+    const url = "sport="+sport
+    return fetch("http://34.68.66.109/api/equipments/?"+url,options)
+        .then(response=>response.json())
+        .then(r=>r.results)
+        .then(r=>r.length>3?r.slice(0, 3):r)
         .then(r=>{console.log(r); return r})
 }
 
