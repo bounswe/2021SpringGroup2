@@ -59,10 +59,10 @@ class User(AbstractUser):
 
     badges = ArrayField(models.CharField(max_length=30), default=empty_list)
 
-    followings = ArrayField(models.ForeignKey('self'), default=empty_list)
-    followers = ArrayField(models.ForeignKey('self'), default=empty_list)
-    blocked = ArrayField(models.ForeignKey('self'), default=empty_list)
-    blocked_by = ArrayField(models.ForeignKey('self'), default=empty_list)
+    followings = models.ManyToManyField('self')
+    followers = models.ManyToManyField('self')
+    blocked = models.ManyToManyField('self')
+    blocked_by = models.ManyToManyField('self')
 
     privacy = models.BooleanField(default=False)
 
