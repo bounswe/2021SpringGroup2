@@ -107,6 +107,23 @@ class EventViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
         min_creation_date = self.request.query_params.get('min_creation_date')
         max_creation_date = self.request.query_params.get('max_creation_date')
 
+        player = self.request.query_params.get('player')
+        spectator = self.request.query_params.get('spectator')
+
+        player_applicant = self.request.query_params.get('player_applicant')
+        spectator_applicant = self.request.query_params.get('spectator_applicant')
+
+        if player is not None:
+            queryset = queryset.filter(players__contains=[player])
+        if spectator is not None:
+            queryset = queryset.filter(spectators__contains=[spectator])
+
+        if player_applicant is not None:
+            queryset = queryset.filter(player_applicants__contains=[player_applicant])
+        if spectator_applicant is not None:
+            queryset = queryset.filter(spec_applicants__contains=[spectator_applicant])
+
+
         # filter by query by searching in both title and description
         if query is not None:
             queryset = queryset.filter(Q(title__icontains=query) | Q(content__icontains=query))

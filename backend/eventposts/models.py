@@ -1,7 +1,6 @@
 from django.db import models
 from authentication.models import User, empty_list
 from django.contrib.postgres.fields import ArrayField
-from datetime import datetime
 
 
 class Post(models.Model):
@@ -11,7 +10,7 @@ class Post(models.Model):
     content = models.TextField(default="")
     title = models.TextField(default="")
 
-    creation_date = models.DateTimeField(default=datetime.now())
+    creation_date = models.DateTimeField(auto_now_add=True)
     location = models.TextField(default="")
     sport = models.CharField(max_length=30)
 
@@ -23,7 +22,7 @@ class Post(models.Model):
 
 
 class EventPost(Post):
-    date = models.DateTimeField(default=datetime.now())
+    date = models.DateTimeField()
     duration = models.IntegerField(default=60)
 
     min_age = models.IntegerField(default=18)
@@ -47,11 +46,11 @@ class Comment(models.Model):
     parent_post = models.ForeignKey(EventPost, on_delete=models.CASCADE)
     content = models.TextField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="event_comment")
-    created_date = models.DateTimeField(default=datetime.now())
+    created_date = models.DateTimeField(auto_now_add=True)
 
 
 class Answer(models.Model):
     parent_comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
     content = models.TextField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="event_answer")
-    created_date = models.DateTimeField(default=datetime.now())
+    created_date = models.DateTimeField(auto_now_add=True)
