@@ -2,11 +2,16 @@ import React, {useEffect, useState} from 'react'
 import {useParams} from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import {createStyles, makeStyles, styled} from "@mui/styles";
+import {createStyles, makeStyles, styled} from "@material-ui/core/styles";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import {CircularProgress, ListItemText} from "@mui/material";
 import {getProfile} from "../../Controllers/ProfileController";
+import BadgeList from "../Badges/BadgeList";
+import {getAllBadges, getAllBadgesOfAUser, getAllEventsAvailableForBadgeGift} from "../../Controllers/BadgeController";
+import {getUserInfoLoggedIn} from "../../Controllers/AuthInfo";
+import RelatedEvents from "../Badges/RelatedEvents";
+import Box from "@mui/material/Box";
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -110,13 +115,16 @@ const Index = _ =>{
     const userid = params.userid
     const [loading, setLoading] = useState(true)
     const [profile, setProfile] = useState(initialProfile)
-    useEffect(function(){
-        if(loading){
+    const [badges, setBadges] = useState([])
+    const [loggedUser, setLoggedUser] = useState(null)
+    const [relatedEvents, setRelatedEvents] = useState([])
+    const [allBadges, setAllBadges] = useState([])
+    useEffect(async function () {
+        if (loading) {
             getProfile(userid)
-                .then(p=>{
-                    setLoading(false)
+                .then(p => {
                     const newProfile = {...profile}
-                    for(let i in p){
+                    for (let i in p) {
                         console.log(i)
                         newProfile[i].value = p[i]
                     }
@@ -124,10 +132,21 @@ const Index = _ =>{
                     setProfile(newProfile)
                 })
                 .catch(console.log)
+            await getAllBadgesOfAUser(userid).then(badges => {
+                    console.log(badges)
+                    setBadges(badges)
+                }
+            ).catch(console.log)
+            getAllEventsAvailableForBadgeGift(userid).then(events =>
+                setRelatedEvents(events)
+            ).catch(console.log)
+            getAllBadges().then(allBadges =>
+                setAllBadges(allBadges))
+                .catch(console.log)
+            setLoading(false)
         }
     }, [])
 
-    console.log(userid)
 
     return loading? <CircularProgress />
         :
@@ -142,6 +161,11 @@ const Index = _ =>{
                         @{profile.username.value}
                     </Typography>
                 </Grid>
+                {relatedEvents!==null&&relatedEvents!==undefined&&relatedEvents.length>0
+                    ?<Grid item xs={12} sm={12} align={"center"}>
+                        <RelatedEvents events={relatedEvents} badges={allBadges} target={userid}/>
+                    </Grid>
+                    :null}
                 <Grid item xs={12} sm={12}>
                     <Typography gutterBottom variant="body1" align={"center"}>
                         {profile.bio.value}
@@ -176,6 +200,18 @@ const Index = _ =>{
                         </Grid>
                     </Grid>
                 </Grid>
+                {badges&&badges.length>0?
+                    <Grid item xs={12} sm={12}>
+                        <Stack spacing={3}>
+                            <Typography textAlign={"center"} style={{color:"#006400"}} className={classes.other}>
+                                Badges
+                            </Typography>
+                            <BadgeList badges={badges}/>
+                        </Stack>
+                    </Grid>
+                    :null
+                }
+
 
             </Grid>
 
