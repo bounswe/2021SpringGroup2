@@ -1,4 +1,4 @@
-import {datetoISOString} from "../Views/SearchEvents/FilterComponents/helper";
+import {datetoISOString} from "../Views/Search/EventSearch/FilterComponents/helper";
 
 
 test('it helps', async () => {

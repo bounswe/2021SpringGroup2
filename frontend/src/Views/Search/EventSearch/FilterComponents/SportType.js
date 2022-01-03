@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react'
 import Typography from "@mui/material/Typography";
 import {FormControl, MenuItem, Select} from "@material-ui/core";
-import {getSports, getSportsList} from '../../../Controllers/SportsController';
+import {getSports, getSportsList} from '../../../../Controllers/SportsController';
 import {Autocomplete} from "@mui/lab";
 import {Grid, TextField} from "@mui/material";
-import {checkIfNumber} from "../../Create Event/CreateEventPage";
+import {checkIfNumber} from "../../../Create Event/CreateEventPage";
 const initialState = {
     title: {
         value: "",
