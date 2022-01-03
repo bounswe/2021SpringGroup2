@@ -51,7 +51,7 @@ export default function LoginPage(props){
                  }
                  else{
                      setHeaders(r.access, r.refresh)
-                     setUserInfo(state.username.value, "")
+                     getUserInfo(state.username.value)
                      navigate("/")
                      location.reload()
                  }
