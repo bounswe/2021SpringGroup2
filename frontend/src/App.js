@@ -20,6 +20,7 @@ import NotFound from "./Views/Not Found/NotFound";
 import Event from "./Views/Event Page/Event";
 import CreateEventPage from "./Views/Create Event/CreateEventPage";
 import Equipment from "./Views/View Equipment/Equipment";
+import CreateEquipmentPage from "./Views/Create Equipment/CreateEquipmentPage";
 
 
 
@@ -37,6 +38,7 @@ const App = () => {
                         <Route path=":userid" element={<ViewProfile/>}/>
                         <Route index element={<ViewProfile/>}/>
                     </Route>  <Route path="createevent" element={<CreateEventPage/>}/>
+                    <Route path="createequipment" element={<CreateEquipmentPage/>}/>
                     <Route path="home" element={<Home />} />
                     <Route path="equipments/:equipmentid" element={<Equipment/>}/>
                     <Route path="resetpassword" element={<ResetPasswordPage/>}/>
