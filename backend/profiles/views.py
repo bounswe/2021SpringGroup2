@@ -206,7 +206,7 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
             }
         return response
 
-    @action(detail=True, methods=['post'], permission_classes=[permission.IsAuthenticated])
+    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def follow_user(self, request, *args, **kwargs):
         user, _ = self.JWTauth.authenticate(self.request)
         other_username = kwargs['pk']
@@ -216,7 +216,7 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
         user.followings.append(other_user)
         return Response(data={"message": "Successfully followed user."}, status=200)
 
-    @action(detail=True, methods=['delete'], permission_classes=[permission.IsAuthenticated])
+    @action(detail=True, methods=['delete'], permission_classes=[permissions.IsAuthenticated])
     def unfollow_user(self, request, *args, **kwargs):
         user, _ = self.JWTauth.authenticate(self.request)
         other_username = kwargs['pk']
@@ -228,7 +228,7 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
         user.followings.remove(other_user)
         return Response(data={"message": "Successfully unfollowed user."}, status=200)
 
-    @action(detail=True, methods=['get'], permission_classes=[permission.IsAuthenticated])
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def get_followings(self, request, *args, **kwargs):
         user, _ = self.JWTauth.authenticate(self.request)
         user_name = user.username
@@ -241,7 +241,7 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
             objects.append(self.wrap_follow_block(data, "Follow", user_name, followed_username, summary_msg))
         return Response(self.wrap_all(objects, "Users " + user_name + " follows."))
 
-    @action(detail=True, methods=['get'], permission_classes=[permission.IsAuthenticated])
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def get_followers(self, request, *args, **kwargs):
         user, _ = self.JWTauth.authenticate(self.request)
         followers = user.followers.all()
@@ -253,7 +253,7 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
             objects.append(self.wrap_follow_block(data, "Follow", followed_username, user_name, summary_msg))
         return Response(self.wrap_all(objects, "Users following " + user_name + "."))
 
-    @action(detail=True, methods=['post'], permission_classes=[permission.IsAuthenticated])
+    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def block_user(self, request, *args, **kwargs):
         user, _ = self.JWTauth.authenticate(self.request)
         other_username = kwargs['pk']
@@ -263,7 +263,7 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
         user.blocked.append(other_user)
         return Response(data={"message": "Successfully blocked user."}, status=200)
 
-    @action(detail=True, methods=['delete'], permission_classes=[permission.IsAuthenticated])
+    @action(detail=True, methods=['delete'], permission_classes=[permissions.IsAuthenticated])
     def unblock_user(self, request, *args, **kwargs):
         user, _ = self.JWTauth.authenticate(self.request)
         other_username = kwargs['pk']
@@ -275,7 +275,7 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
         user.blocked.remove(other_user)
         return Response(data={"message": "Successfully unblocked user."}, status=200)
 
-    @action(detail=True, methods=['get'], permission_classes=[permission.IsAuthenticated])
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def get_blockings(self, request, *args, **kwargs):
         user, _ = self.JWTauth.authenticate(self.request)
         user_name = user.username
@@ -288,7 +288,7 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
             objects.append(self.wrap_follow_block(data, "Block", user_name, blocked_username, summary_msg))
         return Response(self.wrap_all(objects, "Users " + user_name + " blocked."))
 
-    @action(detail=True, methods=['get'], permission_classes=[permission.IsAuthenticated])
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def get_blockers(self, request, *args, **kwargs):
         user, _ = self.JWTauth.authenticate(self.request)
         blockers = user.blocked_by.all()
