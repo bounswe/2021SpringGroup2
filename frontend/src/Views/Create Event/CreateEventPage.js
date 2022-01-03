@@ -215,7 +215,7 @@ export default function CreateEventPage(props){
             setSkillError("Maximum skill level must be higher than the minimum skill level")
             return
         }
-        if(!dateStart||!dateEnd||!latitude||!longitude||!inputs.title||!sport||!inputs.location){
+        if(!dateStart||!dateEnd||!latitude||!longitude||!inputs.title.value||!sport||!inputs.location.value){
             return;
         }
         let duration = Math.floor(((dateEnd-dateStart)/1000)/60)
