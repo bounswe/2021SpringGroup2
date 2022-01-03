@@ -5,7 +5,7 @@ import Card from "@mui/material/Card";
 import {useNavigate} from "react-router-dom";
 import ButtonBase from "@mui/material/ButtonBase";
 import Skeleton from "@mui/material/Skeleton";
-import {getEquipment, getEvent} from "../../../Controllers/SearchController";
+import {getEquipment} from "../../../Controllers/SearchController";
 
 const initialEvent = {
     "@context": "https://www.w3.org/ns/activitystreams",
@@ -77,7 +77,7 @@ export default function EventCard(props){
                     textAlign: 'initial',
                     width: "100%"
                 }}
-                onClick={_=>navigate("/event/"+props.id)}>
+                onClick={_=>navigate("/equipment/"+props.id)}>
                 <CardContent>
                     <Typography sx={{ fontSize: 22 }} color="text.primary">
                         {event.object.title}
