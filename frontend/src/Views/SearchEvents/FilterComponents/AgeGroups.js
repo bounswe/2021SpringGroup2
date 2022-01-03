@@ -16,7 +16,7 @@ export default function AgeGroups(props){
             </Typography>
             <Slider
                 getAriaLabel={() => 'Age Group Range'}
-                value={[props[props.ids[0]], props[props.ids[1]]]}
+                value={[parseInt(props[props.ids[0]]), parseInt(props[props.ids[1]])]}
                 onChange={handleChange}
                 valueLabelDisplay="auto"
             />

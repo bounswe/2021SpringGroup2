@@ -29,9 +29,9 @@ export default function SportType(props){
     }
 
     useEffect(_=>{
-        getSportsList().then(r=>setOptions(r.sort(function (a, b) {
+        getSportsList().then(r=>setOptions([""].concat(r.sort(function (a, b) {
             return a.label.localeCompare(b.label);})
-        )).catch(console.log)
+        ))).catch(console.log)
     }, [])
 
     return(
