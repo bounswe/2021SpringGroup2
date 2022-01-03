@@ -18,6 +18,8 @@ import Badge from "@mui/material/Badge"
 import {IconButton} from "@mui/material";
 import {logOut} from "../../Controllers/AuthInfo";
 import {useSnackbar} from "notistack";
+import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 
 
@@ -81,27 +83,32 @@ const Header = props => {
                                 <img src={image} alt={"logo"} />
                                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                                 </Typography>
-                                <Toolbar>
-                                    <Search>
-                                        <SearchIconWrapper>
-                                            <SearchIcon />
-                                        </SearchIconWrapper>
-                                        <StyledInputBase
-                                            placeholder="Search"
-                                            inputProps={{ 'aria-label': 'search' }}
-                                        />
-                                    </Search>
-                                </Toolbar>
                                 <IconButton
                                     size="large"
                                     aria-label="show 17 new notifications"
                                     color="inherit"
+                                    style={{marginRight:10}}
                                 >
-                                    <Badge badgeContent={12} color="error" component={Link} to="/notifications">
+                                    <Badge badgeContent={2} color="error" component={Link} to="/notifications">
 
                                         <NotificationsIcon />
                                     </Badge>
                                 </IconButton>
+                                <Button
+                                    component={Link} to="/home"
+                                    color="primary"
+                                    variant="outlined"
+                                    style={{marginRight:10}}
+                                    startIcon={<HomeOutlinedIcon />} >
+                                    Home
+                                </Button>
+                                <Button
+                                    component={Link} to="/search"
+                                    color="primary"
+                                    variant="outlined"
+                                    style={{marginRight:10}}>
+                                    Search
+                                </Button>
                                 <Button
                                     component={Link} to="/createevent"
                                     color="primary"
@@ -110,16 +117,10 @@ const Header = props => {
                                     Create a new event
                                 </Button>
                                 <Button
-                                    component={Link} to="/home"
-                                    color="primary"
-                                    variant="outlined"
-                                    startIcon={<HomeOutlinedIcon />} >
-                                    Home
-                                </Button>
-                                <Button
                                     component={Link} to={"/profile/" + props.loggedIn.username}
                                     color="primary"
                                     variant="outlined"
+                                    style={{marginRight:10}}
                                     startIcon={<AccountCircleOutlinedIcon />} >
                                     Profile
                                 </Button>
@@ -132,6 +133,7 @@ const Header = props => {
                                     }}
                                     color="primary"
                                     variant="outlined"
+                                    startIcon={<LogoutIcon />}
                                 >
                                     Log Out
                                 </Button>
@@ -142,13 +144,6 @@ const Header = props => {
                                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                                 </Typography>
                                 <Button
-                                    component={Link} to="/search"
-                                    color="primary"
-                                    variant="outlined"
-                                    style={{marginRight:10}}>
-                                    Search
-                                </Button>
-                                <Button
                                     component={Link} to="/home"
                                     color="primary"
                                     variant="outlined"
@@ -157,11 +152,26 @@ const Header = props => {
                                     Home
                                 </Button>
                                 <Button
+                                    component={Link} to="/search"
+                                    color="primary"
+                                    variant="outlined"
+                                    style={{marginRight:10}}>
+                                    Search
+                                </Button>
+                                <Button
                                     component={Link} to="/signup"
                                     color="primary"
                                     variant="outlined"
+                                    style={{marginRight:10}}
                                     startIcon={<ExitToAppOutlinedIcon />} >
                                     Sign Up
+                                </Button>
+                                <Button
+                                    component={Link} to="/login"
+                                    color="primary"
+                                    variant="outlined"
+                                    startIcon={<LoginIcon />} >
+                                    Log In
                                 </Button>
                             </Toolbar>
                 }
