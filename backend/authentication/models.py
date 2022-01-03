@@ -61,8 +61,8 @@ class User(AbstractUser):
 
     followings = ArrayField(models.IntegerField(), default=empty_list)
     followers = ArrayField(models.IntegerField(), default=empty_list)
-    blocked = ArrayField(models.IntegerField(), default=empty_list)
-    blocked_by = ArrayField(models.IntegerField(), default=empty_list)
+    blockings = ArrayField(models.IntegerField(), default=empty_list)
+    blockers = ArrayField(models.IntegerField(), default=empty_list)
 
     privacy = models.BooleanField(default=False)
 

@@ -246,14 +246,15 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
         return Response(self.wrap_all(objects, "Users " + user_name + " follows."))
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="followers")
-    def get_followers(self, request, *args, **kwargs):
+    def followers(self, request, *args, **kwargs):
         user, _ = self.JWTauth.authenticate(self.request)
         user_name = user.username
-        followers = user.followers.all()
-        serializer = self.get_serializer(followers, many=True)
+        followers = user.followers
+        follower_users = self.queryset.filter(id__in=followers)
+        serializer = self.get_serializer(follower_users, many=True)
         objects = []
         for data in serializer.data:
-            following_username = data["followed_user"]
+            following_username = data["username"]
             summary_msg = following_username + " followed " + user_name
             objects.append(self.wrap_follow_block(data, "Follow", following_username, user_name, summary_msg))
         return Response(self.wrap_all(objects, "Users following " + user_name + "."))
@@ -264,9 +265,9 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
         other_username = kwargs['pk']
         other_user = self.queryset.get(username=other_username)
         BlockRecord.objects.create(blocking_user_id=user.id, blocked_user_id=other_user.id)
-        other_user.blocked_by.append(user.id)
+        other_user.blockers.append(user.id)
         other_user.save()
-        user.blocked.append(other_user.id)
+        user.blockings.append(other_user.id)
         user.save()
         return Response(data={"message": "Successfully blocked user."}, status=200)
 
@@ -278,9 +279,9 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
         other_user = self.queryset.get(username=other_username)
         block_record_instance = block_queryset.filter(Q(blocking_user_id=user.id) & Q(blocked_user_id=other_user.id))
         block_record_instance.delete()
-        other_user.blocked_by.remove(user.id)
+        other_user.blockers.remove(user.id)
         other_user.save()
-        user.blocked.remove(other_user.id)
+        user.blockings.remove(other_user.id)
         user.save()
         return Response(data={"message": "Successfully unblocked user."}, status=200)
 
@@ -288,11 +289,12 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
     def get_blockings(self, request, *args, **kwargs):
         user, _ = self.JWTauth.authenticate(self.request)
         user_name = user.username
-        blocked = user.blocked
-        serializer = self.get_serializer(blocked, many=True)
+        blockings = user.blockings
+        blocking_users = self.queryset.filter(id__in=blockings)
+        serializer = self.get_serializer(blocking_users, many=True)
         objects = []
         for data in serializer.data:
-            blocked_username = data["blocking_user"]
+            blocked_username = data["username"]
             summary_msg = user_name + " blocked " + blocked_username
             objects.append(self.wrap_follow_block(data, "Block", user_name, blocked_username, summary_msg))
         return Response(self.wrap_all(objects, "Users " + user_name + " blocked."))
@@ -301,11 +303,12 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
     def get_blockers(self, request, *args, **kwargs):
         user, _ = self.JWTauth.authenticate(self.request)
         user_name = user.username
-        blockers = user.blocked_by.all()
-        serializer = self.get_serializer(blockers, many=True)
+        blockers = user.blockings
+        blocker_users = self.queryset.filter(id__in=blockers)
+        serializer = self.get_serializer(blocker_users, many=True)
         objects = []
         for data in serializer.data:
-            blocking_username = data["blocked_user"]
-            summary_msg = blocking_username + " blocked " + user_name
-            objects.append(self.wrap_follow_block(data, "Block", blocking_username, user_name, summary_msg))
+            blocker_username = data["username"]
+            summary_msg = blocker_username + " blocked " + user_name
+            objects.append(self.wrap_follow_block(data, "Block", blocker_username, user_name, summary_msg))
         return Response(self.wrap_all(objects, "Users blocked " + user_name + "."))
