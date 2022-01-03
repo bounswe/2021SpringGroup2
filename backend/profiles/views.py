@@ -34,6 +34,15 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
     lookup_fields = ('username', 'id')
     JWTauth = JWTAuthentication()
 
+    def get_queryset(self):
+        queryset = User.objects.all()
+        query = self.request.query_params.get('query')
+
+        if query is not None:
+            queryset = queryset.filter(username__icontains=query)
+
+        return queryset
+
     def get_serializer_class(self):
         if self.action == 'related_events':
             return SimpleEventSerializer
