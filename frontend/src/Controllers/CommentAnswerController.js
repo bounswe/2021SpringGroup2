@@ -64,6 +64,7 @@ export async function getCommentsAndAnswersOfEvent(post_id, isEvent){
     try{
         await fetch("/api/"+ isEvent + "/"  +String(post_id)+"/comments/",options)
             .then(response=>response.json())
+            .then(response=>{console.log(response);return response})
             .then(response=> response.items.forEach(async d=>
                 comments.push(await CommentAnswerController.getCommentByID(post_id,d.object.id,isEvent))
             ))
