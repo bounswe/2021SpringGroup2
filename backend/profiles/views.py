@@ -231,7 +231,7 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
         user.save()
         return Response(data={"message": "Successfully unfollowed user."}, status=200)
 
-    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="followings")
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def followings(self, request, *args, **kwargs):
         user, _ = self.JWTauth.authenticate(self.request)
         user_name = user.username
@@ -245,7 +245,7 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
             objects.append(self.wrap_follow_block(data, "Follow", user_name, followed_username, summary_msg))
         return Response(self.wrap_all(objects, "Users " + user_name + " follows."))
 
-    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="followers")
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def followers(self, request, *args, **kwargs):
         user, _ = self.JWTauth.authenticate(self.request)
         user_name = user.username
@@ -285,8 +285,8 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
         user.save()
         return Response(data={"message": "Successfully unblocked user."}, status=200)
 
-    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="blockings")
-    def get_blockings(self, request, *args, **kwargs):
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
+    def blockings(self, request, *args, **kwargs):
         user, _ = self.JWTauth.authenticate(self.request)
         user_name = user.username
         blockings = user.blockings
@@ -299,8 +299,8 @@ class ProfileViewSet(MultipleFieldsLookupMixin, viewsets.ModelViewSet):
             objects.append(self.wrap_follow_block(data, "Block", user_name, blocked_username, summary_msg))
         return Response(self.wrap_all(objects, "Users " + user_name + " blocked."))
 
-    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated], url_path="blockers")
-    def get_blockers(self, request, *args, **kwargs):
+    @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
+    def blockers(self, request, *args, **kwargs):
         user, _ = self.JWTauth.authenticate(self.request)
         user_name = user.username
         blockers = user.blockings
