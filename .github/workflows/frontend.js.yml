@@ -21,7 +21,6 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
     - name: Set Timezone
       uses: szenius/set-timezone@v1.0
       with:
