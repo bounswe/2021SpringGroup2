@@ -14,6 +14,7 @@ import EventFilter from "./EventSearch/EventFilter";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import EventTab from "./EventSearch/EventTab";
+import EquipmentTab from "./EquipmentSearch/EquipmentTab";
 
 const useStyles = makeStyles(theme => createStyles({
     "@global": {
@@ -144,10 +145,15 @@ export default function SearchEvents() {
                             aria-label="full width tabs example"
                         >
                             <Tab label="Events" id={`full-width-tab-event`} aria-controls={"full-width-tabpanel-event"}/>
+                            <Tab label="Equipments" id={`full-width-tab-equipment`} aria-controls={"full-width-tabpanel-equipment"}/>
                         </Tabs>
                         <EventTab
                             hidden={tab!==0}
                             events={events}
+                        />
+                        <EquipmentTab
+                            hidden={tab!==1}
+                            equipments={events}
                         />
                     </Grid>
                     <Grid item md={1}>
