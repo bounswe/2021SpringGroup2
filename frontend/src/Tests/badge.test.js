@@ -128,3 +128,27 @@ describe("Check if related events available for badge gift of a user is displaye
     localStorage.removeItem('user_id')
 })
 
+
+describe("Check badge gift request", () =>{
+
+    let originalFetch;
+    let request;
+    beforeEach(() => {
+        localStorage.setItem('username', "berkaydoner")
+        localStorage.setItem('user_id', 1)
+        originalFetch = global.fetch;
+        global.fetch = jest.fn((x,options) => {request=options})
+    })
+    afterEach(() => {
+        global.fetch = originalFetch;
+    });
+    it("Check if the response is in the correct format.",async () => {
+        const response = await BadgeController.giveBadgeToUser(0,"Friendly",1)
+        expect(request.body).toEqual(
+            "{\"offerer\":\"berkaydoner\",\"event_id\":1,\"badge_name\":\"Friendly\"}"
+        )
+        expect(request.method).toEqual("POST")
+    })
+    localStorage.removeItem('username')
+    localStorage.removeItem('user_id')
+})
