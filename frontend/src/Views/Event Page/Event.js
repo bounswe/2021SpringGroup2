@@ -14,6 +14,7 @@ import ApplicantList from "../Application/ApplicantList";
 import ApplicantSelection from "../Application/ApplicantSelection";
 import {getUserInfoLoggedIn} from "../../Controllers/AuthInfo";
 import {Alert} from "@mui/lab";
+import Comments from "../Comments/Comments";
 import {useSnackbar} from "notistack";
 import {formatDate} from "../Comments/Comment";
 
@@ -255,6 +256,7 @@ export default function Event (){
                 </Grid>
                 <Grid item xs={12} sm={12}>
                     <Stack direction={"row"} spacing={3} justifyContent={"center"}>
+                            <Comments id={eventid} isEvent={"posts"}/>
                             <Button onClick={()=>{handleApplication("player")}} disabled={viewerUser===null||viewerUser===false||viewerUser.user_id===null||
                             players.length===event.object.eventPlayerCapacity||
                             event.object.eventPlayers.includes(Number(viewerUser.user_id))||

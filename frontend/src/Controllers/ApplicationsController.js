@@ -1,11 +1,13 @@
 import {getToken, getUserInfoLoggedIn} from "./AuthInfo";
 import {getProfile} from "./ProfileController";
-
+import * as ApplicationsController from "./ApplicationsController"
 export async function getUserListInfo(list){
     let details = []
-    list.forEach(id=>getProfile(id).then(res=>{
-        details.push({username:res.username,avatar:res.avatar,user_id:res.id})
-    }))
+    for (const id of list) {
+        await getProfile(id).then(res => {
+            details.push({username: res.username, avatar: res.avatar, user_id: res.id})
+        });
+    }
     return details
 }
 
@@ -20,7 +22,7 @@ export async function getApplicationsToAnEvent(post_id,playerApplications) {
             "?type=" + playerApplications, options)
             .then(response => response.json())
             .then(async (result) => {
-                    return await getUserListInfo(result.applicants)
+                    return await ApplicationsController.getUserListInfo(result.applicants)
                 }
             )
             .then(d=>{console.log(d);return d})

@@ -1,0 +1,38 @@
+import {getUserAvatar} from "../Views/Search/UserSearch/UserCard";
+
+test("Check if avatar is correct when all lowercase",()=> {
+    expect(getUserAvatar("berkaydoner")).toBe("B")
+    expect(getUserAvatar("dogukanakar1")).toBe("D")
+    expect(getUserAvatar("sefikaAkman")).toBe("S")
+    expect(getUserAvatar("rebound")).toBe("R")
+    expect(getUserAvatar("omerarslan")).toBe("O")
+    expect(getUserAvatar("ceneksanzak")).toBe("C")
+    expect(getUserAvatar("nebilim")).toBe("N")
+})
+test("Check if avatar is correct when all uppercase",()=> {
+    expect(getUserAvatar("BERKAYDONER")).toBe("B")
+    expect(getUserAvatar("DOGUKANAKAR1")).toBe("D")
+    expect(getUserAvatar("sefika_akman")).toBe("S")
+    expect(getUserAvatar("REBOUND")).toBe("R")
+    expect(getUserAvatar("OMERARSLAN")).toBe("O")
+    expect(getUserAvatar("CENEKSANZAK")).toBe("C")
+    expect(getUserAvatar("NEBILIM")).toBe("N")
+})
+test("Check if avatar is correct when camelcase",()=> {
+    expect(getUserAvatar("berkay_doner")).toBe("B")
+    expect(getUserAvatar("dogukan_akar_1")).toBe("D")
+    expect(getUserAvatar("sefika_Akman")).toBe("S")
+    expect(getUserAvatar("re_boun_d")).toBe("R")
+    expect(getUserAvatar("omer_arslan")).toBe("O")
+    expect(getUserAvatar("cenek_sanzak")).toBe("C")
+    expect(getUserAvatar("nebi_lim")).toBe("N")
+})
+test("Check if avatar is correct when random cases",()=> {
+    expect(getUserAvatar("berKKayDoner")).toBe("B")
+    expect(getUserAvatar("doGuKKanAkar1")).toBe("D")
+    expect(getUserAvatar("SefiKa_Akman")).toBe("S")
+    expect(getUserAvatar("reboUnd")).toBe("R")
+    expect(getUserAvatar("oMerArslan")).toBe("O")
+    expect(getUserAvatar("CenekSanzak")).toBe("C")
+    expect(getUserAvatar("NebiLim")).toBe("N")
+})

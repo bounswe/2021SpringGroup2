@@ -1,6 +1,9 @@
 import React from 'react'
 import Typography from "@mui/material/Typography";
 import Slider from '@mui/material/Slider';
+import {getValue} from "./helper";
+
+
 
 
 export default function AgeGroups(props){
@@ -16,7 +19,7 @@ export default function AgeGroups(props){
             </Typography>
             <Slider
                 getAriaLabel={() => 'Age Group Range'}
-                value={[parseInt(props[props.ids[0]]), parseInt(props[props.ids[1]])]}
+                value={getValue(props)}
                 onChange={handleChange}
                 valueLabelDisplay="auto"
             />

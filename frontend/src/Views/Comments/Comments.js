@@ -39,7 +39,10 @@ export default function Comments(props){
     };
     const handlePostComment = () => {
         if (newComment.startsWith("@" + repliedUser + " ") && repliedComment !== null) {
-            const answer = postAnswer(0, 1, newComment.substring(repliedUser.length + 2));
+            let answer;
+            postAnswer(props.id, repliedComment, newComment.substring(repliedUser.length + 2),props.isEvent).then(
+                d=>{answer=d}
+            )
             let foundComment = false
             const handle_return = (d) => {
                 if(d.comment_id === repliedComment && !foundComment){
@@ -52,16 +55,17 @@ export default function Comments(props){
             }
             setTimeout(() => {
                 setComments(comments.map(handle_return))
-            }, 400);
+            }, 500);
 
-            //setComments(getCommentsAndAnswersOfEvent(0))
 
         } else {
-            const comment = postComment(0, newComment);
+            let comment;
+            postComment(props.id, newComment,props.isEvent).then(d=>
+            {comment = d;}
+        )
             setTimeout(() => {
                 setComments(comments.concat(comment))
-            }, 400)
-            //setComments(getCommentsAndAnswersOfEvent(0))
+            }, 500)
 
         }
         setNewComment("")
@@ -69,22 +73,26 @@ export default function Comments(props){
         setRepliedComment(null)
     };
     useEffect(_=>{
-        getCommentsAndAnswersOfEvent(0).then(d=>{
-            setComments(d)
+        getCommentsAndAnswersOfEvent(props.id,props.isEvent).then(d=>{
+            if(d!==undefined&&d!==null){
+                setComments(d)
+            }
         })
     }, [])
     return (
         <div>
-            <Button onClick={handleOpen}>View Comments</Button>
+            <Button variant={"contained"} onClick={handleOpen}>View Comments</Button>
             <Dialog open={open} onClose={handleClose}   disableScrollLock={ true } fullWidth>
                 <DialogContent>
                     {comments.length>0?
                         <List>
                             {comments.map(d=>
                                     <Comment content={d} newcomment={newComment}
+                                             comment_id={d.comment_id}
                                              setReply={(e) => {setNewComment(e)}}
                                              selectComment={setRepliedComment}
-                                             selectUser={setRepliedUser} ref={textInput}/>
+                                             selectUser={setRepliedUser} ref={textInput}
+                                             isEvent={props.isEvent} id={props.id}/>
                             )}
                         </List>
                         :

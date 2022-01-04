@@ -1,0 +1,31 @@
+import {linkFormatChecker} from "../Views/Create Equipment/CreateEquipmentPage";
+test("Check if link formats are checked correctly.",()=>{
+    expect(linkFormatChecker("wwwdummy.com")).toBe(false)
+    expect(linkFormatChecker("httpdummy.com")).toBe(false)
+    expect(linkFormatChecker("httpsdummy.com")).toBe(false)
+    expect(linkFormatChecker("httpdummycom")).toBe(false)
+    expect(linkFormatChecker("wwwdummycom")).toBe(false)
+    expect(linkFormatChecker("www.dummycom")).toBe(false)
+    expect(linkFormatChecker("httpsdummycom")).toBe(false)
+    expect(linkFormatChecker("http://dummycom")).toBe(false)
+    expect(linkFormatChecker("https://dummycom")).toBe(false)
+
+    expect(linkFormatChecker("www.dummy.com")).toBe(true)
+    expect(linkFormatChecker("www.dummy.edu")).toBe(true)
+    expect(linkFormatChecker("www.dummy.com.tr")).toBe(true)
+    expect(linkFormatChecker("www.dummy.edu.tr")).toBe(true)
+    expect(linkFormatChecker("https://dummy.com")).toBe(true)
+    expect(linkFormatChecker("http://dummy.com")).toBe(true)
+    expect(linkFormatChecker("https://dummy.com.tr")).toBe(true)
+    expect(linkFormatChecker("http://dummy.edu.tr")).toBe(true)
+    expect(linkFormatChecker("https://dummy.edu")).toBe(true)
+    expect(linkFormatChecker("http://dummy.org")).toBe(true)
+    expect(linkFormatChecker("https://www.website1.com")).toBe(true)
+    expect(linkFormatChecker("https://www.website2.com")).toBe(true)
+    expect(linkFormatChecker("www.website3.com")).toBe(true)
+    expect(linkFormatChecker("https://www.website4.com.tr")).toBe(true)
+    expect(linkFormatChecker("http://www.website5.edu.tr")).toBe(true)
+    expect(linkFormatChecker("https://www.website6.com.tr")).toBe(true)
+
+
+})
