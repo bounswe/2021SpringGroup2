@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import {createStyles, makeStyles, styled} from "@material-ui/core/styles";
-import {ListItemText, TextField} from "@mui/material";
+import {CircularProgress, ListItemText, TextField} from "@mui/material";
 import {getSportsList} from '../../Controllers/SportsController';
 import EventInfoCard from "../Home/EventInfoCard";
 import Capture from '../images/Capture.png'
@@ -113,7 +113,7 @@ export default function Event (){
     const [playerApplicants, setPlayerApplicants] = useState([])
     const [spectatorApplicants, setSpectatorApplicants] = useState([])
     const [viewerUser, setViewerUser] = useState(null)
-    const [successMessage,setSuccessMessage] = useState(null)
+    const [isLoading,setIsLoading] = useState(true)
     const getSportInfo = sport => console.log(sport) || getSportsList()
         .then(sports=>sports.find(s=>s.label===sport))
     const { enqueueSnackbar } = useSnackbar();
@@ -155,7 +155,7 @@ export default function Event (){
                     }
                 }
             )
-            console.log(players, spectators)
+            setIsLoading(false)
         }
     },[event])
     const handleApplication = (type) => {
@@ -168,7 +168,9 @@ export default function Event (){
             })
     }
 
-    return(
+    return isLoading? <div align={"center"} >
+            <CircularProgress /></div>
+        :(
         <div style={{background:`url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}>
 
             <Grid item xs={12} sm={12} container spacing={3} alignItems="stretch"  className={classes.fav}>
