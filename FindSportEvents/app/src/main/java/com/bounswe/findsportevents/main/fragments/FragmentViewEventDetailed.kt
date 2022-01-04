@@ -36,6 +36,7 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
     private var token = ""
     private var username = ""
     private var eventId = 0
+    private var players : ArrayList<Int> = arrayListOf()
     private var comments : MutableList<String> = mutableListOf()
     private var commentIds : MutableList<Int> = mutableListOf()
     private var users : MutableList<String> = mutableListOf()
@@ -60,6 +61,7 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                     binding.tvEventLocationResult.text = response.body()?.`object`?.location?.name ?:""
                     binding.tvDateResult.text = response.body()?.`object`?.eventDate.toString()
                     binding.tvAgeIntervalResult.text= "${response.body()?.`object`?.eventMinAge.toString()}  - ${response.body()?.`object`?.eventMaxAge.toString()}"
+                    players = response.body()?.`object`?.eventPlayers as ArrayList<Int>
                     layoutManager= LinearLayoutManager(context)
                     binding.rvDiscussion.layoutManager=layoutManager
                     adapter = RecyclerAdapterDiscussion(users,comments,dates, listener)
@@ -274,6 +276,11 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                 })
 
             }
+        binding.btnPlayers.setOnClickListener {
+            val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
+            transaction.add(R.id.container_main,FragmentPlayers.newInstance(token,username,players)).addToBackStack("equipmentResults")
+            transaction.commit()
+        }
     }
 
     interface FragmentViewEventDetailedListener{

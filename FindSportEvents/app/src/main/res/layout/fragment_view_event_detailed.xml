@@ -113,6 +113,27 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_date" />
 
             <TextView
+                android:id="@+id/tv_players"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:padding="20dp"
+                android:text="Players"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_age_interval" />
+
+            <TextView
+                android:id="@+id/tv_spectators"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="20dp"
+                android:text="Spectators"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_players" />
+
+            <TextView
                 android:id="@+id/tv_age_interval_result"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -154,13 +175,31 @@
                 app:layout_constraintTop_toBottomOf="@+id/btn_equipment" />
 
             <Button
+                android:id="@+id/btn_players"
+                android:layout_width="123dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:text="VIEW PLAYERS"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_age_interval_result" />
+
+            <Button
+                android:id="@+id/btn_spectators"
+                android:layout_width="123dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:text="VIEW SPECTATORS"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_players" />
+
+            <Button
                 android:id="@+id/btn_equipment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="SEE RELATED EQUIPMENT"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_age_interval_result" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_spectators" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_discussion"

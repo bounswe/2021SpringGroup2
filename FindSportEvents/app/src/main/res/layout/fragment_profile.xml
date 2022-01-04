@@ -130,6 +130,14 @@
                 android:layout_marginHorizontal="@dimen/space_xx_large"
                 />
             <Button
+                android:id="@+id/btn_view_following"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="VIEW FOLLOWINGS"
+                android:backgroundTint="#86000000"
+                android:layout_marginHorizontal="@dimen/space_xx_large"
+                />
+            <Button
                 android:id="@+id/button_update_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

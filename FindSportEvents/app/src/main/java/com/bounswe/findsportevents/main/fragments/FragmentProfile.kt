@@ -144,6 +144,11 @@ class FragmentProfile : Fragment(), DialogManager {
             transaction.add(R.id.container_main,FragmentPlayedEvents.newInstance(token,ownerId)).addToBackStack("myEvents")
             transaction.commit()
         }
+        binding.btnViewFollowing.setOnClickListener {
+            val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
+            transaction.add(R.id.container_main,FragmentFollowing.newInstance(token,username)).addToBackStack("myEvents")
+            transaction.commit()
+        }
     }
 
     interface FragmentProfileListener {
