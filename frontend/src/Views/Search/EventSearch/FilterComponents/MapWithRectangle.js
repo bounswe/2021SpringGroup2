@@ -33,6 +33,9 @@ export default function MapWithRectangle(props) {
     const [locations, setLocations] = useState([{}]);
     const [optionsOpen,setOptionsOpen] = useState(false);
     const textFieldStyle = {backgroundColor: 'white', marginTop: 10, marginBottom: 10};
+    const [bottomLeft, setBottomLeft] = useState(null);
+    const [topRight, setTopRight] = useState(null);
+    const [center, setCenter] = useState(centerValue)
 
     const [drawOptions, setDrawOptions] = useState({
         marker: false,
@@ -44,16 +47,19 @@ export default function MapWithRectangle(props) {
     })
 
     useEffect(()=>{
-        if(props.bottomLeft!==null&&props.topRight!==null){
-            props.setCenter(
-                {lat:(props.bottomLeft.lat+props.topRight.lat)/2,
-                    lng:(props.bottomLeft.lng+props.topRight.lng)/2}
+        if(bottomLeft!==null&&topRight!==null){
+            setCenter(
+                {lat:(bottomLeft.lat+topRight.lat)/2,
+                    lng:(bottomLeft.lng+topRight.lng)/2}
             )
+            props.setValue(props.ids)([bottomLeft.lat,topRight.lat,bottomLeft.lng,topRight.lng])
+            console.log(props.ids)
+            console.log(( [bottomLeft.lat,topRight.lat,bottomLeft.lng,topRight.lng]))
         }
-    },[props.bottomLeft,props.topRight])
+    },[bottomLeft,topRight])
     useEffect(()=>{
-        if(props.center===null&&(props.bottomLeft===null||props.topRight===null)){
-            props.setCenter(centerValue)
+        if(center===null&&(bottomLeft===null||topRight===null)){
+            setCenter(centerValue)
         }
     })
     function SetViewOnClick({ coords }) {
@@ -75,15 +81,15 @@ export default function MapWithRectangle(props) {
         setOptionsOpen(false)
         let bottomLeft = {lat:input.bottomLeft.lat, lng:input.bottomLeft.lng}
         let topRight = {lat:input.topRight.lat, lng:input.topRight.lng}
-        props.setCenter(
+        setCenter(
                 {lat:(bottomLeft.lat+topRight.lat)/2,
                     lng:(bottomLeft.lng+topRight.lng)/2}
             )
     }
     const _onCreated = e =>{
-        props.setBottomLeft(
+        setBottomLeft(
             {lat:e.layer._bounds._southWest.lat,lng:e.layer._bounds._southWest.lng})
-        props.setTopRight(
+        setTopRight(
             {lat:e.layer._bounds._northEast.lat,lng:e.layer._bounds._northEast.lng})
         setDrawOptions({
             marker: false,
@@ -97,15 +103,15 @@ export default function MapWithRectangle(props) {
     const _onEdited = e => {
         for(let key in e.layers._layers){
             let drawing = e.layers._layers[key]
-            props.setBottomLeft(
+            setBottomLeft(
                 {lat:drawing._bounds._southWest.lat,lng:drawing._bounds._southWest.lng})
-            props.setTopRight(
+            setTopRight(
                 {lat:drawing._bounds._northEast.lat,lng:drawing._bounds._northEast.lng})
         }
     }
     const _onDelete = (e) => {
-        props.setTopRight(null)
-        props.setBottomLeft(null)
+        setTopRight(null)
+        setBottomLeft(null)
         setDrawOptions({
             marker: false,
             circle: false,
@@ -158,7 +164,7 @@ export default function MapWithRectangle(props) {
                             onDeleted={_onDelete}
                             draw={drawOptions}
                         />
-                        <SetViewOnClick coords={props.center}/>
+                        <SetViewOnClick coords={center}/>
 
                     </FeatureGroup>
 
