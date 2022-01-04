@@ -72,12 +72,8 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                         spectators = response.body()?.`object`?.eventSpectators as ArrayList<Int>
                         latitude = response.body()!!.`object`.location.latitude
                         longitude = response.body()!!.`object`.location.longitude
-                        layoutManager = LinearLayoutManager(context)
-                        binding.rvDiscussion.layoutManager = layoutManager
-                        adapter = RecyclerAdapterDiscussion(users, comments, dates, listener)
                         ownerId = response.body()!!.`object`.ownerId
 
-                        binding.rvDiscussion.adapter = adapter
 
                     }
                 }
@@ -296,6 +292,10 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                                                 dates.add(response.body()!!.items.get(i).`object`.creationDate)
                                                 commentIds.add(response.body()!!.items.get(i).`object`.id)
                                             }
+                                            layoutManager = LinearLayoutManager(context)
+                                            binding.rvDiscussion.layoutManager = layoutManager
+                                            adapter = RecyclerAdapterDiscussion(users, comments, dates, listener)
+                                            binding.rvDiscussion.adapter = adapter
                                         }
                                     }
 

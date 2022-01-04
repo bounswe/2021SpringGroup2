@@ -112,6 +112,9 @@ class FragmentAnswersEquipment : Fragment(), RecyclerAdapterDiscussion.OnItemCli
                                 response: Response<AllCommentsResponse>
                             ) {
                                 if(response.isSuccessful){
+                                    comments = mutableListOf()
+                                    users = mutableListOf()
+                                    dates = mutableListOf()
                                     for(i in 0 until response.body()?.items?.size!!) {
                                         comments.add(response.body()!!.items.get(i).`object`.content)
                                         users.add(response.body()!!.items.get(i).actor.name)
