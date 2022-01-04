@@ -252,6 +252,7 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                                             comments.add(response.body()!!.items.get(i).`object`.content)
                                             users.add(response.body()!!.items.get(i).actor.name)
                                             dates.add(response.body()!!.items.get(i).`object`.creationDate)
+                                            commentIds.add(response.body()!!.items.get(i).`object`.id)
                                         }
                                         layoutManager= LinearLayoutManager(context)
                                         binding.rvDiscussion.layoutManager=layoutManager

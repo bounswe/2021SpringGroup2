@@ -25,7 +25,7 @@ class RecyclerAdapterDiscussion(val usernames : MutableList<String>,val contents
     }
 
     override fun getItemCount(): Int {
-        return usernames.size
+        return contents.size
     }
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView), View.OnClickListener{
         var username: TextView
