@@ -243,6 +243,12 @@ interface ReboundAPI {
         @Body request: ApplicantsRequest
     ): Call<ApplicantsResponse>
 
+    @GET("api/badges/{badge_name}/")
+    fun getBadgeByName(
+        @Header("Authorization") token : String,
+        @Path("badge_name") badgeName: String
+    ): Call<ItemsResponse>
+
     companion object {
 
         var BASE_URL = "http://34.68.66.109/"

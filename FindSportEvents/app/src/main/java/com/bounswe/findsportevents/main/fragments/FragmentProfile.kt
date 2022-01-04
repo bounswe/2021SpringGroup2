@@ -37,6 +37,7 @@ class FragmentProfile : Fragment(), DialogManager {
     private var token = ""
     private var username = ""
     private var testList : ArrayList<String> = arrayListOf()
+    private var badgeList: List<String> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,9 +62,10 @@ class FragmentProfile : Fragment(), DialogManager {
                     binding.etFavSport3.setText(response.body()?.fav_sport_3 ?: "")
                     binding.etLocation.setText(response.body()?.location ?: "")
                     if (!response.body()?.badges.isNullOrEmpty()){
+                        badgeList = response.body()?.badges ?: emptyList()
                         var str = ""
                         for (badge in response.body()?.badges!!) {
-                            str += "$badge "
+                            str += "$badge, "
                         }
                         binding.etBadges.setText(str)
                     }
@@ -154,6 +156,12 @@ class FragmentProfile : Fragment(), DialogManager {
         binding.btnViewFollowing.setOnClickListener {
             val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
             transaction.add(R.id.container_main,FragmentFollowing.newInstance(token,username)).addToBackStack("myEvents")
+            transaction.commit()
+        }
+        binding.btnViewBadges.setOnClickListener {
+            val badgeArrayList = ArrayList<String>(badgeList)
+            val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.container_main,FragmentViewBadges.newInstance(token, badgeArrayList)).addToBackStack("myEvents")
             transaction.commit()
         }
     }
