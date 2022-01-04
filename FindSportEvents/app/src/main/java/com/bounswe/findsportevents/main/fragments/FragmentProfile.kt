@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.bounswe.findsportevents.R
 import com.bounswe.findsportevents.databinding.FragmentProfileBinding
+import com.bounswe.findsportevents.extensions.startActivity
+import com.bounswe.findsportevents.login.LoginActivity
 import com.bounswe.findsportevents.main.MainActivity
 import com.bounswe.findsportevents.network.ReboundAPI
 import com.bounswe.findsportevents.network.modalz.requests.UpdateProfileRequest
@@ -163,6 +165,11 @@ class FragmentProfile : Fragment(), DialogManager {
             val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
             transaction.replace(R.id.container_main,FragmentViewBadges.newInstance(token, badgeArrayList)).addToBackStack("myEvents")
             transaction.commit()
+        }
+        binding.btnLogout.setOnClickListener {
+            val intent = Intent (activity, LoginActivity::class.java)
+            requireActivity().startActivity(intent)
+            requireActivity().finish()
         }
     }
 
