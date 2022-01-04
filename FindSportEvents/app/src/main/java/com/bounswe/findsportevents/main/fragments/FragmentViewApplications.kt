@@ -81,6 +81,8 @@ class FragmentViewApplications : Fragment(), RecyclerAdapterApplications.OnItemC
                 ) {
                     hideLoading()
                     if (response.isSuccessful) {
+                        usernames = mutableListOf()
+                        favSports = mutableListOf()
                         for (i in response.body()?.applicants?.indices!!) {
                             ReboundAPI.create()
                                 .getUser(token, response.body()!!.applicants[i].toString())
@@ -134,6 +136,8 @@ class FragmentViewApplications : Fragment(), RecyclerAdapterApplications.OnItemC
                 ) {
                     hideLoading()
                     if (response.isSuccessful) {
+                        usernamesSpectators = mutableListOf()
+                        favSportsSpectators = mutableListOf()
                         for (i in response.body()?.applicants?.indices!!) {
                             ReboundAPI.create()
                                 .getUser(token, response.body()!!.applicants[i].toString())
