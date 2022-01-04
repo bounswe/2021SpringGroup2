@@ -120,6 +120,20 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/space_xx_large">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_badges"
+                    android:enabled="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Badges" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
             <Button
                 android:id="@+id/btn_view_events"
                 android:layout_width="match_parent"
@@ -130,15 +144,23 @@
                 />
 
             <Button
+                android:id="@+id/btn_give_a_badge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/space_xx_large"
+                android:backgroundTint="@color/teal_700"
+                android:text="GIVE A BADGE" />
+
+            <Button
                 android:id="@+id/btn_follow"
-                android:layout_width="329dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/space_xx_large"
                 android:backgroundTint="#0AD112"
                 android:text="FOLLOW THIS USER" />
             <Button
                 android:id="@+id/btn_block"
-                android:layout_width="329dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/space_xx_large"
                 android:backgroundTint="#86F10606"

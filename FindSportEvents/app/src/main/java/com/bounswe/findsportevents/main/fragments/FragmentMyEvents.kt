@@ -205,7 +205,6 @@ class FragmentMyEvents : Fragment(), RecyclerAdapter.OnItemClickListener , Dialo
             }
         }
     }
-
     override fun onItemClick(position: Int) {
         val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
         transaction.replace(R.id.container_main,FragmentViewEventDetailed.newInstance(token,ownerId.toString(),eventIds[position])).addToBackStack("eqiupmentresult")
