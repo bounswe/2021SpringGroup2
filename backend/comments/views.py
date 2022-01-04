@@ -12,6 +12,30 @@ from rest_framework.views import APIView
 from django.forms.models import model_to_dict
 from django.utils import timezone
 
+
+
+class GetCommentById(APIView):
+
+    def get (self,request,postid,commentid):
+        try:
+            comments=Comment.objects.filter(eventid=postid,id=commentid)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        if(len(comments)==0):
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        commentserializer = CommentSerializer(comments, many=True)
+        object = {"type": "Comment", "postId": comments[0].eventid.id, "ownerId": comments[0].owner.id, "content": comments[0].comment,
+                  "creationDate": comments[0].creationDate}     #timezone.now()}
+
+        response = {"@context": "https://www.w3.org/ns/activitystreams",
+                    "summary": comments[0].owner.username + " created a comment",
+                    "type":"Create",
+                    "actor":{"type":"Person","name":comments[0].owner.username } }
+        response["object"] = object
+        return Response(response)
+
+
 class Comments(APIView):
     def get(self, request,id):
 
@@ -71,6 +95,56 @@ class Comments(APIView):
 
 
 
+
+class Answers(APIView):
+    def get(self, request, post_id,comment_id):
+
+        try:
+            comments = Comment.objects.filter(eventid=post_id, id=comment_id)
+            answers = Answer.objects.filter(commentid=comment_id)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        if len(comments)==0:
+            return Response(status=status.HTTP_404_BAD_REQUEST)
+        print(answers)
+        listItems = []
+
+        for answer in answers:
+            objectValue = {"answer":answer.answer, "creationDate":answer.creationDate}
+            listItem = {"type": "Create", "actor": {"type": "Person", "name": answer.owner.username},
+                        "object": objectValue}
+            listItems.append(listItem)
+ 
+        response = {"@context": "https://www.w3.org/ns/activitystreams", "summary": "Object History",
+                    "type": "Collection", "totalItems": len(answers), "items": listItems}
+        return Response(response)
+        
+    def post(self,request, post_id, comment_id):
+        try:
+            EventPost.objects.get(id=post_id)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        body = {}
+        body["eventid"]=post_id
+        body["commentid"]=comment_id
+        body["answer"]=request.data["answer"]
+        body["owner"]=request.data["ownerId"]
+        body["creationDate"]=request.data["creationDate"]
+
+        try:
+            answerSerializer=AnswerSerializer(data=body)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if answerSerializer.is_valid():
+
+            answerSerializer.save()
+            object= {"answer":body["answer"],"creationDate":timezone.now()}
+            response = {"@context": "https://www.w3.org/ns/activitystreams", "summary":answerSerializer.validated_data["owner"].username+ " created a comment",
+            "type": "Create", "actor":{"type":"Person","name":answerSerializer.validated_data["owner"].username } }
+            response["object"]=object
+            return Response(response)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 
