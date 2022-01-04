@@ -9,10 +9,11 @@ export function getSports(){
         .then(r=>r.map(d=>({img:d.relationships.images.data[0].url, title:d.attributes.name, desc:d.attributes.description})))
 }
 export function getSportsList(){
-    return fetch("https://sports.api.decathlon.com/sports?parents_only=true&has_hecathlon_id=true",
+    return fetch("https://sports.api.decathlon.com/sports?parents_only=true&has_icon=true&has_hecathlon_id=true",
         {headers: {'Accept-Language': 'en-US'}})
         .then(response=>response.json())
         .then(r=>{console.log(r); return r})
         .then(r=>r.data.map(d=>({img:d.relationships.images.data[0].url, label:d.attributes.name})))
+        .then(r=>r.concat({img:"https://sports-api-production.s3.amazonaws.com/uploads/sport/images/327/frisbee.jpg", label:"Frisbee"}))
 }
 
