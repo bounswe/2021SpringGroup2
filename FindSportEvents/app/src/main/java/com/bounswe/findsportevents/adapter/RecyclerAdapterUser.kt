@@ -24,7 +24,7 @@ class RecyclerAdapterUser(val usernames : MutableList<String>,val favSports:Muta
     }
 
     override fun getItemCount(): Int {
-        return usernames.size
+        return favSports.size
     }
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView), View.OnClickListener{
         var username: TextView

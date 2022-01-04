@@ -131,7 +131,23 @@
                 android:id="@+id/btn_view_events"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="VIEW YOUR EVENTS"
+                android:text="VIEW EVENTS YOU HAVE CREATED"
+                android:backgroundTint="#86000000"
+                android:layout_marginHorizontal="@dimen/space_xx_large"
+                />
+            <Button
+                android:id="@+id/btn_view_played_events"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="VIEW EVENTS YOU HAVE PARTICIPATED IN"
+                android:backgroundTint="#86000000"
+                android:layout_marginHorizontal="@dimen/space_xx_large"
+                />
+            <Button
+                android:id="@+id/btn_view_following"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="VIEW FOLLOWINGS"
                 android:backgroundTint="#86000000"
                 android:layout_marginHorizontal="@dimen/space_xx_large"
                 />

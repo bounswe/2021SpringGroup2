@@ -162,17 +162,17 @@ interface ReboundAPI {
         @Path("commentId") commentId : Int,
         @Body content : MutableMap<String,String>
     ): Call<CommentResponse>
-    @POST("api/users/{username}/following/")
+    @GET("api/users/{username}/follow/")
     fun followUser(
         @Header("Authorization") token : String,
         @Path("username") username : String,
     ): Call<FollowResponse>
-    @DELETE("api/users/{username}/following/")
+    @GET("api/users/{username}/unfollow/")
     fun unfollowUser(
         @Header("Authorization") token : String,
         @Path("username") username : String,
     ): Call<UnfollowResponse>
-    @GET("api/users/{username}/following/")
+    @GET("api/users/{username}/followings/")
     fun getFollowings(
         @Header("Authorization") token : String,
         @Path("username") username : String,
@@ -182,21 +182,31 @@ interface ReboundAPI {
         @Header("Authorization") token : String,
         @Path("username") username : String,
     ): Call<GetFollowingsResponse>
-    @POST("api/users/{username}/blocked/")
+    @GET("api/users/{username}/block/")
     fun blockUser(
         @Header("Authorization") token : String,
         @Path("username") username : String,
     ): Call<BlockResponse>
-    @DELETE("api/users/{username}/blocked/")
+    @GET("api/users/{username}/unblock/")
     fun unblockUser(
         @Header("Authorization") token : String,
         @Path("username") username : String,
     ): Call<BlockResponse>
-    @GET("api/users/{username}/blocking/")
+    @GET("api/users/{username}/blockings/")
     fun getBlockings(
         @Header("Authorization") token : String,
         @Path("username") username : String,
     ): Call<GetFollowingsResponse>
+    @GET("api/users/")
+    fun searchUser(
+        @Header("Authorization") token : String,
+        @Query("query") query : String,
+    ): Call<AllUserResponse>
+    @GET("api/posts/")
+    fun getPlayedEvents(
+        @Header("Authorization") token : String,
+        @Query("player") player : Int,
+    ): Call<PlayedEventsResponse>
 
 
 
