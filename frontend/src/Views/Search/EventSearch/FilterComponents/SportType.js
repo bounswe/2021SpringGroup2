@@ -43,7 +43,7 @@ export default function SportType(props){
                 <Autocomplete
                     value={sportTypes}
                     options={options}
-                    onChange={(event, value) =>value ? setSportTypes(value.label) : setSportTypes(event.target.value)}
+                    onChange={(event, value) =>value ? (setSportTypes(value.label)||props.setValue(props.id)(value.label)) : setSportTypes(event.target.value)}
                     renderInput={params => {
                         return (
                             <TextField
