@@ -112,7 +112,7 @@ class FragmentProfile : Fragment(), DialogManager {
                 binding.etFavSport2.text.toString(),
                 binding.etFavSport3.text.toString(),
                 binding.etLocation.text.toString(),
-                "https://upload.wikimedia.org/wikipedia/commons/1/18/Lewis_Hamilton_2016_Malaysia_2.jpg", // TODO CHANGE IT LATER
+                "https://www.pausedergi.com/wp-content/uploads/2021/02/cemil-3.jpg", // TODO CHANGE IT LATER
                 false // TODO CHANGE IT LATER
             )
             ReboundAPI.create().updateUser(token, username, request).enqueue(object: Callback<UpdateProfileResponse> {

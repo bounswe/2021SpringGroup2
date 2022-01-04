@@ -61,6 +61,18 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                     response: Response<EventbyIdResponse>
                 ) {
                     if (response.isSuccessful) {
+                        ReboundAPI.create().getUser(token,response.body()!!.`object`.ownerId.toString()).enqueue(object: Callback<UserResponse> {
+                            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+                                if (response.isSuccessful){
+                                    binding.tvEventCreatorResult.text=response.body()!!.username
+                                }
+                            }
+
+                            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                                //
+                            }
+
+                        })
                         binding.tvEventTitleResult.text = response.body()?.`object`?.title ?: ""
                         binding.tvEventTypeResult.text = response.body()?.`object`?.eventSport
                         binding.tvEventLocationResult.text =
