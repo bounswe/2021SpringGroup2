@@ -81,6 +81,7 @@ class FragmentMapLocation : Fragment()  {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setObservers()
+        setClickListeners()
     }
 
     override fun onDestroyView() {
