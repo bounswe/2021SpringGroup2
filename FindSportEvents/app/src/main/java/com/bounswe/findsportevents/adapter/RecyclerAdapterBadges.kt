@@ -1,6 +1,5 @@
 package com.bounswe.findsportevents.adapter
 
-import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,7 +42,7 @@ class RecyclerAdapterBadges(val events : MutableList<String>,val eventTitles : M
             date=itemView.findViewById(R.id.date_tv)
             badgeButton=itemView.findViewById(R.id.bt_give_a_badge)
             badgeButton.setOnClickListener {
-                listener.onItemClick()
+                listener.onItemClick(eventCreator.text.toString().toInt())
             }
             itemView.setOnClickListener(this)
         }
@@ -56,7 +55,7 @@ class RecyclerAdapterBadges(val events : MutableList<String>,val eventTitles : M
         }
     }
     interface OnItemClickListener{
-        fun onItemClick()
+        fun onItemClick(postId: Int)
     }
 
 }

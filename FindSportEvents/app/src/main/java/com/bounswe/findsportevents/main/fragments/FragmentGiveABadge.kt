@@ -8,10 +8,13 @@ import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bounswe.findsportevents.databinding.FragmentGiveABadgeBinding
 import com.bounswe.findsportevents.network.ReboundAPI
+import com.bounswe.findsportevents.network.modalz.requests.GiveBadgeRequest
 import com.bounswe.findsportevents.network.modalz.responses.GetBadgesResponse
+import com.bounswe.findsportevents.network.modalz.responses.GiveBadgeResponse
 import com.bounswe.findsportevents.util.DialogManager
 import com.bounswe.findsportevents.util.LoadingDialog
 import retrofit2.Call
@@ -22,16 +25,19 @@ import java.lang.Exception
 import java.util.*
 
 
-class FragmentGiveABadge: Fragment(), DialogManager {
+class FragmentGiveABadge : Fragment(), DialogManager {
     private var _binding: FragmentGiveABadgeBinding? = null
     private val binding get() = _binding!!
     private var dialog: LoadingDialog? = null
     private var token = ""
     private var username = ""
+    private var postId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         token = requireArguments().getString(TOKEN_KEY) ?: ""
+        postId = requireArguments().getInt(POST_ID_KEY)
+        username = requireArguments().getString(USERNAME_KEY) ?: ""
 
     }
 
@@ -122,16 +128,78 @@ class FragmentGiveABadge: Fragment(), DialogManager {
     }
 
     private fun setClickListeners() {
-//        TODO("Not yet implemented")
+        binding.btGiveBadge1.setOnClickListener {
+            val request = GiveBadgeRequest(
+                binding.tvName1.text.toString(),
+                postId
+            )
+            giveBadge(request)
+        }
+        binding.btGiveBadge2.setOnClickListener {
+            val request = GiveBadgeRequest(
+                binding.tvName2.text.toString(),
+                postId
+            )
+            giveBadge(request)
+        }
+        binding.btGiveBadge3.setOnClickListener {
+            val request = GiveBadgeRequest(
+                binding.tvName3.text.toString(),
+                postId
+            )
+            giveBadge(request)
+        }
+        binding.btGiveBadge4.setOnClickListener {
+            val request = GiveBadgeRequest(
+                binding.tvName4.text.toString(),
+                postId
+            )
+            giveBadge(request)
+        }
+        binding.btGiveBadge5.setOnClickListener {
+            val request = GiveBadgeRequest(
+                binding.tvName5.text.toString(),
+                postId
+            )
+            giveBadge(request)
+        }
+        binding.btGiveBadge6.setOnClickListener {
+            val request = GiveBadgeRequest(
+                binding.tvName6.text.toString(),
+                postId
+            )
+            giveBadge(request)
+        }
+    }
+
+    private fun giveBadge(request: GiveBadgeRequest) {
+        ReboundAPI.create().giveABadge(token, username, request).enqueue(object: Callback<GiveBadgeResponse> {
+            override fun onResponse(
+                call: Call<GiveBadgeResponse>,
+                response: Response<GiveBadgeResponse>
+            ) {
+                if(response.isSuccessful){
+                    Toast.makeText(requireContext(), response.body()?.summary ?: "", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<GiveBadgeResponse>, t: Throwable) {
+            }
+
+        })
     }
 
     companion object {
         const val TAG = "UserResult"
         private const val TOKEN_KEY = "token_key"
+        private const val POST_ID_KEY = "post_id_key"
+        private const val USERNAME_KEY = "username_key"
 
-        fun newInstance(token: String) = FragmentGiveABadge().also {
+        fun newInstance(token: String, postId: Int, username: String) = FragmentGiveABadge().also {
             it.arguments = Bundle().also {
                 it.putString(TOKEN_KEY, token)
+                it.putInt(POST_ID_KEY, postId)
+                it.putString(USERNAME_KEY, username)
             }
         }
     }

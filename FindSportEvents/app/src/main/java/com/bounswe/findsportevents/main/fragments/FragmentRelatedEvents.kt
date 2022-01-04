@@ -13,7 +13,6 @@ import com.bounswe.findsportevents.R
 import com.bounswe.findsportevents.adapter.RecyclerAdapterBadges
 import com.bounswe.findsportevents.databinding.FragmentRelatedEventsBinding
 import com.bounswe.findsportevents.network.ReboundAPI
-import com.bounswe.findsportevents.network.modalz.responses.AllEventsResponse
 import com.bounswe.findsportevents.network.modalz.responses.RelatedEventResponse
 import com.bounswe.findsportevents.util.DialogManager
 import com.bounswe.findsportevents.util.LoadingDialog
@@ -131,10 +130,10 @@ class FragmentRelatedEvents : Fragment(), RecyclerAdapterBadges.OnItemClickListe
         }
     }
 
-    override fun onItemClick() {
+    override fun onItemClick(postId: Int) {
 //        Toast.makeText(context, "Give a badge clicked", Toast.LENGTH_SHORT).show()
         val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.container_main,FragmentGiveABadge.newInstance(token)).addToBackStack("myEvents")
+        transaction.replace(R.id.container_main,FragmentGiveABadge.newInstance(token, postId, username)).addToBackStack("myEvents")
         transaction.commit()
     }
     override fun showLoading(context: Context) {
