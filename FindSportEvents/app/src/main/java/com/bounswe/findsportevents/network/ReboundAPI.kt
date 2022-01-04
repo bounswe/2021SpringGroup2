@@ -228,6 +228,13 @@ interface ReboundAPI {
         @Body request: GiveBadgeRequest,
     ): Call<GiveBadgeResponse>
 
+    @POST("api/posts/{id}/applicants")
+    fun acceptOrRejectApplicants(
+        @Header("Authorization") token : String,
+        @Path("id") eventId: String,
+        @Body request: ApplicantsRequest
+    ): Call<ApplicantsResponse>
+
     companion object {
 
         var BASE_URL = "http://34.68.66.109/"
