@@ -11,15 +11,18 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import {getSampleEvents} from "../../Controllers/SampleEventController";
 import EventInfoCard from "./EventCard";
 import {getToken} from "../../Controllers/AuthInfo";
+import {searchEvents} from "../../Controllers/SearchController";
+import EventCard from "../Search/EventSearch/EventCard";
 function Homepage() {
     const [sports, setSports] = useState([{}])
-    const [events, setEvents] = useState([{}])
+    const [events, setEvents] = useState([])
     const [sportIndex, setSportIndex] = useState((0))
     const [eventIndex, setEventIndex] = useState((0))
     useEffect(_=>{
         getSports().then(r=>setSports(r))
             .catch(console.log)
-        getSampleEvents().then(r=>setEvents(r))
+        searchEvents()
+            .then(r=>r.results).then(r=>setEvents(r))
             .catch(console.log)
     }, [])
   return (
@@ -59,7 +62,7 @@ function Homepage() {
             <Grid container spacing={2} alignItems="stretch">
                 {events.slice(eventIndex,eventIndex+3).map(s=>(
                     <Grid item md={4} style={{display: 'flex'}}>
-                        <EventInfoCard {...s}/>
+                        <EventCard {...s}/>
                     </Grid>)
                 )}
             </Grid>

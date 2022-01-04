@@ -11,7 +11,7 @@ export function  searchEvents(params={}){
         return params[k]===initialFilters[k]?"h=h": encodeURIComponent(k) + '=' + encodeURIComponent(params[k])
     }).join('&')
     console.log(url)
-    return fetch("/api/posts/?"+url,options)
+    return fetch("http://34.68.66.109/api/posts/?"+url,options)
         .then(response=>response.json())
         .then(r=>{console.log(r); return r})
 }
@@ -22,7 +22,7 @@ export function  getEvent(id){
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
     }
-    return fetch("/api/posts/"+id+'/',options)
+    return fetch("http://34.68.66.109/api/posts/"+id+'/',options)
         .then(response=>response.json())
         .then(r=>{console.log(r); return r})
 }
@@ -33,7 +33,7 @@ export function searchEventBySport(sport){
         headers: { 'Content-Type': 'application/json' },
     }
     const url = "sport="+sport
-    return fetch("/api/posts/?"+url,options)
+    return fetch("http://34.68.66.109/api/posts/?"+url,options)
         .then(response=>response.json())
         .then(r=>r.results)
         .then(r=>r.length>3?r.slice(0, 3):r)
@@ -46,7 +46,7 @@ export function searchEventByOwner(owner){
         headers: { 'Content-Type': 'application/json' },
     }
     const url = "owner="+owner
-    return fetch("/api/posts/?"+url,options)
+    return fetch("http://34.68.66.109/api/posts/?"+url,options)
         .then(response=>response.json())
         .then(r=>r.results)
         .then(r=>{console.log(r); return r})
@@ -57,7 +57,7 @@ export function searchEventByApplier(player){
         headers: { 'Content-Type': 'application/json' },
     }
     const url = "player="+player
-    return fetch("/api/posts/?"+url,options)
+    return fetch("http://34.68.66.109/api/posts/?"+url,options)
         .then(response=>response.json())
         .then(r=>r.results)
         .then(r=>{console.log(r); return r})
@@ -69,7 +69,7 @@ export function searchEquipmentBySport(sport){
         headers: { 'Content-Type': 'application/json' },
     }
     const url = "sport="+sport
-    return fetch("/api/equipments/?"+url,options)
+    return fetch("http://34.68.66.109/api/equipments/?"+url,options)
         .then(response=>response.json())
         .then(r=>r.results)
         .then(r=>r.length>3?r.slice(0, 3):r)
@@ -89,7 +89,7 @@ export function  searchEquipments(params={}){
         return params[k]===initialFilters[k]?"h=h": encodeURIComponent(k) + '=' + encodeURIComponent(params[k])
     }).join('&')
     console.log(url)
-    return fetch("/api/equipments/?"+url,options)
+    return fetch("http://34.68.66.109/api/equipments/?"+url,options)
         .then(response=>response.json())
         .then(r=>{console.log(r); return r})
 }
@@ -100,7 +100,7 @@ export function  getEquipment(id){
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
     }
-    return fetch("/api/equipments/"+id+'/',options)
+    return fetch("http://34.68.66.109/api/equipments/"+id+'/',options)
         .then(response=>response.json())
         .then(r=>{console.log(r); return r})
 }
@@ -115,7 +115,7 @@ export function  searchUsers(params={}){
         return params[k]===initialFilters[k]?"h=h": encodeURIComponent(k) + '=' + encodeURIComponent(params[k])
     }).join('&')
     console.log(url)
-    return fetch("/api/users/?"+url,options)
+    return fetch("http://34.68.66.109/api/users/?"+url,options)
         .then(response=>response.json())
         .then(r=>{console.log(r); return r})
 }
@@ -126,7 +126,7 @@ export function  getUser(id={}){
         headers: { 'Content-Type': 'application/json' },
     }
     const url = id+'/'
-    return fetch("/api/users/"+url,options)
+    return fetch("http://34.68.66.109/api/users/"+url,options)
         .then(response=>response.json())
         .then(r=>{console.log(r); return r})
 }
