@@ -151,7 +151,7 @@
                 android:text="DISCUSSION"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btn_apply_as_player" />
+                app:layout_constraintTop_toBottomOf="@+id/btn_applications" />
 
             <Button
                 android:id="@+id/btn_apply_as_player"
@@ -200,6 +200,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_spectators" />
+
+            <Button
+                android:id="@+id/btn_applications"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VIEW APPLICATIONS"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_apply_as_player" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_discussion"

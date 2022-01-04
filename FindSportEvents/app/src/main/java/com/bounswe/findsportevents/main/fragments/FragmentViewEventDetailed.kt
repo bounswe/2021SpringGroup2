@@ -65,7 +65,7 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                     layoutManager= LinearLayoutManager(context)
                     binding.rvDiscussion.layoutManager=layoutManager
                     adapter = RecyclerAdapterDiscussion(users,comments,dates, listener)
-
+                    ownerId = response.body()!!.`object`.ownerId
 
                     binding.rvDiscussion.adapter = adapter
 
@@ -280,6 +280,33 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
             val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
             transaction.add(R.id.container_main,FragmentPlayers.newInstance(token,username,players)).addToBackStack("equipmentResults")
             transaction.commit()
+        }
+        binding.btnApplications.setOnClickListener {
+            var userId=0
+            ReboundAPI.create().getUser(token,username).enqueue(object: Callback<UserResponse>{
+                override fun onResponse(
+                    call: Call<UserResponse>,
+                    response: Response<UserResponse>
+                ) {
+                    if(response.isSuccessful){
+                      userId = response.body()?.id?.toInt() ?: 0
+
+                    }
+                }
+
+                override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                    //
+                }
+
+
+            })
+            if(userId==ownerId){
+
+            }
+            else{
+                Toast.makeText(context,"YOU NEED TO BE THE CREATOR OF THIS EVENT!!",Toast.LENGTH_SHORT).show()
+            }
+
         }
     }
 
