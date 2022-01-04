@@ -1,5 +1,6 @@
 package com.bounswe.findsportevents.main.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,13 +19,17 @@ import com.bounswe.findsportevents.network.modalz.requests.ApplicantsRequest
 import com.bounswe.findsportevents.network.modalz.responses.ApplicantListResponse
 import com.bounswe.findsportevents.network.modalz.responses.ApplicantsResponse
 import com.bounswe.findsportevents.network.modalz.responses.UserResponse
+import com.bounswe.findsportevents.util.DialogManager
+import com.bounswe.findsportevents.util.LoadingDialog
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 
-class FragmentViewApplications : Fragment(), RecyclerAdapterApplications.OnItemClickListener, RecyclerAdapterSpectators.OnItemClickListenerSpectator {
+class FragmentViewApplications : Fragment(), RecyclerAdapterApplications.OnItemClickListener, RecyclerAdapterSpectators.OnItemClickListenerSpectator, DialogManager {
     private var _binding: FragmentViewApplicationsBinding? = null
     private val binding get() = _binding!!
+    private var dialog: LoadingDialog? = null
 
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var adapter: RecyclerView.Adapter<RecyclerAdapterApplications.ViewHolder>? = null
@@ -65,12 +70,16 @@ class FragmentViewApplications : Fragment(), RecyclerAdapterApplications.OnItemC
         adapter = RecyclerAdapterApplications(usernames, favSports, listener)
         binding.rvPlayers.adapter = adapter
 
+        context?.run {
+            showLoading(this)
+        }
         ReboundAPI.create().getApplicants(token, eventId, "player")
             .enqueue(object : Callback<ApplicantListResponse> {
                 override fun onResponse(
                     call: Call<ApplicantListResponse>,
                     response: Response<ApplicantListResponse>
                 ) {
+                    hideLoading()
                     if (response.isSuccessful) {
                         for (i in response.body()?.applicants?.indices!!) {
                             ReboundAPI.create()
@@ -94,6 +103,7 @@ class FragmentViewApplications : Fragment(), RecyclerAdapterApplications.OnItemC
                                     }
 
                                     override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                                        hideLoading()
                                     }
 
                                 })
@@ -103,6 +113,7 @@ class FragmentViewApplications : Fragment(), RecyclerAdapterApplications.OnItemC
                 }
 
                 override fun onFailure(call: Call<ApplicantListResponse>, t: Throwable) {
+                    hideLoading()
                 }
 
             })
@@ -112,12 +123,16 @@ class FragmentViewApplications : Fragment(), RecyclerAdapterApplications.OnItemC
         adapterSpectators = RecyclerAdapterSpectators(usernames, favSports, listenerSpectators)
         binding.rvPlayers.adapter = adapterSpectators
 
+        context?.run {
+            showLoading(this)
+        }
         ReboundAPI.create().getApplicants(token, eventId, "spectator")
             .enqueue(object : Callback<ApplicantListResponse> {
                 override fun onResponse(
                     call: Call<ApplicantListResponse>,
                     response: Response<ApplicantListResponse>
                 ) {
+                    hideLoading()
                     if (response.isSuccessful) {
                         for (i in response.body()?.applicants?.indices!!) {
                             ReboundAPI.create()
@@ -141,6 +156,7 @@ class FragmentViewApplications : Fragment(), RecyclerAdapterApplications.OnItemC
                                     }
 
                                     override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                                        hideLoading()
                                     }
 
                                 })
@@ -150,6 +166,7 @@ class FragmentViewApplications : Fragment(), RecyclerAdapterApplications.OnItemC
                 }
 
                 override fun onFailure(call: Call<ApplicantListResponse>, t: Throwable) {
+                    hideLoading()
                 }
 
             })
@@ -275,8 +292,28 @@ class FragmentViewApplications : Fragment(), RecyclerAdapterApplications.OnItemC
         val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
         transaction.replace(
             R.id.container_main,
-            FragmentUserResult.newInstance(token, username, usernames[position])
+            FragmentUserResult.newInstance(token, username, usernamesSpectators[position])
         ).addToBackStack("userResult")
         transaction.commit()
+    }
+
+    override fun showLoading(context: Context) {
+        try {
+            hideLoading()
+            dialog = LoadingDialog(context)
+            dialog?.setCancelable(false)
+            dialog?.show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun hideLoading() {
+        try {
+            dialog?.dismiss()
+            dialog = null
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
