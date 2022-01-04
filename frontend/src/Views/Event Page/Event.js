@@ -14,6 +14,8 @@ import ApplicantList from "../Application/ApplicantList";
 import ApplicantSelection from "../Application/ApplicantSelection";
 import {getUserInfoLoggedIn} from "../../Controllers/AuthInfo";
 import {Alert} from "@mui/lab";
+import {useSnackbar} from "notistack";
+import {formatDate} from "../Comments/Comment";
 
 const useStyles = makeStyles(theme => createStyles({
     "@global": {
@@ -114,6 +116,8 @@ export default function Event (){
     const [successMessage,setSuccessMessage] = useState(null)
     const getSportInfo = sport => console.log(sport) || getSportsList()
         .then(sports=>sports.find(s=>s.label===sport))
+    const { enqueueSnackbar } = useSnackbar();
+
 
     useEffect(() => {
         fetch("http://34.68.66.109/api/posts/"+eventid+"/")
@@ -156,10 +160,12 @@ export default function Event (){
     },[event])
     const handleApplication = (type) => {
         applyToEvent(eventid, type).then(r => {
-            if(r.ok){
-                setSuccessMessage("You have successfully applied as a "+type)
-            }
-        })
+            enqueueSnackbar("You have successfully applied to the event.", {variant: "success"})
+            location.reload()
+        }).catch(e=>{
+                enqueueSnackbar("An error occured in the server.", {variant: "error"})
+                console.log(e)
+            })
     }
 
     return(
@@ -185,7 +191,7 @@ export default function Event (){
                         Location: {event.object.location.type} {event.object.location.longitude} {event.object.location.latitude}
                     </Typography>
                     <Typography gutterBottom variant="body1" align={"center"} >
-                        Event Date: {event.object.eventDate}
+                        Event Date: {formatDate(event.object.eventDate)}
                     </Typography>
                 </Grid>
 
@@ -217,7 +223,7 @@ export default function Event (){
                             <ListItemText className={classes.fav} primary="Event Owner" secondary={event.actor.name} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <ListItemText className={classes.fav} primary="Creation Date" secondary={event.object.creationDate} />
+                            <ListItemText className={classes.fav} primary="Creation Date" secondary={formatDate(event.object.creationDate)} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <ListItemText className={classes.fav} primary=" Player Capacity" secondary={event.object.eventPlayerCapacity} />
