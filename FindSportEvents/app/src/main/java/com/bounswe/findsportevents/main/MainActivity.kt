@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity(),FragmentMapLocation.FragmentMapLocation
     private var login = false
     private var token = ""
     private var username = ""
-    private var testList= arrayListOf("f1","Football","Sumo Wrestling")
+    private var testList= arrayListOf("Ultimate Frisbee","f1","Football","Sumo Wrestling")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -53,14 +53,16 @@ class FragmentSearchUser : Fragment(), RecyclerAdapterUser.OnItemClickListener {
                 if (response.isSuccessful) {
                     for (i in 0 until ((response.body()?.results?.size) ?: 0))
                     {
-                        usernames.add(response.body()?.results!!.get(i).username)
+
                         ReboundAPI.create().getUser(token, response.body()?.results!!.get(i).username).enqueue(object : Callback<UserResponse>{
                             override fun onResponse(
                                 call: Call<UserResponse>,
                                 response: Response<UserResponse>
                             ) {
                                 if (response.isSuccessful){
+                                    usernames.add(response.body()?.username.toString())
                                     favSports.add(response.body()?.fav_sport_1.toString())
+
                                     layoutManager=LinearLayoutManager(context)
                                     binding.recyclerView2.layoutManager=layoutManager
                                     adapter = RecyclerAdapterUser(usernames,favSports, listener)
@@ -115,19 +117,18 @@ class FragmentSearchUser : Fragment(), RecyclerAdapterUser.OnItemClickListener {
 
             override fun onQueryTextChange(newText: String): Boolean {
                 currentText=binding.searchView.query.toString()
-                usernames = mutableListOf()
-                favSports = mutableListOf()
                 layoutManager=LinearLayoutManager(context)
                 binding.recyclerView2.layoutManager=layoutManager
                 adapter = RecyclerAdapterUser(usernames,favSports, listener)
                 binding.recyclerView2.adapter = adapter
-
                 ReboundAPI.create().searchUser(token,currentText).enqueue(object: Callback<AllUserResponse>{
                     override fun onResponse(
                         call: Call<AllUserResponse>,
                         response: Response<AllUserResponse>
                     ) {
                         if (response.isSuccessful) {
+                            usernames = mutableListOf()
+                            favSports = mutableListOf()
                             for (i in 0 until ((response.body()?.results?.size) ?: 0))
                             {
                                 ReboundAPI.create().getUser(token, response.body()?.results!!.get(i).username).enqueue(object : Callback<UserResponse>{
@@ -136,8 +137,10 @@ class FragmentSearchUser : Fragment(), RecyclerAdapterUser.OnItemClickListener {
                                         response: Response<UserResponse>
                                     ) {
                                         if (response.isSuccessful){
-                                            usernames.add(response.body()?.username.toString())
-                                            favSports.add(response.body()?.fav_sport_1.toString())
+                                            if(!usernames.contains(response.body()?.username.toString())) {
+                                                usernames.add(response.body()?.username.toString())
+                                                favSports.add(response.body()?.fav_sport_1.toString())
+                                            }
                                             layoutManager=LinearLayoutManager(context)
                                             binding.recyclerView2.layoutManager=layoutManager
                                             adapter = RecyclerAdapterUser(usernames,favSports, listener)

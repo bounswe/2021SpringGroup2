@@ -18,10 +18,13 @@ class RecyclerAdapterUser(val usernames : MutableList<String>,val favSports:Muta
     }
 
     override fun onBindViewHolder(holder: RecyclerAdapterUser.ViewHolder, position: Int) {
-        holder.username.text=usernames[position]
-        holder.favSport.text=favSports[position]
+        holder.username.text=usernames[getItemViewType(position)]
+        holder.favSport.text=favSports[getItemViewType(position)]
 
     }
+    override fun getItemId(position: Int) = position.toLong()
+    override fun getItemViewType(position: Int) = position
+
 
     override fun getItemCount(): Int {
         return favSports.size
@@ -42,6 +45,7 @@ class RecyclerAdapterUser(val usernames : MutableList<String>,val favSports:Muta
                 listener.onItemClick(position)
             }
         }
+
     }
     interface OnItemClickListener{
         fun onItemClick(position: Int)
