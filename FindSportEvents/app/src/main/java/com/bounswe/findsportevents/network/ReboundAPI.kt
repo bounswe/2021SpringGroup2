@@ -228,7 +228,15 @@ interface ReboundAPI {
         @Body request: GiveBadgeRequest,
     ): Call<GiveBadgeResponse>
 
-    @POST("api/posts/{id}/applicants")
+    @GET("api/posts/{id}/applicants/")
+    fun getApplicants(
+        @Header("Authorization") token : String,
+        @Path("id") eventId: String,
+        @Query("type") type : String
+    ): Call<ApplicantListResponse>
+
+
+    @POST("api/posts/{id}/applicants/")
     fun acceptOrRejectApplicants(
         @Header("Authorization") token : String,
         @Path("id") eventId: String,
