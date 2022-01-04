@@ -1,4 +1,5 @@
 import {initialFilters} from "../Views/Search/Index";
+import {useState} from "react";
 
 export function  searchEvents(params={}){
 
@@ -34,6 +35,44 @@ export function searchEventBySport(sport){
     const url = "sport="+sport
     return fetch("/api/posts/?"+url,options)
         .then(response=>response.json())
+        .then(r=>r.results)
+        .then(r=>r.length>3?r.slice(0, 3):r)
+        .then(r=>{console.log(r); return r})
+}
+
+export function searchEventByOwner(owner){
+    const options = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    }
+    const url = "owner="+owner
+    return fetch("/api/posts/?"+url,options)
+        .then(response=>response.json())
+        .then(r=>r.results)
+        .then(r=>{console.log(r); return r})
+}
+export function searchEventByApplier(player){
+    const options = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    }
+    const url = "player="+player
+    return fetch("/api/posts/?"+url,options)
+        .then(response=>response.json())
+        .then(r=>r.results)
+        .then(r=>{console.log(r); return r})
+}
+
+export function searchEquipmentBySport(sport){
+    const options = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    }
+    const url = "sport="+sport
+    return fetch("/api/equipments/?"+url,options)
+        .then(response=>response.json())
+        .then(r=>r.results)
+        .then(r=>r.length>3?r.slice(0, 3):r)
         .then(r=>{console.log(r); return r})
 }
 

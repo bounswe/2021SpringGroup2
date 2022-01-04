@@ -10,6 +10,7 @@ import MaxCreationDate from "./FilterComponents/MaxCreationDate";
 import MinDate from "./FilterComponents/MinDate";
 import MaxDate from "./FilterComponents/MaxDate";
 import Paper from "@mui/material/Paper";
+import MapWithRectangle from "./FilterComponents/MapWithRectangle";
 
 
 export default  function EventFilter(props){
@@ -74,6 +75,11 @@ export default  function EventFilter(props){
                 {...props.filters}
                 ids={["min_spectator_capacity","max_spectator_capacity"]}
                 setValue={props.setValues}/>
+            <div>  {props.space}  </div>
+            <MapWithRectangle
+                ids={["min_latitude","max_latitude","min_longitude","max_longitude",]}
+                setValue={props.setValues}
+            />
             <div>  {props.space}  </div>
             <MinCreationDate
                 {...props.filters}

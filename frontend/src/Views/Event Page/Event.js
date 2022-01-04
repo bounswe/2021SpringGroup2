@@ -14,9 +14,13 @@ import ApplicantList from "../Application/ApplicantList";
 import ApplicantSelection from "../Application/ApplicantSelection";
 import {getUserInfoLoggedIn} from "../../Controllers/AuthInfo";
 import {Alert} from "@mui/lab";
+import EquipmentCard from "../Search/EquipmentSearch/EquipmentCard";
+import Container from "@mui/material/Container";
+import {searchEquipmentBySport, searchEventBySport} from "../../Controllers/SearchController";
 import Comments from "../Comments/Comments";
 import {useSnackbar} from "notistack";
 import {formatDate} from "../Comments/Comment";
+
 
 const useStyles = makeStyles(theme => createStyles({
     "@global": {
@@ -114,7 +118,10 @@ export default function Event (){
     const [playerApplicants, setPlayerApplicants] = useState([])
     const [spectatorApplicants, setSpectatorApplicants] = useState([])
     const [viewerUser, setViewerUser] = useState(null)
+    const [successMessage,setSuccessMessage] = useState(null)
+    const [equipments, setEquipments] = useState([])
     const [isLoading,setIsLoading] = useState(true)
+
     const getSportInfo = sport => console.log(sport) || getSportsList()
         .then(sports=>sports.find(s=>s.label===sport))
     const { enqueueSnackbar } = useSnackbar();
@@ -125,10 +132,12 @@ export default function Event (){
             .then(r=>r.json())
             .then(r=>setEvent(r)||r)
             .then(r=>getSportInfo(r.object.eventSport))
-            //.then(r=>getSportInfo("Tennis"))
-            .then(setSport)
+            .then(r=>setSport(r)||r)
+            .then(r=>searchEquipmentBySport(r.label))
+            .then(setEquipments)
         setViewerUser(getUserInfoLoggedIn())
     }, []);
+
     useEffect(async () => {
         console.log(event)
         if (!event.init) {
@@ -159,6 +168,7 @@ export default function Event (){
             setIsLoading(false)
         }
     },[event])
+
     const handleApplication = (type) => {
         applyToEvent(eventid, type).then(r => {
             enqueueSnackbar("You have successfully applied to the event.", {variant: "success"})
@@ -172,7 +182,8 @@ export default function Event (){
     return isLoading? <div align={"center"} >
             <CircularProgress /></div>
         :(
-        <div style={{background:`url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}>
+        <div>
+
 
             <Grid item xs={12} sm={12} container spacing={3} alignItems="stretch"  className={classes.fav}>
                     <Grid item  style={{display: 'flex'}} align={"center"}>
@@ -220,9 +231,6 @@ export default function Event (){
                 <Grid item xs={12} sm={12}>
                     <Grid container spacing={2} justifyContent={"space-between"}>
                         <Grid item xs={12} sm={6}>
-                            <ListItemText className={classes.fav} primary="Players" secondary={event.object.eventPlayers} />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
                             <ListItemText className={classes.fav} primary="Event Owner" secondary={event.actor.name} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -269,6 +277,13 @@ export default function Event (){
                     </Stack>
                 </Grid>
             </Grid>
+
+            <Container style={{marginTop:100}}>
+                <h2>Related Equipments</h2>
+                {equipments.map((e, i)=>(
+                    <EquipmentCard key={i} {...e}/>
+                ))}
+            </Container>
 
         </div>
 
