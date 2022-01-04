@@ -18,7 +18,10 @@ export default function ApplicantSelection(props){
     const [detailsOpen,setDetailsOpen] = useState(false)
     const handleEvaluation = (user,accept)=> {
         evaluateApplication(props.event_id, user.user_id, props.type, accept, Number(props.owner_id)).then(
-            r => {console.log(r)})
+            r => {console.log(r);
+                location.reload()
+            }
+        )
     }
     return (
         <div>

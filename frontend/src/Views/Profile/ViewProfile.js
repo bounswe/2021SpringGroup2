@@ -136,11 +136,12 @@ const Index = _ =>{
 
     useEffect(async function () {
         if(profile.loading){
-            let id = null
 
+            let id = null
+            let newProfile
             getProfile(userid)
                 .then(p=>{
-                    const newProfile = {...profile}
+                    newProfile = {...profile}
                     for(let i in p){
                         if(newProfile[i] === undefined)continue
                         console.log(i)
@@ -148,6 +149,7 @@ const Index = _ =>{
                     }
                     newProfile.username.value = userid
                     newProfile.loading = false
+
                     setProfile(newProfile)
                     id=p.id
                     return p
@@ -168,10 +170,12 @@ const Index = _ =>{
             getAllBadges().then(allBadges =>
                 setAllBadges(allBadges))
                 .catch(console.log)
+            setProfile(newProfile)
         }
     }, [])
 
-    return profile.loading? <CircularProgress />
+    return profile.loading? <div align={"center"} >
+            <CircularProgress /></div>
         :
     (
         <div className={classes.paper}>

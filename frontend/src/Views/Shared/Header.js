@@ -114,7 +114,14 @@ const Header = props => {
                                     color="primary"
                                     variant="outlined"
                                     style={{marginRight:10}}>
-                                    Create a new event
+                                    New event
+                                </Button>
+                                <Button
+                                    component={Link} to="/createequipment"
+                                    color="primary"
+                                    variant="outlined"
+                                    style={{marginRight:5}}>
+                                    New equipment
                                 </Button>
                                 <Button
                                     component={Link} to={"/profile/" + props.loggedIn.username}

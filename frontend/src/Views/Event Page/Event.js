@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import {createStyles, makeStyles, styled} from "@material-ui/core/styles";
-import {ListItemText, TextField} from "@mui/material";
+import {CircularProgress, ListItemText, TextField} from "@mui/material";
 import {getSportsList} from '../../Controllers/SportsController';
 import EventInfoCard from "../Home/EventInfoCard";
 import Capture from '../images/Capture.png'
@@ -17,6 +17,10 @@ import {Alert} from "@mui/lab";
 import EquipmentCard from "../Search/EquipmentSearch/EquipmentCard";
 import Container from "@mui/material/Container";
 import {searchEquipmentBySport, searchEventBySport} from "../../Controllers/SearchController";
+import Comments from "../Comments/Comments";
+import {useSnackbar} from "notistack";
+import {formatDate} from "../Comments/Comment";
+
 
 const useStyles = makeStyles(theme => createStyles({
     "@global": {
@@ -116,9 +120,12 @@ export default function Event (){
     const [viewerUser, setViewerUser] = useState(null)
     const [successMessage,setSuccessMessage] = useState(null)
     const [equipments, setEquipments] = useState([])
+    const [isLoading,setIsLoading] = useState(true)
 
     const getSportInfo = sport => console.log(sport) || getSportsList()
         .then(sports=>sports.find(s=>s.label===sport))
+    const { enqueueSnackbar } = useSnackbar();
+
 
     useEffect(() => {
         fetch("http://34.68.66.109/api/posts/"+eventid+"/")
@@ -158,21 +165,25 @@ export default function Event (){
                     }
                 }
             )
-            console.log(players, spectators)
+            setIsLoading(false)
         }
     },[event])
 
     const handleApplication = (type) => {
         applyToEvent(eventid, type).then(r => {
-            if(r.ok){
-                setSuccessMessage("You have successfully applied as a "+type)
-            }
-        })
+            enqueueSnackbar("You have successfully applied to the event.", {variant: "success"})
+            location.reload()
+        }).catch(e=>{
+                enqueueSnackbar("An error occured in the server.", {variant: "error"})
+                console.log(e)
+            })
     }
 
-    return(
-        // style={{background:`url(${Capture})`,backgroundRepeat:"no-repeat",backgroundSize:"contain",height:2500,width:1900}}
+    return isLoading? <div align={"center"} >
+            <CircularProgress /></div>
+        :(
         <div>
+
 
             <Grid item xs={12} sm={12} container spacing={3} alignItems="stretch"  className={classes.fav}>
                     <Grid item  style={{display: 'flex'}} align={"center"}>
@@ -194,7 +205,7 @@ export default function Event (){
                         Location: {event.object.location.type} {event.object.location.longitude} {event.object.location.latitude}
                     </Typography>
                     <Typography gutterBottom variant="body1" align={"center"} >
-                        Event Date: {event.object.eventDate}
+                        Event Date: {formatDate(event.object.eventDate)}
                     </Typography>
                 </Grid>
 
@@ -223,7 +234,7 @@ export default function Event (){
                             <ListItemText className={classes.fav} primary="Event Owner" secondary={event.actor.name} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <ListItemText className={classes.fav} primary="Creation Date" secondary={event.object.creationDate} />
+                            <ListItemText className={classes.fav} primary="Creation Date" secondary={formatDate(event.object.creationDate)} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <ListItemText className={classes.fav} primary=" Player Capacity" secondary={event.object.eventPlayerCapacity} />
@@ -253,6 +264,7 @@ export default function Event (){
                 </Grid>
                 <Grid item xs={12} sm={12}>
                     <Stack direction={"row"} spacing={3} justifyContent={"center"}>
+                            <Comments id={eventid} isEvent={"posts"}/>
                             <Button onClick={()=>{handleApplication("player")}} disabled={viewerUser===null||viewerUser===false||viewerUser.user_id===null||
                             players.length===event.object.eventPlayerCapacity||
                             event.object.eventPlayers.includes(Number(viewerUser.user_id))||

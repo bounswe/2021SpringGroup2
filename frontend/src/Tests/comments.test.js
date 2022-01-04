@@ -20,7 +20,7 @@ describe("Check if the answers are formatted correctly given the request", () =>
                     "name": "Sally"
                 },
                 "object": {
-                    "answer": "I would like to participate",
+                    "content": "I would like to participate",
                     "creationDate": "2014-11-31T23:00:00-08:00"
                 }
             },
@@ -31,7 +31,7 @@ describe("Check if the answers are formatted correctly given the request", () =>
                     "name": "Sally"
                 },
                 "object": {
-                    "answer": "I wish I was available!",
+                    "content": "I wish I was available!",
                     "creationDate": "2014-11-31T23:00:00-12:00"
                 }
             }
@@ -41,7 +41,7 @@ describe("Check if the answers are formatted correctly given the request", () =>
         global.fetch = originalFetch;
     });
     it("Check if the response is in the correct format.",async () => {
-        const response = await CommentAnswerController.getAnswersOfComment(0,0)
+        const response = await CommentAnswerController.getAnswersOfComment(0,0,"posts")
         expect(response).toEqual([
         {user:{username:"Sally"},content:"I would like to participate",
             creationDate:"2014-11-31T23:00:00-08:00", isAnswer:true},
@@ -76,8 +76,8 @@ describe("Check if the comment is in correct format and it fetches answers", () 
     });
     it("Check if the response is in the correct format and function calls are correct",async () => {
         const spy = jest.spyOn(CommentAnswerController,"getAnswersOfComment")
-        const response = await CommentAnswerController.getCommentByID(11,14)
-        expect(spy).toBeCalledWith(11,14)
+        const response = await CommentAnswerController.getCommentByID(11,14,"posts")
+        expect(spy).toBeCalledWith(11,14,"posts")
         expect(spy).toHaveBeenCalledTimes(1)
         expect(response).toEqual( {
             user: { username: 'Sally' },
@@ -101,21 +101,39 @@ describe("Check if the correct comments and answers are fetched given the reques
                 "totalItems": 2,
                 "items": [
                     {
+                        "@context": "https://www.w3.org/ns/activitystreams",
+                        "summary": "berkaydoner created a comment",
                         "type": "Create",
                         "actor": {
                             "type": "Person",
-                            "name": "Sally"
+                            "name": "berkaydoner"
                         },
-                        "object": "/api/posts/13/comments/12"
+                        "object": {
+                            "type": "Comment",
+                            "postId": 13,
+                            "id": 11,
+                            "ownerId": 1,
+                            "content": "hello",
+                            "creationDate": "2022-01-03T00:52:34.928342Z"
+                        }
                     },
                     {
+                        "@context": "https://www.w3.org/ns/activitystreams",
+                        "summary": "berkaydoner created a comment",
                         "type": "Create",
                         "actor": {
                             "type": "Person",
-                            "name": "Sally"
+                            "name": "berkaydoner"
                         },
-                        "object": "/api/posts/13/comments/11"
-                    }
+                        "object": {
+                            "type": "Comment",
+                            "postId": 13,
+                            "id": 12,
+                            "ownerId": 1,
+                            "content": "hello2",
+                            "creationDate": "2022-01-03T00:52:34.928342Z"
+                        }
+                    },
                 ]
             })}));})
     afterEach(() => {
@@ -124,32 +142,42 @@ describe("Check if the correct comments and answers are fetched given the reques
     it("Check if function calls are correct",async () => {
         const spy1 = jest.spyOn(CommentAnswerController,"getCommentByID")
         const spy2 = jest.spyOn(CommentAnswerController,"getAnswersOfComment")
-        await CommentAnswerController.getCommentsAndAnswersOfEvent(13)
-        expect(spy1).toHaveBeenCalledWith(13,12)
-        expect(spy1).toHaveBeenCalledWith(13,11)
+        await CommentAnswerController.getCommentsAndAnswersOfEvent(13,"posts")
+        expect(spy1).toHaveBeenCalledWith(13,12,"posts")
+        expect(spy1).toHaveBeenCalledWith(13,11,"posts")
         expect(spy1).toHaveBeenCalledTimes(2)
     })
 })
 
 test('Check if correct post request is sent when creating comment', async () => {
+    localStorage.setItem('username', "berkaydoner")
+    localStorage.setItem('user_id', 1)
     global.fetch = jest.fn().mockImplementation(() =>
             Promise.resolve({ json: () => Promise.resolve([]) })
     )
-    const json = await CommentAnswerController.postComment(0,"Hello")
+    const json = await CommentAnswerController.postComment(0,"Hello","posts")
     expect(json.content).toBe("Hello")
     expect(json.isAnswer).toBe(false)
     expect(json.answers).toEqual([])
+    expect(json.user.username).toBe("berkaydoner")
     global.fetch.mockClear()
+    localStorage.removeItem('username')
+    localStorage.removeItem('user_id')
 })
 test('Check if correct post request is sent when creating answer', async () => {
+    localStorage.setItem('username', "berkaydoner")
+    localStorage.setItem('user_id', 1)
     global.fetch = jest.fn().mockImplementation(() =>
         Promise.resolve({ json: () => Promise.resolve([]) })
     )
-    const json = await CommentAnswerController.postAnswer(0,0,"Hello")
+    const json = await CommentAnswerController.postAnswer(0,0,"Hello","posts")
     expect(json.content).toBe("Hello")
     expect(json.isAnswer).toBe(true)
+    expect(json.user.username).toBe("berkaydoner")
     expect(json.answers).toBe(undefined)
     global.fetch.mockClear()
+    localStorage.removeItem('username')
+    localStorage.removeItem('user_id')
 })
 
 test("Check if the date formatter method works correctly", ()=>{

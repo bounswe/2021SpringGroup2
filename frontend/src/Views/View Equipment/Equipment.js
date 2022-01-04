@@ -7,6 +7,9 @@ import {ListItemText, TextField} from "@mui/material";
 import EventCard from "../Search/EventSearch/EventCard";
 import {searchEventBySport} from "../../Controllers/SearchController";
 import Container from "@mui/material/Container";
+import Comments from "../Comments/Comments";
+import Stack from "@mui/material/Stack";
+
 
 const useStyles = makeStyles(theme => createStyles({
     "@global": {
@@ -126,6 +129,11 @@ export default function Equipment (){
                             <ListItemText className={classes.fav} primary="Location" secondary={equipment.object.location.type + " " + equipment.object.location.longitude + " " + equipment.object.location.latitude} />
                         </Grid>
                     </Grid>
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                    <Stack direction={"row"} spacing={3} justifyContent={"center"}>
+                        <Comments id={equipmentid} isEvent={"equipments"}/>
+                    </Stack>
                 </Grid>
 
             </Grid>
