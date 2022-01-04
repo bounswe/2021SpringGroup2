@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
 
     >
     <ScrollView
@@ -29,41 +30,107 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+
+            <TextView
+                android:id="@+id/tv_equipment_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:src="@drawable/ic_baseline_person_24"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:text="Equipment Type : "
+                android:textSize="20dp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_title"
-                app:srcCompat="@drawable/rebound"/>
+                app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
+            <TextView
+                android:id="@+id/tv_equipment_type2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:text="Equipment Type : "
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/tv_equipment_type"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
+            <TextView
+                android:id="@+id/tv_owner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:text="Owner of the Equipment : "
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_equipment_type" />
+
+            <TextView
+                android:id="@+id/tv_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="Location : "
+                android:layout_marginTop="20dp"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_owner" />
+
+            <ImageView
+                android:id="@+id/iv_map_longitude"
+                android:layout_width="51dp"
+                android:layout_height="55dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="68dp"
+                android:layout_marginTop="4dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_map"
+                android:visibility="visible"
+                app:layout_constraintStart_toEndOf="@+id/tv_location"
+                app:layout_constraintTop_toBottomOf="@+id/tv_owner2"
+                />
+
+            <TextView
+                android:id="@+id/tv_owner2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal"
+                android:text="owner"
+                android:textSize="20dp"
+                android:textStyle="bold"
+
+                app:layout_constraintStart_toEndOf="@+id/tv_owner"
+                app:layout_constraintTop_toBottomOf="@+id/tv_equipment_type2" />
 
             <TextView
                 android:id="@+id/tv_description"
                 android:layout_width="380dp"
                 android:layout_height="63dp"
-                android:layout_marginTop="30dp"
                 android:height="50dp"
                 android:background="#51000000"
                 android:text="DESCRIPTION"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.461"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
+                app:layout_constraintTop_toBottomOf="@+id/tv_description2" />
 
             <TextView
                 android:id="@+id/tv_description2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="DESCRIPTION"
                 android:gravity="center"
+                android:text="DESCRIPTION"
                 android:textStyle="bold"
+                android:layout_marginTop="30dp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_location" />
+
 
             <TextView
                 android:id="@+id/tv_discussion"

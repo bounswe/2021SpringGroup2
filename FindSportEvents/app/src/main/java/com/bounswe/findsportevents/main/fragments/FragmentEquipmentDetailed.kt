@@ -16,10 +16,7 @@ import com.bounswe.findsportevents.databinding.FragmentEquipmentDetailedBinding
 import com.bounswe.findsportevents.databinding.FragmentViewEventDetailedBinding
 import com.bounswe.findsportevents.network.ReboundAPI
 import com.bounswe.findsportevents.network.modalz.requests.CommentRequest
-import com.bounswe.findsportevents.network.modalz.responses.AllCommentsResponse
-import com.bounswe.findsportevents.network.modalz.responses.CommentResponse
-import com.bounswe.findsportevents.network.modalz.responses.EquipmentbyIdResponse
-import com.bounswe.findsportevents.network.modalz.responses.EventbyIdResponse
+import com.bounswe.findsportevents.network.modalz.responses.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,6 +35,8 @@ class FragmentEquipmentDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
     private var username= ""
     private var postId = 0
     private var commentIds : MutableList<Int> = mutableListOf()
+    private var latitude =0f
+    private var longitude = 0f
 
     private var comments : MutableList<String> = mutableListOf()
     private var users : MutableList<String> = mutableListOf()
@@ -57,6 +56,22 @@ class FragmentEquipmentDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                 if(response.isSuccessful){
                     binding.tvTitle.text= response.body()?.`object`?.title ?: ""
                     binding.tvDescription.text = response.body()?.`object`?.content?: ""
+                    binding.tvEquipmentType2.text= response.body()?.`object`?.equipmentType ?: ""
+                    latitude= response.body()?.`object`?.location?.latitude ?: 0f
+                    longitude= response.body()?.`object`?.location?.longitude ?: 0f
+                    ReboundAPI.create().getUser(token, response.body()?.`object`?.ownerId.toString()).enqueue(object: Callback<UserResponse> {
+                        override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+
+                            if(response.isSuccessful){
+                           binding.tvOwner2.text= response.body()?.username
+                            }
+                        }
+
+                        override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+
+                        }
+
+                    })
 
                 }
             }
@@ -154,6 +169,7 @@ class FragmentEquipmentDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                                        comments.add(response.body()!!.items.get(i).`object`.content)
                                        users.add(response.body()!!.items.get(i).actor.name)
                                        dates.add(response.body()!!.items.get(i).`object`.creationDate)
+                                       commentIds.add(response.body()!!.items.get(i).`object`.id)
                                    }
                                    layoutManager= LinearLayoutManager(context)
                                    binding.rvDiscussion.layoutManager=layoutManager
@@ -178,6 +194,12 @@ class FragmentEquipmentDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
            })
 
        }
+        binding.ivMapLongitude.setOnClickListener {
+            val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
+            transaction.add(R.id.container_main,FragmentMapLocation.newInstance(token,latitude,longitude)).addToBackStack("equipmentResults")
+            transaction.commit()
+
+        }
     }
 
     interface FragmentEquipmentDetailedListener{

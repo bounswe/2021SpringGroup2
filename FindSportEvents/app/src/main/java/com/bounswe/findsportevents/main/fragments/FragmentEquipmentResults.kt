@@ -154,7 +154,7 @@ class FragmentEquipmentResults : Fragment(), RecyclerAdapterEquipment.OnItemClic
     }
     override fun onItemClick(position: Int) {
         val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.container_main,FragmentEquipmentDetailed.newInstance(token,username,equipmentIds[position])).addToBackStack("eqiupmentresult")
+        transaction.add(R.id.container_main,FragmentEquipmentDetailed.newInstance(token,username,equipmentIds[position])).addToBackStack("eqiupmentresult")
         transaction.commit()
     }
 

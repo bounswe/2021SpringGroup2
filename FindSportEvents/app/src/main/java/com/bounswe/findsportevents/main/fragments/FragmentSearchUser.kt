@@ -130,13 +130,13 @@ class FragmentSearchUser : Fragment(), RecyclerAdapterUser.OnItemClickListener {
                         if (response.isSuccessful) {
                             for (i in 0 until ((response.body()?.results?.size) ?: 0))
                             {
-                                usernames.add(response.body()?.results!!.get(i).username)
                                 ReboundAPI.create().getUser(token, response.body()?.results!!.get(i).username).enqueue(object : Callback<UserResponse>{
                                     override fun onResponse(
                                         call: Call<UserResponse>,
                                         response: Response<UserResponse>
                                     ) {
                                         if (response.isSuccessful){
+                                            usernames.add(response.body()?.username.toString())
                                             favSports.add(response.body()?.fav_sport_1.toString())
                                             layoutManager=LinearLayoutManager(context)
                                             binding.recyclerView2.layoutManager=layoutManager

@@ -24,5 +24,6 @@ data class ObjectResponse (
         val eventSpectatorCapacity : Int,
         val eventApplicants : List<Int>,
         val eventPlayers : List<Int>,
+        val eventSpectators : List<Int>,
 
 )

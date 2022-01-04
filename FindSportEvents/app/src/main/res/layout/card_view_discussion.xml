@@ -14,15 +14,18 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cons_layout"
         android:layout_width="match_parent"
-        android:layout_height="66dp">
+        android:layout_height="wrap_content"
+        android:minHeight="66dp">
 
         <TextView
             android:id="@+id/tv_username"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginStart="16dp"
+            android:minHeight="64dp"
+            android:layout_marginStart="4dp"
             android:gravity="center"
             android:text="Username"
+            android:background="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,10 +33,13 @@
 
         <TextView
             android:id="@+id/tv_comment"
-            android:layout_width="wrap_content"
+            android:layout_width="172dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="48dp"
+            android:minHeight="64dp"
+            android:layout_marginStart="8dp"
+            android:gravity="center"
             android:text="Comment"
+            android:background="#FBE9E7"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tv_username"
@@ -41,13 +47,14 @@
 
         <TextView
             android:id="@+id/tv_creation_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="60dp"
+            android:layout_width="91dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginEnd="4dp"
+            android:gravity="bottom"
             android:text="date"
             android:textColor="#0B1040"
-            android:textSize="20sp"
+            android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
