@@ -32,48 +32,52 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
     private var listener: RecyclerAdapterDiscussion.OnItemClickListener = this
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var adapter: RecyclerView.Adapter<RecyclerAdapterDiscussion.ViewHolder>? = null
-    private lateinit var viewEventDetailedFragListener: FragmentViewEventDetailedListener
     private var token = ""
     private var username = ""
     private var eventId = 0
-    private var latitude =0f
+    private var latitude = 0f
     private var longitude = 0f
-    private var players : ArrayList<Int> = arrayListOf()
-    private var spectators : ArrayList<Int> = arrayListOf()
-    private var comments : MutableList<String> = mutableListOf()
-    private var commentIds : MutableList<Int> = mutableListOf()
-    private var users : MutableList<String> = mutableListOf()
-    private var dates : MutableList<String> = mutableListOf()
-    private var name =""
-    private var ownerId= 0
+    private var players: ArrayList<Int> = arrayListOf()
+    private var spectators: ArrayList<Int> = arrayListOf()
+    private var comments: MutableList<String> = mutableListOf()
+    private var commentIds: MutableList<Int> = mutableListOf()
+    private var users: MutableList<String> = mutableListOf()
+    private var dates: MutableList<String> = mutableListOf()
+    private var name = ""
+    private var ownerId = 0
     private var content = ""
     private var creationDate = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewEventDetailedFragListener = requireActivity() as FragmentViewEventDetailedListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
         username = requireArguments().getString(USER_KEY) ?: ""
         eventId = requireArguments().getInt(EVENT_KEY) ?: 0
-        ReboundAPI.create().getEventbyId(token,eventId).enqueue(object : Callback<EventbyIdResponse>{
-            @SuppressLint("SetTextI18n")
-            override fun onResponse(call: Call<EventbyIdResponse>, response: Response<EventbyIdResponse>) {
-                if (response.isSuccessful) {
-                    binding.tvEventTitleResult.text = response.body()?.`object`?.title ?: ""
-                    binding.tvEventTypeResult.text=response.body()?.`object`?.eventSport
-                    binding.tvEventLocationResult.text = response.body()?.`object`?.location?.name ?:""
-                    binding.tvDateResult.text = response.body()?.`object`?.eventDate.toString()
-                    binding.tvAgeIntervalResult.text= "${response.body()?.`object`?.eventMinAge.toString()}  - ${response.body()?.`object`?.eventMaxAge.toString()}"
-                    players = response.body()?.`object`?.eventPlayers as ArrayList<Int>
-                    spectators= response.body()?.`object`?.eventSpectators as ArrayList<Int>
-                    latitude= response.body()!!.`object`.location.latitude
-                    longitude= response.body()!!.`object`.location.longitude
-                    layoutManager= LinearLayoutManager(context)
-                    binding.rvDiscussion.layoutManager=layoutManager
-                    adapter = RecyclerAdapterDiscussion(users,comments,dates, listener)
-                    ownerId = response.body()!!.`object`.ownerId
+        ReboundAPI.create().getEventbyId(token, eventId)
+            .enqueue(object : Callback<EventbyIdResponse> {
+                @SuppressLint("SetTextI18n")
+                override fun onResponse(
+                    call: Call<EventbyIdResponse>,
+                    response: Response<EventbyIdResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        binding.tvEventTitleResult.text = response.body()?.`object`?.title ?: ""
+                        binding.tvEventTypeResult.text = response.body()?.`object`?.eventSport
+                        binding.tvEventLocationResult.text =
+                            response.body()?.`object`?.location?.name ?: ""
+                        binding.tvDateResult.text = response.body()?.`object`?.eventDate.toString()
+                        binding.tvAgeIntervalResult.text =
+                            "${response.body()?.`object`?.eventMinAge.toString()}  - ${response.body()?.`object`?.eventMaxAge.toString()}"
+                        players = response.body()?.`object`?.eventPlayers as ArrayList<Int>
+                        spectators = response.body()?.`object`?.eventSpectators as ArrayList<Int>
+                        latitude = response.body()!!.`object`.location.latitude
+                        longitude = response.body()!!.`object`.location.longitude
+                        layoutManager = LinearLayoutManager(context)
+                        binding.rvDiscussion.layoutManager = layoutManager
+                        adapter = RecyclerAdapterDiscussion(users, comments, dates, listener)
+                        ownerId = response.body()!!.`object`.ownerId
 
-                    binding.rvDiscussion.adapter = adapter
+                        binding.rvDiscussion.adapter = adapter
 
                     }
                 }
@@ -270,22 +274,28 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                         call: Call<CommentResponse>,
                         response: Response<CommentResponse>
                     ) {
-                        if(response.isSuccessful){
-                            Toast.makeText(requireContext(), "COMMENT SUCCESSFULLY POSTED", Toast.LENGTH_SHORT).show()
-                            ReboundAPI.create().getAllComments(token,eventId).enqueue(object :Callback<AllCommentsResponse>{
-                                override fun onResponse(
-                                    call: Call<AllCommentsResponse>,
-                                    response: Response<AllCommentsResponse>
-                                ) {
-                                    if(response.isSuccessful){
-                                        comments = mutableListOf()
-                                        users = mutableListOf()
-                                        dates = mutableListOf()
-                                        for(i in 0 until response.body()?.items?.size!!) {
-                                            comments.add(response.body()!!.items.get(i).`object`.content)
-                                            users.add(response.body()!!.items.get(i).actor.name)
-                                            dates.add(response.body()!!.items.get(i).`object`.creationDate)
-                                            commentIds.add(response.body()!!.items.get(i).`object`.id)
+                        if (response.isSuccessful) {
+                            Toast.makeText(
+                                requireContext(),
+                                "COMMENT SUCCESSFULLY POSTED",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            ReboundAPI.create().getAllComments(token, eventId)
+                                .enqueue(object : Callback<AllCommentsResponse> {
+                                    override fun onResponse(
+                                        call: Call<AllCommentsResponse>,
+                                        response: Response<AllCommentsResponse>
+                                    ) {
+                                        if (response.isSuccessful) {
+                                            comments = mutableListOf()
+                                            users = mutableListOf()
+                                            dates = mutableListOf()
+                                            for (i in 0 until response.body()?.items?.size!!) {
+                                                comments.add(response.body()!!.items.get(i).`object`.content)
+                                                users.add(response.body()!!.items.get(i).actor.name)
+                                                dates.add(response.body()!!.items.get(i).`object`.creationDate)
+                                                commentIds.add(response.body()!!.items.get(i).`object`.id)
+                                            }
                                         }
                                     }
 
@@ -321,8 +331,11 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
             transaction.commit()
         }
         binding.btnSpectators.setOnClickListener {
-            val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-            transaction.add(R.id.container_main,FragmentSpectators.newInstance(token,username,spectators)).addToBackStack("equipmentResults")
+            val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
+            transaction.add(
+                R.id.container_main,
+                FragmentSpectators.newInstance(token, username, spectators)
+            ).addToBackStack("equipmentResults")
             transaction.commit()
         }
         binding.btnApplications.setOnClickListener {
@@ -335,8 +348,12 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                     if (response.isSuccessful) {
                         userId = response.body()?.id?.toInt() ?: 0
                         if (userId == ownerId) {
-                            val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-                            transaction.replace(R.id.container_main,FragmentViewApplications.newInstance(token, eventId, ownerId)).addToBackStack("myEvents")
+                            val transaction: FragmentTransaction =
+                                parentFragmentManager.beginTransaction()
+                            transaction.replace(
+                                R.id.container_main,
+                                FragmentViewApplications.newInstance(token, eventId, ownerId)
+                            ).addToBackStack("myEvents")
                             transaction.commit()
                         } else {
                             Toast.makeText(
@@ -356,14 +373,13 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
 
         }
         binding.ivMapLongitude.setOnClickListener {
-            val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-            transaction.add(R.id.container_main,FragmentMapLocation.newInstance(token,latitude,longitude)).addToBackStack("equipmentResults")
+            val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
+            transaction.add(
+                R.id.container_main,
+                FragmentMapLocation.newInstance(token, latitude, longitude)
+            ).addToBackStack("equipmentResults")
             transaction.commit()
         }
-    }
-
-    interface FragmentViewEventDetailedListener {
-        //        TODO("Not yet implemented")
     }
 
 
