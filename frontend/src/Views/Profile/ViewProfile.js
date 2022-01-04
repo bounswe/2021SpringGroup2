@@ -12,6 +12,11 @@ import {getAllBadges, getAllBadgesOfAUser, getAllEventsAvailableForBadgeGift} fr
 import {getUserInfoLoggedIn} from "../../Controllers/AuthInfo";
 import RelatedEvents from "../Badges/RelatedEvents";
 import Box from "@mui/material/Box";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import AppliedEvents from "./Tabs/AppliedEvents";
+import OwnedEvents from "./Tabs/OwnedEvents"
+import {searchEventByOwner, searchEventByApplier} from "../../Controllers/SearchController";
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -124,8 +129,15 @@ const Index = _ =>{
     const [loggedUser, setLoggedUser] = useState(null)
     const [relatedEvents, setRelatedEvents] = useState([])
     const [allBadges, setAllBadges] = useState([])
+    const [tab, setTab] = useState(0)
+    const [applied, setApplied] = useState([])
+    const [owned, setOwned] = useState([])
+
+
     useEffect(async function () {
         if(profile.loading){
+            let id = null
+
             getProfile(userid)
                 .then(p=>{
                     const newProfile = {...profile}
@@ -137,7 +149,13 @@ const Index = _ =>{
                     newProfile.username.value = userid
                     newProfile.loading = false
                     setProfile(newProfile)
+                    id=p.id
+                    return p
                 })
+                .then(p=>searchEventByOwner(p.id))
+                .then(setOwned)
+                .then(_=>searchEventByApplier(id))
+                .then(setApplied)
                 .catch(console.log)
             await getAllBadgesOfAUser(userid).then(badges => {
                     console.log(badges)
@@ -152,7 +170,6 @@ const Index = _ =>{
                 .catch(console.log)
         }
     }, [])
-
 
     return profile.loading? <CircularProgress />
         :
@@ -219,6 +236,28 @@ const Index = _ =>{
                 }
 
 
+            </Grid>
+
+            <Grid>
+                <Tabs
+                    value={tab}
+                    onChange={(event, newValue) => setTab(newValue)}
+                    indicatorColor="secondary"
+                    textColor="inherit"
+                    variant="fullWidth"
+                    aria-label="full width tabs example"
+                >
+                    <Tab label="Applied Events" id={`full-width-tab-applied`} aria-controls={"full-width-tabpanel-applied"}/>
+                    <Tab label="Owned Events" id={`full-width-tab-owned`} aria-controls={"full-width-tabpanel-owned"}/>
+                </Tabs>
+                <AppliedEvents
+                    hidden={tab!==0}
+                    applied={applied}
+                />
+                <OwnedEvents
+                    hidden={tab!==1}
+                    owned={owned}
+                />
             </Grid>
 
         </div>
