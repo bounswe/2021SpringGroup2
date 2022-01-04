@@ -127,8 +127,8 @@ export default function MapWithRectangle(props) {
     }
     return (
         <div>
-            <Grid container spacing={1}>
-                <Grid item sm={11}>
+            <Grid container>
+                <Grid item sm={9}>
                     <Autocomplete
                         open={optionsOpen}
                         value={location}
@@ -145,7 +145,7 @@ export default function MapWithRectangle(props) {
                                             style={textFieldStyle} value={locationText|""}></TextField>
                             )}} />
                 </Grid>
-                <Grid item sm={1}>
+                <Grid item sm={3}>
                     <IconButton style={{marginTop: "10%"}} onClick={handleSearch}>
                         <SearchIcon style={{width:"70%", height:"70%"}}/>
                     </IconButton>
