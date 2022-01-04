@@ -34,6 +34,7 @@ class FragmentSearchTransit : Fragment() {
         super.onCreate(savedInstanceState)
         searchTransitFragListener = requireActivity() as FragmentSearchTransitListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
+        username= requireArguments().getString(USER_KEY) ?: ""
         testList=requireArguments().getStringArrayList(TEST_KEY) ?: arrayListOf("")
         token="JWT $token"
 
@@ -66,12 +67,12 @@ class FragmentSearchTransit : Fragment() {
     private fun setClickListeners() {
        binding.btnSearchEvent.setOnClickListener {
            val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-           transaction.replace(R.id.container_main,FragmentSearchEvent.newInstance(token,testList)).addToBackStack("myEvents")
+           transaction.replace(R.id.container_main,FragmentSearchEvent.newInstance(token,username,testList)).addToBackStack("myEvents")
            transaction.commit()
        }
         binding.btnSearchUser.setOnClickListener {
             val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.container_main,FragmentSearchUser.newInstance(token)).addToBackStack("searchUser")
+            transaction.replace(R.id.container_main,FragmentSearchUser.newInstance(token,username)).addToBackStack("searchUser")
             transaction.commit()
         }
     }
@@ -83,11 +84,13 @@ class FragmentSearchTransit : Fragment() {
     companion object {
         const val TAG = "search transit"
         private const val TOKEN_KEY = "token_key"
+        private const val USER_KEY = "user_key"
         private const val TEST_KEY = "test_key"
-        fun newInstance(token: String,testList : ArrayList<String>) = FragmentSearchTransit().also {
+        fun newInstance(token: String,username:String,testList : ArrayList<String>) = FragmentSearchTransit().also {
             it.arguments = Bundle().also {
                 it.putString(TOKEN_KEY, token)
                 it.putStringArrayList(TEST_KEY,testList)
+                it.putString(USER_KEY,username)
 
             }
         }

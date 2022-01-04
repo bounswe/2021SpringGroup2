@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bounswe.findsportevents.R
 import com.bounswe.findsportevents.adapter.RecyclerAdapter
 import com.bounswe.findsportevents.databinding.FragmentMyEventsBinding
 import com.bounswe.findsportevents.network.ReboundAPI
@@ -27,8 +29,10 @@ class FragmentMyEvents : Fragment(), RecyclerAdapter.OnItemClickListener , Dialo
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var adapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>? = null
     private var token = ""
+    private var username= ""
     private var dialog: LoadingDialog? = null
     var ownerId : Long=0
+    var eventIds : MutableList<Int> = mutableListOf()
     var contents: MutableList<String> = mutableListOf()
     var titles: MutableList<String> = mutableListOf()
     var events: MutableList<String> = mutableListOf()
@@ -70,6 +74,7 @@ class FragmentMyEvents : Fragment(), RecyclerAdapter.OnItemClickListener , Dialo
                         response.body()?.results?.get(i)
                             ?.let { spectators.add(it.spec_capacity) }
                         response.body()?.results?.get(i)?.let { date.add(it.date.toString()) }
+                        eventIds.add(response.body()!!.results.get(i).id)
                     }
                     layoutManager = LinearLayoutManager(context)
                     binding.recyclerView.layoutManager = layoutManager
@@ -111,6 +116,7 @@ class FragmentMyEvents : Fragment(), RecyclerAdapter.OnItemClickListener , Dialo
                                             ?.let { spectators.add(it.spec_capacity) }
                                         response.body()?.results?.get(i)
                                             ?.let { date.add(it.date.toString()) }
+                                        eventIds.add(response.body()!!.results.get(i).id)
                                     }
                                     layoutManager = LinearLayoutManager(context)
                                     binding.recyclerView.layoutManager = layoutManager
@@ -200,7 +206,9 @@ class FragmentMyEvents : Fragment(), RecyclerAdapter.OnItemClickListener , Dialo
         }
     }
     override fun onItemClick(position: Int) {
-        Toast.makeText(context, "Item ${events[position]}", Toast.LENGTH_SHORT).show()
+        val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.container_main,FragmentViewEventDetailed.newInstance(token,ownerId.toString(),eventIds[position])).addToBackStack("eqiupmentresult")
+        transaction.commit()
     }
     override fun showLoading(context: Context) {
         try {

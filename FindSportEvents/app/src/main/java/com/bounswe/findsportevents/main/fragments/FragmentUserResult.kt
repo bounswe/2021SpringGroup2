@@ -11,6 +11,8 @@ import androidx.fragment.app.FragmentTransaction
 import com.bounswe.findsportevents.R
 import com.bounswe.findsportevents.databinding.FragmentUserResultBinding
 import com.bounswe.findsportevents.network.ReboundAPI
+import com.bounswe.findsportevents.network.modalz.responses.BlockResponse
+import com.bounswe.findsportevents.network.modalz.responses.FollowResponse
 import com.bounswe.findsportevents.network.modalz.responses.UserResponse
 import com.bounswe.findsportevents.util.DialogManager
 import com.bounswe.findsportevents.util.LoadingDialog
@@ -28,17 +30,19 @@ class FragmentUserResult : Fragment(), DialogManager {
     private lateinit var userResultFragListener: FragmentUserResultListener
     private var token = ""
     private var username = ""
+    private var selectedUsername = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userResultFragListener = requireActivity() as FragmentUserResultListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
         username = requireArguments().getString(USERNAME_KEY) ?: ""
+        selectedUsername = requireArguments().getString(SELECTED_KEY) ?: ""
 
         context?.run {
             showLoading(this)
         }
-        ReboundAPI.create().getUser(token, username).enqueue(object: Callback<UserResponse> {
+        ReboundAPI.create().getUser(token, selectedUsername).enqueue(object: Callback<UserResponse> {
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                 hideLoading()
                 if(response.isSuccessful){
@@ -102,6 +106,43 @@ class FragmentUserResult : Fragment(), DialogManager {
             transaction.replace(R.id.container_main,FragmentRelatedEvents.newInstance(token,ownerId,username)).addToBackStack("myEvents")
             transaction.commit()
         }
+        binding.btnFollow.setOnClickListener{
+                ReboundAPI.create().followUser(token,selectedUsername).enqueue(object: Callback<FollowResponse>{
+                    override fun onResponse(
+                        call: Call<FollowResponse>,
+                        response: Response<FollowResponse>
+                    ) {
+                        if(response.isSuccessful){
+                            Toast.makeText(context, response.body()?.message,Toast.LENGTH_SHORT)
+
+                    }
+                    }
+
+                    override fun onFailure(call: Call<FollowResponse>, t: Throwable) {
+                        Toast.makeText(context, "AN ERROR OCCURRED, PLEASE TRY AGAIN LATER",Toast.LENGTH_SHORT)
+                    }
+
+                })
+
+        }
+        binding.btnBlock.setOnClickListener {
+            ReboundAPI.create().blockUser(token,selectedUsername).enqueue(object: Callback<BlockResponse>{
+                override fun onResponse(
+                    call: Call<BlockResponse>,
+                    response: Response<BlockResponse>
+                ) {
+                    if(response.isSuccessful){
+                        Toast.makeText(context, response.body()?.message,Toast.LENGTH_SHORT)
+
+                    }
+                }
+
+                override fun onFailure(call: Call<BlockResponse>, t: Throwable) {
+                    Toast.makeText(context, "AN ERROR OCCURRED, PLEASE TRY AGAIN LATER",Toast.LENGTH_SHORT)
+                }
+
+            })
+        }
     }
 
     interface FragmentUserResultListener {
@@ -112,11 +153,13 @@ class FragmentUserResult : Fragment(), DialogManager {
         const val TAG = "UserResult"
         private const val TOKEN_KEY = "token_key"
         private const val USERNAME_KEY = "username_key"
+        private const val SELECTED_KEY = "selected_key"
 
-        fun newInstance(token: String, username: String) = FragmentUserResult().also {
+        fun newInstance(token: String, username: String,selectedUsername:String) = FragmentUserResult().also {
             it.arguments = Bundle().also {
                 it.putString(TOKEN_KEY, token)
                 it.putString(USERNAME_KEY, username)
+                it.putString(SELECTED_KEY, selectedUsername)
             }
         }
     }

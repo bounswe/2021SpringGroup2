@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bounswe.findsportevents.R
 import com.bounswe.findsportevents.adapter.RecyclerAdapter2
 import com.bounswe.findsportevents.databinding.FragmentSearchResultsBinding
 import com.bounswe.findsportevents.network.ReboundAPI
@@ -30,6 +32,7 @@ class FragmentSearchResults : Fragment(), RecyclerAdapter2.OnItemClickListener, 
     private var _binding: FragmentSearchResultsBinding? = null
     private val binding get() = _binding!!
     private var token = ""
+    private var username= ""
     private var layoutManager: RecyclerView.LayoutManager?=null
     private var listener : RecyclerAdapter2.OnItemClickListener = this
     private var adapter: RecyclerView.Adapter<RecyclerAdapter2.ViewHolder>?=null
@@ -51,6 +54,7 @@ class FragmentSearchResults : Fragment(), RecyclerAdapter2.OnItemClickListener, 
     private var query=""
     private var dialog: LoadingDialog? = null
     var events : MutableList<String> = mutableListOf()
+    var eventIds : MutableList<Int> = mutableListOf()
     var creators:MutableList<Int> = mutableListOf()
     var fields:MutableList<String> = mutableListOf()
     var players:MutableList<Int> = mutableListOf()
@@ -68,6 +72,7 @@ class FragmentSearchResults : Fragment(), RecyclerAdapter2.OnItemClickListener, 
         super.onCreate(savedInstanceState)
         searchResultsFragListener = requireActivity() as FragmentSearchResultsListener
         token = requireArguments().getString(TOKEN_KEY) ?: ""
+        username = requireArguments().getString(USER_KEY) ?: ""
         sport=requireArguments().getString(SPORT_KEY)?:""
         minAge= requireArguments().getInt(MIN_AGE_KEY)
         maxAge= requireArguments().getInt(MAX_AGE_KEY)
@@ -105,6 +110,7 @@ class FragmentSearchResults : Fragment(), RecyclerAdapter2.OnItemClickListener, 
                         response.body()?.results?.get(i)
                             ?.let { spectators.add(it.spec_capacity) }
                         response.body()?.results?.get(i)?.let { date.add(it.date.toString()) }
+                        eventIds.add(response.body()!!.results.get(i).id)
                     }
                     layoutManager= LinearLayoutManager(context)
                     binding.recyclerView2.layoutManager=layoutManager
@@ -130,6 +136,7 @@ class FragmentSearchResults : Fragment(), RecyclerAdapter2.OnItemClickListener, 
                                         response.body()?.results?.get(i)
                                             ?.let { spectators.add(it.spec_capacity) }
                                         response.body()?.results?.get(i)?.let { date.add(it.date.toString()) }
+                                        eventIds.add(response.body()!!.results.get(i).id)
                                     }
                                     layoutManager=LinearLayoutManager(context)
                                     binding.recyclerView2.layoutManager=layoutManager
@@ -191,7 +198,9 @@ class FragmentSearchResults : Fragment(), RecyclerAdapter2.OnItemClickListener, 
 //
     }
     override fun onItemClick(position: Int) {
-        Toast.makeText(context,"Item ${events[position]}",Toast.LENGTH_SHORT).show()
+        val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.container_main,FragmentViewEventDetailed.newInstance(token,username,eventIds[position])).addToBackStack("eqiupmentresult")
+        transaction.commit()
     }
     override fun showLoading(context: Context) {
         try {
@@ -231,12 +240,14 @@ class FragmentSearchResults : Fragment(), RecyclerAdapter2.OnItemClickListener, 
         private const val MIN_LONGITUDE_KEY = "min_longitude_key"
         private const val MAX_LATITUDE_KEY = "max_latitude_key"
         private const val MAX_LONGITUDE_KEY = "max_longitude_key"
+        private const val USER_KEY = "user_key"
 
 
-        fun newInstance(token : String,sport: String, minSkill:Int,maxSkill:Int, min_age:Int, max_age:Int,start_time:String,end_time:String,min_duration:Int,max_duration:Int,min_latitude:Float,
+        fun newInstance(token : String,username: String,sport: String, minSkill:Int,maxSkill:Int, min_age:Int, max_age:Int,start_time:String,end_time:String,min_duration:Int,max_duration:Int,min_latitude:Float,
         max_latitude:Float,min_longitude:Float,max_longitude:Float) = FragmentSearchResults().apply {
             arguments = Bundle().apply {
                 putString(TOKEN_KEY, token)
+                putString(USER_KEY, username)
                 putString(SPORT_KEY, sport)
                 putInt(MIN_SKILL_KEY, minSkill)
                 putInt(MAX_SKILL_KEY, maxSkill)

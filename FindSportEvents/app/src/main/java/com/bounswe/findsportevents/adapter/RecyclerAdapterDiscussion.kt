@@ -18,7 +18,7 @@ class RecyclerAdapterDiscussion(val usernames : MutableList<String>,val contents
     }
 
     override fun onBindViewHolder(holder: RecyclerAdapterDiscussion.ViewHolder, position: Int) {
-        holder.username.text=usernames[position]
+        holder.username.text=usernames[position] + ":"
         holder.comment.text=contents[position]
         holder.creationDate.text=creationDates[position]
 
@@ -36,6 +36,7 @@ class RecyclerAdapterDiscussion(val usernames : MutableList<String>,val contents
             username=itemView.findViewById(R.id.tv_username)
             comment=itemView.findViewById(R.id.tv_comment)
             creationDate=itemView.findViewById(R.id.tv_creation_date)
+            itemView.setOnClickListener(this)
         }
 
         override fun onClick(p0: View?) {

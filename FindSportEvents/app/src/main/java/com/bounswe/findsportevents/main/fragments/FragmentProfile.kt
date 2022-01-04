@@ -25,6 +25,7 @@ import retrofit2.Response
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class FragmentProfile : Fragment(), DialogManager {
     private var _binding: FragmentProfileBinding? = null
@@ -35,6 +36,7 @@ class FragmentProfile : Fragment(), DialogManager {
     private lateinit var profileFragListener: FragmentProfileListener
     private var token = ""
     private var username = ""
+    private var testList : ArrayList<String> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +44,7 @@ class FragmentProfile : Fragment(), DialogManager {
         token = requireArguments().getString(TOKEN_KEY) ?: ""
         token="JWT $token"
         username = requireArguments().getString(USERNAME_KEY) ?: ""
+        testList = requireArguments().getStringArrayList(TEST_KEY) ?: arrayListOf()
 
         context?.run {
             showLoading(this)
@@ -134,6 +137,14 @@ class FragmentProfile : Fragment(), DialogManager {
             val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
             transaction.replace(R.id.container_main,FragmentMyEvents.newInstance(token,ownerId)).addToBackStack("myEvents")
             transaction.commit()
+
+
+        }
+        binding.btnAddEquipment.setOnClickListener {
+            val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.container_main,FragmentCreateEquipment.newInstance(token, username, testList)).addToBackStack("myEvents")
+            transaction.commit()
+
         }
     }
 
@@ -145,11 +156,13 @@ class FragmentProfile : Fragment(), DialogManager {
         const val TAG = "profile"
         private const val TOKEN_KEY = "token_key"
         private const val USERNAME_KEY = "username_key"
+        private const val TEST_KEY = "test_key"
 
-        fun newInstance(token: String, username: String) = FragmentProfile().also {
+        fun newInstance(token: String, username: String,testList : ArrayList<String>) = FragmentProfile().also {
             it.arguments = Bundle().also {
                 it.putString(TOKEN_KEY, token)
                 it.putString(USERNAME_KEY, username)
+                it.putStringArrayList(TEST_KEY, testList)
             }
         }
     }

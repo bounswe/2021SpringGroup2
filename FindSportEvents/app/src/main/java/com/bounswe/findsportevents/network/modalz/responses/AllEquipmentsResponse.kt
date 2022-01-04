@@ -1,11 +1,10 @@
 package com.bounswe.findsportevents.network.modalz.responses
 
 data class AllEquipmentsResponse(
-    val summary: String,
-    val type: String,
-    val totalItems: Int,
-    val totalPages: Int,
-    val orderedItems: List<EquipmentResponse>
+    val count: Int,
+    val next : String,
+    val previous : String,
+    val results : List<EquipmentResponse2>
 )
 
 data class EquipmentResponse(
@@ -21,4 +20,16 @@ data class EquipmentResponse(
         val url : String,
         val sport : String,
         val equipmentType : String
+)
+data class EquipmentResponse2(
+    val id : Int,
+    val content : String,
+    val title : String,
+    val equipment_type: String
+)
+data class EquipmentbyIdResponse(
+    val summary : String,
+    val type : String,
+    val actor : ActorResponse,
+    val `object` : EquipmentResponse
 )
