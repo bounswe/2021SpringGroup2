@@ -14,6 +14,6 @@ export function getSportsList(){
         .then(response=>response.json())
         .then(r=>{console.log(r); return r})
         .then(r=>r.data.map(d=>({img:d.relationships.images.data[0].url, label:d.attributes.name})))
-        .then(r=>r.concat({img:"https://sports-api-production.s3.amazonaws.com/uploads/sport/images/327/frisbee.jpg", label:"Frisbee"}))
+        .then(r=>r.concat({img:"https://sports-api-production.s3.amazonaws.com/uploads/sport/images/327/frisbee.jpg", label:"Ultimate Frisbee"}))
 }
 

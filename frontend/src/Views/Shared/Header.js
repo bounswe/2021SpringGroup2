@@ -83,17 +83,6 @@ const Header = props => {
                                 <img src={image} alt={"logo"} />
                                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                                 </Typography>
-                                <IconButton
-                                    size="large"
-                                    aria-label="show 17 new notifications"
-                                    color="inherit"
-                                    style={{marginRight:10}}
-                                >
-                                    <Badge badgeContent={2} color="error" component={Link} to="/notifications">
-
-                                        <NotificationsIcon />
-                                    </Badge>
-                                </IconButton>
                                 <Button
                                     component={Link} to="/home"
                                     color="primary"
