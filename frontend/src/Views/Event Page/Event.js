@@ -210,9 +210,6 @@ export default function Event (){
                 </Grid>
 
                 <Grid item xs={12} sm={12}>
-                    <Typography variant="h5" align={"center"}>
-                        Requirements (to apply)
-                    </Typography>
                     <Grid container spacing={2} justifyContent={"space-between"} >
                         <Grid item xs={12} sm={6}>
                             <ListItemText className={classes.fav} primary="Minimum Age" secondary={event.object.eventMinAge} />

@@ -251,7 +251,7 @@ const Index = _ =>{
                     variant="fullWidth"
                     aria-label="full width tabs example"
                 >
-                    <Tab label="Applied Events" id={`full-width-tab-applied`} aria-controls={"full-width-tabpanel-applied"}/>
+                    <Tab label="Participated Events" id={`full-width-tab-applied`} aria-controls={"full-width-tabpanel-applied"}/>
                     <Tab label="Owned Events" id={`full-width-tab-owned`} aria-controls={"full-width-tabpanel-owned"}/>
                 </Tabs>
                 <AppliedEvents

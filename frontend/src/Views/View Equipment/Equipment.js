@@ -9,6 +9,7 @@ import {searchEventBySport} from "../../Controllers/SearchController";
 import Container from "@mui/material/Container";
 import Comments from "../Comments/Comments";
 import Stack from "@mui/material/Stack";
+import {formatDate} from "../Comments/Comment";
 
 
 const useStyles = makeStyles(theme => createStyles({
@@ -123,7 +124,7 @@ export default function Equipment (){
                             <ListItemText className={classes.fav} primary="Type of Equipment" secondary={equipment.object.equipmentType} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <ListItemText className={classes.fav} primary="Creation Date" secondary={equipment.object.creationDate} />
+                            <ListItemText className={classes.fav} primary="Creation Date" secondary={formatDate(equipment.object.creationDate)} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <ListItemText className={classes.fav} primary="Location" secondary={equipment.object.location.type + " " + equipment.object.location.longitude + " " + equipment.object.location.latitude} />

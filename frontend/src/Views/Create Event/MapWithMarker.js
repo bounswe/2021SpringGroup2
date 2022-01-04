@@ -81,7 +81,7 @@ export default function MapWithMarker(props) {
                     clearOnBlur={false}
                     renderInput={params => {
                         return (
-                            <TextField  {...params} id="location" fullWidth label="Event Location" placeholder="Search for city, district, street..." size="small" variant="outlined"
+                            <TextField  {...params} id="location" fullWidth label="Select Location" placeholder="Search for city, district, street..." size="small" variant="outlined"
                                         style={textFieldStyle} value={locationText|""}></TextField>
                         )}} />
             </Grid>

@@ -257,7 +257,7 @@ export default function CreateEquipmentPage(props){
                     </Grid>
 
                     <Box textAlign='center'>
-                        <Button  variant="contained" align="center" onClick={createEvent}
+                        <Button type="submit" variant="contained" align="center" onClick={createEvent}
                                 style={{margin:"8px 0",backgroundColor:"#41e5ff"}}>Create Equipment Post
                         </Button>
                     </Box>
