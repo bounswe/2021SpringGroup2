@@ -13,12 +13,21 @@ from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from django.db.models import Q, F, Func, IntegerField
 from datetime import datetime
-
+from collections import OrderedDict
 
 class EventPostsPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'page_size'
     max_page_size = 1000
+
+    def get_paginated_response(self, data):
+        return Response(OrderedDict([
+            ('count', self.page.paginator.count),
+            ('next', self.get_next_link()),
+            ('previous', self.get_previous_link()),
+            ('results', data),
+            ('totalPages', self.page.paginator.num_pages)
+        ]))
 
 
 class EventViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
