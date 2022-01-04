@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe.findsportevents.R
 import com.bounswe.findsportevents.adapter.RecyclerAdapterApplications
+import com.bounswe.findsportevents.adapter.RecyclerAdapterSpectators
 import com.bounswe.findsportevents.databinding.FragmentViewApplicationsBinding
 import com.bounswe.findsportevents.network.ReboundAPI
 import com.bounswe.findsportevents.network.modalz.requests.ApplicantsRequest
@@ -21,14 +22,21 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class FragmentViewApplications : Fragment(), RecyclerAdapterApplications.OnItemClickListener {
+class FragmentViewApplications : Fragment(), RecyclerAdapterApplications.OnItemClickListener, RecyclerAdapterSpectators.OnItemClickListenerSpectator {
     private var _binding: FragmentViewApplicationsBinding? = null
     private val binding get() = _binding!!
+
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var adapter: RecyclerView.Adapter<RecyclerAdapterApplications.ViewHolder>? = null
     private var listener: RecyclerAdapterApplications.OnItemClickListener = this
     private var usernames: MutableList<String> = mutableListOf()
     private var favSports: MutableList<String> = mutableListOf()
+
+    private var layoutManagerSpectators: RecyclerView.LayoutManager? = null
+    private var adapterSpectators: RecyclerView.Adapter<RecyclerAdapterSpectators.ViewHolder>? = null
+    private var listenerSpectators: RecyclerAdapterSpectators.OnItemClickListenerSpectator = this
+    private var usernamesSpectators: MutableList<String> = mutableListOf()
+    private var favSportsSpectators: MutableList<String> = mutableListOf()
     private var token = ""
     private var eventId = 0
     private var ownerId = 0
@@ -99,6 +107,54 @@ class FragmentViewApplications : Fragment(), RecyclerAdapterApplications.OnItemC
 
             })
 
+        layoutManagerSpectators = LinearLayoutManager(context)
+        binding.rvSpectators.layoutManager = layoutManagerSpectators
+        adapterSpectators = RecyclerAdapterSpectators(usernames, favSports, listenerSpectators)
+        binding.rvPlayers.adapter = adapterSpectators
+
+        ReboundAPI.create().getApplicants(token, eventId, "spectator")
+            .enqueue(object : Callback<ApplicantListResponse> {
+                override fun onResponse(
+                    call: Call<ApplicantListResponse>,
+                    response: Response<ApplicantListResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        for (i in response.body()?.applicants?.indices!!) {
+                            ReboundAPI.create()
+                                .getUser(token, response.body()!!.applicants[i].toString())
+                                .enqueue(object : Callback<UserResponse> {
+                                    override fun onResponse(
+                                        call: Call<UserResponse>,
+                                        response: Response<UserResponse>
+                                    ) {
+                                        if (response.isSuccessful) {
+                                            usernamesSpectators.add(response.body()?.username!!)
+                                            favSportsSpectators.add(response.body()?.fav_sport_1!!)
+
+                                            adapterSpectators = RecyclerAdapterSpectators(
+                                                usernamesSpectators,
+                                                favSportsSpectators,
+                                                listenerSpectators
+                                            )
+                                            binding.rvSpectators.adapter = adapterSpectators
+                                        }
+                                    }
+
+                                    override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                                    }
+
+                                })
+                        }
+
+                    }
+                }
+
+                override fun onFailure(call: Call<ApplicantListResponse>, t: Throwable) {
+                }
+
+            })
+
+
         setClickListeners()
     }
 
@@ -165,6 +221,57 @@ class FragmentViewApplications : Fragment(), RecyclerAdapterApplications.OnItemC
     }
 
     override fun onProfileClickedPlayers(username: String, position: Int) {
+        val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
+        transaction.replace(
+            R.id.container_main,
+            FragmentUserResult.newInstance(token, username, usernames[position])
+        ).addToBackStack("userResult")
+        transaction.commit()
+    }
+
+    override fun onAcceptOrRejectClickedSpectators(accept: Boolean, username: String) {
+        ReboundAPI.create().getUser(token, username).enqueue(object : Callback<UserResponse> {
+            override fun onResponse(
+                call: Call<UserResponse>,
+                response: Response<UserResponse>
+            ) {
+                if (response.isSuccessful) {
+
+                    val request = ApplicantsRequest(
+                        "spectator",
+                        response.body()?.id?.toInt() ?: 0,
+                        ownerId,
+                        accept
+                    )
+                    ReboundAPI.create().acceptOrRejectApplicants(token, eventId, request)
+                        .enqueue(object : Callback<ApplicantsResponse> {
+                            override fun onResponse(
+                                call: Call<ApplicantsResponse>,
+                                response: Response<ApplicantsResponse>
+                            ) {
+                                if (response.isSuccessful) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        response.body()?.summary ?: "",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+
+                            override fun onFailure(call: Call<ApplicantsResponse>, t: Throwable) {
+                            }
+
+                        })
+                }
+            }
+
+            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+            }
+
+        })
+    }
+
+    override fun onProfileClickedSpectators(username: String, position: Int) {
         val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
         transaction.replace(
             R.id.container_main,
