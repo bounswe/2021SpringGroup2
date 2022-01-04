@@ -271,6 +271,7 @@ export default function Event (){
                             event.object.eventApplicantsAsPlayer.includes(Number(viewerUser.user_id))}
                                     variant={"contained"} style={{backgroundColor:"green"}}>Player Application</Button>
                             <Button onClick={()=>{handleApplication("spectator")}} disabled={viewerUser===null||viewerUser===false||viewerUser.user_id===null||
+                            event.object.eventSpectators.includes(Number(viewerUser.user_id))||
                             event.object.eventApplicantsAsSpectator.includes(Number(viewerUser.user_id))}
                                 variant={"contained"} style={{backgroundColor:"red"}}>Spectator Application</Button>
                     </Stack>
