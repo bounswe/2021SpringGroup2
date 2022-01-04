@@ -31,6 +31,7 @@ class FragmentUserResult : Fragment(), DialogManager {
     private lateinit var userResultFragListener: FragmentUserResultListener
     private var token = ""
     private var username = ""
+    private var usernameForBadge = ""
     private var selectedUsername = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +56,7 @@ class FragmentUserResult : Fragment(), DialogManager {
                     binding.etFavSport3.setText(response.body()?.fav_sport_3 ?: "")
                     binding.etLocation.setText(response.body()?.location ?: "")
                     ownerId= response.body()?.id ?: 0
+                    usernameForBadge = response.body()?.username ?: ""
                     if (!response.body()?.badges.isNullOrEmpty()){
                         var str = ""
                         for (badge in response.body()?.badges!!) {
@@ -104,7 +106,7 @@ class FragmentUserResult : Fragment(), DialogManager {
         }
         binding.btnGiveABadge.setOnClickListener {
             val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.container_main,FragmentRelatedEvents.newInstance(token,ownerId,username)).addToBackStack("myEvents")
+            transaction.replace(R.id.container_main,FragmentRelatedEvents.newInstance(token,ownerId,usernameForBadge)).addToBackStack("myEvents")
             transaction.commit()
         }
         binding.btnFollow.setOnClickListener{
