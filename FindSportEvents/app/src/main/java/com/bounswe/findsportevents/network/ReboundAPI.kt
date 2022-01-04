@@ -231,7 +231,7 @@ interface ReboundAPI {
     @GET("api/posts/{id}/applicants/")
     fun getApplicants(
         @Header("Authorization") token : String,
-        @Path("id") eventId: String,
+        @Path("id") eventId: Int,
         @Query("type") type : String
     ): Call<ApplicantListResponse>
 
@@ -239,7 +239,7 @@ interface ReboundAPI {
     @POST("api/posts/{id}/applicants/")
     fun acceptOrRejectApplicants(
         @Header("Authorization") token : String,
-        @Path("id") eventId: String,
+        @Path("id") eventId: Int,
         @Body request: ApplicantsRequest
     ): Call<ApplicantsResponse>
 

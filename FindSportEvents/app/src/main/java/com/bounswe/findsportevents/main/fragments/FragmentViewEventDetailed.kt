@@ -344,7 +344,9 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                     if (response.isSuccessful) {
                         userId = response.body()?.id?.toInt() ?: 0
                         if (userId == ownerId) {
-
+                            val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
+                            transaction.replace(R.id.container_main,FragmentViewApplications.newInstance(token, eventId, ownerId)).addToBackStack("myEvents")
+                            transaction.commit()
                         } else {
                             Toast.makeText(
                                 context,
