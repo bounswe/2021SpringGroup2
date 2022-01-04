@@ -16,10 +16,7 @@ import com.bounswe.findsportevents.databinding.FragmentEquipmentDetailedBinding
 import com.bounswe.findsportevents.databinding.FragmentViewEventDetailedBinding
 import com.bounswe.findsportevents.network.ReboundAPI
 import com.bounswe.findsportevents.network.modalz.requests.CommentRequest
-import com.bounswe.findsportevents.network.modalz.responses.AllCommentsResponse
-import com.bounswe.findsportevents.network.modalz.responses.CommentResponse
-import com.bounswe.findsportevents.network.modalz.responses.EquipmentbyIdResponse
-import com.bounswe.findsportevents.network.modalz.responses.EventbyIdResponse
+import com.bounswe.findsportevents.network.modalz.responses.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -57,6 +54,20 @@ class FragmentEquipmentDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                 if(response.isSuccessful){
                     binding.tvTitle.text= response.body()?.`object`?.title ?: ""
                     binding.tvDescription.text = response.body()?.`object`?.content?: ""
+                    binding.tvEquipmentType2.text= response.body()?.`object`?.equipmentType ?: ""
+                    ReboundAPI.create().getUser(token, response.body()?.`object`?.ownerId.toString()).enqueue(object: Callback<UserResponse> {
+                        override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+
+                            if(response.isSuccessful){
+                           binding.tvOwner2.text= response.body()?.username
+                            }
+                        }
+
+                        override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+
+                        }
+
+                    })
 
                 }
             }

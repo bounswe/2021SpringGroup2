@@ -138,7 +138,7 @@ class FragmentFollowing : Fragment(), RecyclerAdapterUser.OnItemClickListener {
     override fun onItemClick(position: Int) {
         selectedUsername=currentText
         val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.container_main,FragmentUserResult.newInstance(token,username,usernames[position])).addToBackStack("userResult")
+        transaction.add(R.id.container_main,FragmentUserResult.newInstance(token,username,usernames[position])).addToBackStack("userResult")
         transaction.commit()
     }
 

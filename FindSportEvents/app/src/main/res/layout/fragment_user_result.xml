@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -172,7 +173,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/space_xx_large"
                 android:backgroundTint="#86F10606"
-                android:text="BLOCK THIS USER" />
+                android:text="UNFOLLOW THIS USER" />
 
             <Button
                 android:id="@+id/button_update_password"

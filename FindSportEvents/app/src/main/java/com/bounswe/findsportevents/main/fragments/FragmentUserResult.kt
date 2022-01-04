@@ -13,6 +13,7 @@ import com.bounswe.findsportevents.databinding.FragmentUserResultBinding
 import com.bounswe.findsportevents.network.ReboundAPI
 import com.bounswe.findsportevents.network.modalz.responses.BlockResponse
 import com.bounswe.findsportevents.network.modalz.responses.FollowResponse
+import com.bounswe.findsportevents.network.modalz.responses.UnfollowResponse
 import com.bounswe.findsportevents.network.modalz.responses.UserResponse
 import com.bounswe.findsportevents.util.DialogManager
 import com.bounswe.findsportevents.util.LoadingDialog
@@ -107,38 +108,43 @@ class FragmentUserResult : Fragment(), DialogManager {
             transaction.commit()
         }
         binding.btnFollow.setOnClickListener{
+
+                if(binding.btnFollow.text.toString()=="FOLLOW THIS USER"){
                 ReboundAPI.create().followUser(token,selectedUsername).enqueue(object: Callback<FollowResponse>{
                     override fun onResponse(
                         call: Call<FollowResponse>,
                         response: Response<FollowResponse>
                     ) {
                         if(response.isSuccessful){
-                            Toast.makeText(context, response.body()?.message,Toast.LENGTH_SHORT)
+                            Toast.makeText(context, "YOU ARE NOW FOLLOWING "+selectedUsername,Toast.LENGTH_SHORT).show()
 
                     }
                     }
 
                     override fun onFailure(call: Call<FollowResponse>, t: Throwable) {
-                        Toast.makeText(context, "AN ERROR OCCURRED, PLEASE TRY AGAIN LATER",Toast.LENGTH_SHORT)
+                        Toast.makeText(context, "AN ERROR OCCURRED, PLEASE TRY AGAIN LATER",Toast.LENGTH_SHORT).show()
                     }
 
                 })
+                }
 
         }
         binding.btnBlock.setOnClickListener {
-            ReboundAPI.create().blockUser(token,selectedUsername).enqueue(object: Callback<BlockResponse>{
-                override fun onResponse(
-                    call: Call<BlockResponse>,
-                    response: Response<BlockResponse>
-                ) {
-                    if(response.isSuccessful){
-                        Toast.makeText(context, response.body()?.message,Toast.LENGTH_SHORT)
+            Toast.makeText(context, "YOU ARE NO LONGER FOLLOWING "+selectedUsername,Toast.LENGTH_SHORT)
+            ReboundAPI.create().unfollowUser(token,selectedUsername).enqueue(object: Callback<UnfollowResponse>{
 
-                    }
+                override fun onResponse(
+                    call: Call<UnfollowResponse>,
+                    response: Response<UnfollowResponse>
+                ) {
+                        if(response.isSuccessful)
+                        Toast.makeText(context, "YOU ARE NO LONGER FOLLOWING "+selectedUsername,Toast.LENGTH_SHORT).show()
+
+
                 }
 
-                override fun onFailure(call: Call<BlockResponse>, t: Throwable) {
-                    Toast.makeText(context, "AN ERROR OCCURRED, PLEASE TRY AGAIN LATER",Toast.LENGTH_SHORT)
+                override fun onFailure(call: Call<UnfollowResponse>, t: Throwable) {
+                    Toast.makeText(context, "AN ERROR OCCURRED, PLEASE TRY AGAIN LATER",Toast.LENGTH_SHORT).show()
                 }
 
             })

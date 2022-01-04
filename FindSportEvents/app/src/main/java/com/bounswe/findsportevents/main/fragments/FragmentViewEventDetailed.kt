@@ -36,7 +36,10 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
     private var token = ""
     private var username = ""
     private var eventId = 0
+    private var latitude =0f
+    private var longitude = 0f
     private var players : ArrayList<Int> = arrayListOf()
+    private var spectators : ArrayList<Int> = arrayListOf()
     private var comments : MutableList<String> = mutableListOf()
     private var commentIds : MutableList<Int> = mutableListOf()
     private var users : MutableList<String> = mutableListOf()
@@ -62,6 +65,9 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                     binding.tvDateResult.text = response.body()?.`object`?.eventDate.toString()
                     binding.tvAgeIntervalResult.text= "${response.body()?.`object`?.eventMinAge.toString()}  - ${response.body()?.`object`?.eventMaxAge.toString()}"
                     players = response.body()?.`object`?.eventPlayers as ArrayList<Int>
+                    spectators= response.body()?.`object`?.eventSpectators as ArrayList<Int>
+                    latitude= response.body()!!.`object`.location.latitude
+                    longitude= response.body()!!.`object`.location.longitude
                     layoutManager= LinearLayoutManager(context)
                     binding.rvDiscussion.layoutManager=layoutManager
                     adapter = RecyclerAdapterDiscussion(users,comments,dates, listener)
@@ -280,6 +286,11 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
         binding.btnPlayers.setOnClickListener {
             val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
             transaction.add(R.id.container_main,FragmentPlayers.newInstance(token,username,players)).addToBackStack("equipmentResults")
+            transaction.commit()
+        }
+        binding.btnSpectators.setOnClickListener {
+            val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
+            transaction.add(R.id.container_main,FragmentSpectators.newInstance(token,username,spectators)).addToBackStack("equipmentResults")
             transaction.commit()
         }
         binding.btnApplications.setOnClickListener {

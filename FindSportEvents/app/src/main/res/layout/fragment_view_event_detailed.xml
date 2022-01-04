@@ -6,8 +6,8 @@
     android:layout_height="match_parent">
 
     <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:fillViewport="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -113,6 +113,27 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_date" />
 
             <TextView
+                android:id="@+id/tv_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="20dp"
+                android:text="Location"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_age_interval" />
+
+            <ImageView
+                android:id="@+id/iv_map_longitude"
+                android:layout_width="63dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_map"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_age_interval_result" />
+
+            <TextView
                 android:id="@+id/tv_players"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -121,7 +142,7 @@
                 android:padding="20dp"
                 android:text="Players"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_age_interval" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_location" />
 
             <TextView
                 android:id="@+id/tv_spectators"
@@ -176,17 +197,17 @@
 
             <Button
                 android:id="@+id/btn_players"
-                android:layout_width="123dp"
-                android:layout_height="50dp"
+                android:layout_width="117dp"
+                android:layout_height="51dp"
                 android:layout_marginTop="8dp"
                 android:text="VIEW PLAYERS"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_age_interval_result" />
+                app:layout_constraintTop_toBottomOf="@+id/iv_map_longitude" />
 
             <Button
                 android:id="@+id/btn_spectators"
-                android:layout_width="123dp"
-                android:layout_height="50dp"
+                android:layout_width="117dp"
+                android:layout_height="54dp"
                 android:layout_marginTop="8dp"
                 android:text="VIEW SPECTATORS"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -232,7 +253,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_make_comment"
-                android:layout_width="154dp"
+                android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:hint="Make a comment"
                 app:layout_constraintEnd_toEndOf="parent"
