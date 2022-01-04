@@ -50,6 +50,13 @@ class FragmentUserResult : Fragment(), DialogManager {
                     binding.etFavSport3.setText(response.body()?.fav_sport_3 ?: "")
                     binding.etLocation.setText(response.body()?.location ?: "")
                     ownerId= response.body()?.id ?: 0
+                    if (!response.body()?.badges.isNullOrEmpty()){
+                        var str = ""
+                        for (badge in response.body()?.badges!!) {
+                            str += "$badge "
+                        }
+                        binding.etBadges.setText(str)
+                    }
                 }
             }
 
