@@ -56,6 +56,10 @@ export default function MapWithRectangle(props) {
             console.log(props.ids)
             console.log(( [bottomLeft.lat,topRight.lat,bottomLeft.lng,topRight.lng]))
         }
+        else{
+            props.setValue(props.ids)([null,null,null,null])
+
+        }
     },[bottomLeft,topRight])
     useEffect(()=>{
         if(center===null&&(bottomLeft===null||topRight===null)){
