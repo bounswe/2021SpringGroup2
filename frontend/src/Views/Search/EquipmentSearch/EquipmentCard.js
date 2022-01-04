@@ -77,7 +77,7 @@ export default function EventCard(props){
                     textAlign: 'initial',
                     width: "100%"
                 }}
-                onClick={_=>navigate("/equipment/"+props.id)}>
+                onClick={_=>navigate("/equipments/"+props.id)}>
                 <CardContent>
                     <Typography sx={{ fontSize: 22 }} color="text.primary">
                         {event.object.title}
