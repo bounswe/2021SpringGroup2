@@ -16,6 +16,7 @@ import Tab from '@mui/material/Tab';
 import EventTab from "./EventSearch/EventTab";
 import EquipmentTab from "./EquipmentSearch/EquipmentTab";
 import UserTab from "./UserSearch/UserTab";
+import Pagination from '@mui/material/Pagination';
 
 const useStyles = makeStyles(theme => createStyles({
     "@global": {
@@ -63,6 +64,7 @@ export const initialFilters = {
     max_longitude: null,
     min_duration: 0.0,
     max_duration: 0.0,
+    page:1
 }
 
 export default function SearchEvents() {
@@ -73,6 +75,7 @@ export default function SearchEvents() {
     searchParams.forEach((val, key)=>{searchFilters[key] = val})
     const [events, setEvents] = useState([])
     const [users, setUsers] = useState([])
+    const [max, setMax] = useState(1)
     const [equipments, setEquipments] = useState([])
     const [tab, setTab] = useState(0)
     const [filters, setFilters] = useState(searchFilters)
@@ -101,12 +104,20 @@ export default function SearchEvents() {
     const search = _=>{
         const filters = {}
         searchParams.forEach((val, key)=>{filters[key] = val})
+        let maxPage = 0
         searchEvents(filters)
-            .then(r=>console.log(r)||r.results)
+            .then(r=> {
+                maxPage = r.totalPages
+                return r.results
+            })
             .then(setEvents)
             .then(_=>searchEquipments(filters))
-            .then(r=>console.log(r)||r.results)
+            .then(r=> {
+                maxPage = r.totalPages>maxPage?r.totalPages:maxPage
+                return r.results
+            })
             .then(setEquipments)
+            .then(_=>setMax(maxPage))
             .then(_=>searchUsers(filters))
             .then(r=>console.log(r)||r.results)
             .then(setUsers)
@@ -167,6 +178,11 @@ export default function SearchEvents() {
                         <UserTab
                             hidden={tab!==2}
                             users={users}
+                        />
+                        <Pagination
+                            count={max}
+                            page={filters.page}
+                            onChange={(event, value) => setValue("page")(value)}
                         />
                     </Grid>
                     <Grid item md={1}>
