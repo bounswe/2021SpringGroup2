@@ -68,6 +68,32 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_equipment_type" />
 
             <TextView
+                android:id="@+id/tv_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="Location : "
+                android:layout_marginTop="20dp"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_owner" />
+
+            <ImageView
+                android:id="@+id/iv_map_longitude"
+                android:layout_width="51dp"
+                android:layout_height="55dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="68dp"
+                android:layout_marginTop="4dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_map"
+                android:visibility="visible"
+                app:layout_constraintStart_toEndOf="@+id/tv_location"
+                app:layout_constraintTop_toBottomOf="@+id/tv_owner2"
+                />
+
+            <TextView
                 android:id="@+id/tv_owner2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -98,12 +124,12 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="DESCRIPTION"
-                android:layout_marginTop="30dp"
                 android:textStyle="bold"
+                android:layout_marginTop="30dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_owner" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_location" />
 
 
             <TextView

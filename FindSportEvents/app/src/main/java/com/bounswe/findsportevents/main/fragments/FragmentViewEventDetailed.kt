@@ -320,6 +320,11 @@ class FragmentViewEventDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
             }
 
         }
+        binding.ivMapLongitude.setOnClickListener {
+            val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
+            transaction.add(R.id.container_main,FragmentMapLocation.newInstance(token,latitude,longitude)).addToBackStack("equipmentResults")
+            transaction.commit()
+        }
     }
 
     interface FragmentViewEventDetailedListener{

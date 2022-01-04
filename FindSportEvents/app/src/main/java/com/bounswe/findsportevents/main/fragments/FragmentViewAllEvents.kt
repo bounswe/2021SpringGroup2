@@ -185,7 +185,7 @@ class FragmentViewAllEvents : Fragment(), RecyclerAdapter.OnItemClickListener, D
 
     override fun onItemClick(position: Int) {
         val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.container_main,FragmentViewEventDetailed.newInstance(token,username,eventIds[position])).addToBackStack("searchUser")
+        transaction.add(R.id.container_main,FragmentViewEventDetailed.newInstance(token,username,eventIds[position])).addToBackStack("searchUser")
         transaction.commit()
     }
     override fun showLoading(context: Context) {

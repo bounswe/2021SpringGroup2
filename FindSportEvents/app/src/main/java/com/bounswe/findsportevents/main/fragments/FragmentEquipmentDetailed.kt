@@ -35,6 +35,8 @@ class FragmentEquipmentDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
     private var username= ""
     private var postId = 0
     private var commentIds : MutableList<Int> = mutableListOf()
+    private var latitude =0f
+    private var longitude = 0f
 
     private var comments : MutableList<String> = mutableListOf()
     private var users : MutableList<String> = mutableListOf()
@@ -55,6 +57,8 @@ class FragmentEquipmentDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
                     binding.tvTitle.text= response.body()?.`object`?.title ?: ""
                     binding.tvDescription.text = response.body()?.`object`?.content?: ""
                     binding.tvEquipmentType2.text= response.body()?.`object`?.equipmentType ?: ""
+                    latitude= response.body()?.`object`?.location?.latitude ?: 0f
+                    longitude= response.body()?.`object`?.location?.longitude ?: 0f
                     ReboundAPI.create().getUser(token, response.body()?.`object`?.ownerId.toString()).enqueue(object: Callback<UserResponse> {
                         override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
 
@@ -190,6 +194,12 @@ class FragmentEquipmentDetailed : Fragment(), RecyclerAdapterDiscussion.OnItemCl
            })
 
        }
+        binding.ivMapLongitude.setOnClickListener {
+            val transaction: FragmentTransaction =parentFragmentManager.beginTransaction()
+            transaction.add(R.id.container_main,FragmentMapLocation.newInstance(token,latitude,longitude)).addToBackStack("equipmentResults")
+            transaction.commit()
+
+        }
     }
 
     interface FragmentEquipmentDetailedListener{
