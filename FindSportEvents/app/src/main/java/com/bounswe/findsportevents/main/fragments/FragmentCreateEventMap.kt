@@ -24,6 +24,8 @@ class FragmentCreateEventMap : Fragment() {
 
     private lateinit var map: MapView;
     private var marker1 = GeoPoint(0, 0)
+    private var latitude =0.0
+    private var longitude =0.0
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
 
@@ -105,6 +107,18 @@ class FragmentCreateEventMap : Fragment() {
                 bundleOf(BUNDLE_KEY_1 to result.longitude.toFloat())
             )
             requireActivity().supportFragmentManager.popBackStack()
+        }
+        binding.btnGo.setOnClickListener {
+            Toast.makeText(context,"clicked",Toast.LENGTH_SHORT).show()
+            map = binding.map
+            map.setTileSource(TileSourceFactory.MAPNIK);
+            map.setMultiTouchControls(true);
+            val mapController = map.controller
+            mapController.setZoom(12)
+            latitude=binding.etLatitude.text.toString().toDouble()
+            longitude=binding.etLongitude.text.toString().toDouble()
+            var istLocation=GeoPoint(latitude,longitude)
+            mapController.setCenter(istLocation)
         }
 
     }
