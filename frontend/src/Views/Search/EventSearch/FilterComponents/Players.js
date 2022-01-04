@@ -1,6 +1,7 @@
 import React from 'react'
 import Typography from "@mui/material/Typography";
 import Slider from '@mui/material/Slider';
+import {getValue} from "./helper";
 
 
 export default function Players(props){
@@ -16,7 +17,7 @@ export default function Players(props){
             </Typography>
             <Slider
                 getAriaLabel={() => props.text}
-                value={[parseInt(props[props.ids[0]]), parseInt(props[props.ids[1]])]}
+                value={getValue(props)}
                 onChange={handleChange}
                 valueLabelDisplay="auto"
             />
