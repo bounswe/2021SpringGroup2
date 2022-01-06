@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bottom_home"
+        android:icon="@drawable/home_icon"
+        android:title="@string/home"
+        android:enabled="true"/>
+
+    <item
+        android:id="@+id/bottom_profile"
+        android:icon="@drawable/profile_icon"
+        android:title="@string/profile"
+        android:enabled="true"/>
+    <item
+        android:id="@+id/bottom_event"
+        android:icon="@drawable/event_icon"
+        android:title="@string/events"
+        android:enabled="true"/>
+    <item
+        android:id="@+id/bottom_search"
+        android:icon="@drawable/ic_baseline_search_24"
+        android:title="@string/search"
+        android:enabled="true"/>
+</menu>
